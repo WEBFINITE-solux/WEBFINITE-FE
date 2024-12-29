@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { Outlet, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 const Layout: React.FC = () => {
   const location = useLocation();
@@ -148,15 +148,4 @@ const MenuImg = styled.img`
   width: 43px;
   height: 43px;
   margin-right: 20px;
-`;
-
-const Main = styled.main`
-  flex: 1;
-  overflow-y: auto;
-  background-color: #ffffff;
-  padding: 20px;
-  box-shadow: 0px -2px 4px rgba(0, 0, 0, 0.1);
-  &::-webkit-scrollbar {
-    display: none;
-  }
 `;
