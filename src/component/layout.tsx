@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { useLocation } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 
 const Layout: React.FC = () => {
   const location = useLocation();
@@ -71,6 +71,7 @@ const Layout: React.FC = () => {
           </MenuItem>
         </Menu>
       </Sidebar>
+      <Outlet />
     </Container>
   );
 };
@@ -90,6 +91,7 @@ const Sidebar = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-left: 80px;
 `;
 const MenuTitle = styled.div`
   color: #1a1a1a;
@@ -98,12 +100,13 @@ const MenuTitle = styled.div`
   font-style: normal;
   font-weight: 700;
   line-height: 150%;
-  margin-top: 35px;
+  margin-top: 80px;
   margin-bottom: 35px;
 `;
 const LogoContainer = styled.div`
   width: 190px;
   height: 80px;
+  margin-top: 5px;
 `;
 
 const LogoImg = styled.img`
