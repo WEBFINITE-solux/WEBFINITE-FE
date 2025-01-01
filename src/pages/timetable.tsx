@@ -3,7 +3,7 @@ import styled from "styled-components";
 const Timetable: React.FC = () => {
   return (
     <Container>
-      <TimetableImg src="/timetableBackground.png" />
+      <TimetableBack src="/timetableBackground.png" />
     </Container>
   );
 };
@@ -13,7 +13,7 @@ const Container = styled.div`
   height: 100vh;
   background-color: #ffffff;
 `;
-const TimetableImg = styled.img`
+const TimetableBack = styled.img`
   width: 1704px;
   height: 1079px;
   flex-shrink: 0;
