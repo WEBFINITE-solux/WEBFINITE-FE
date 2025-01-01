@@ -71,6 +71,13 @@ const Layout: React.FC = () => {
           </MenuItem>
         </Menu>
       </Sidebar>
+      <UserContainer>
+        <LogoutButton>
+          <LogoutLogo src="/logout.svg" />
+          <LogoutContent>로그아웃</LogoutContent>
+        </LogoutButton>
+        <UserImg src="/user.svg" />
+      </UserContainer>
       <Outlet />
     </Container>
   );
@@ -83,7 +90,47 @@ const Container = styled.div`
   height: 100vh;
   background-color: #ffffff;
 `;
-
+const UserContainer = styled.div`
+  width: 189px;
+  height: 47.834px;
+  flex-shrink: 0;
+  position: absolute;
+  top: 10px;
+  left: 1660px;
+  z-index: 10;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+`;
+const UserImg = styled.img`
+  width: 47.834px;
+  height: 47.834px;
+  flex-shrink: 0;
+`;
+const LogoutButton = styled.button`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+`;
+const LogoutLogo = styled.img`
+  width: 25px;
+  height: 25px;
+  flex-shrink: 0;
+`;
+const LogoutContent = styled.div`
+  color: #656565;
+  font-family: Pretendard;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 150%;
+  margin-bottom: 0.5px;
+`;
 const Sidebar = styled.div`
   width: 250px;
   background-color: #ffffff;
