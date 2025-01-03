@@ -12,6 +12,7 @@ type Course = {
   end_time: string;
   location: string;
   color?: string;
+  term: string;
 };
 
 const Timetable: React.FC = () => {
@@ -26,6 +27,7 @@ const Timetable: React.FC = () => {
       end_time: "11:45",
       location: "명신관 221호",
       color: colors[Math.floor(Math.random() * colors.length)],
+      term: "2025년1학기",
     },
     {
       course_id: 2,
@@ -36,6 +38,18 @@ const Timetable: React.FC = () => {
       end_time: "13:15",
       location: "명신관 702호",
       color: colors[Math.floor(Math.random() * colors.length)],
+      term: "2025년1학기",
+    },
+    {
+      course_id: 3,
+      course_title: "알고리즘입문",
+      period: "2024.3~7",
+      day: ["TUE"],
+      start_time: "13:00",
+      end_time: "15:50",
+      location: "프라임관 201호",
+      color: colors[Math.floor(Math.random() * colors.length)],
+      term: "2025년1학기",
     },
   ];
 

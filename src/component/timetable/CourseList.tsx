@@ -10,6 +10,7 @@ type Course = {
   end_time: string;
   location: string;
   color?: string;
+  term: string;
 };
 
 type CourseListProps = {
@@ -49,11 +50,11 @@ export default CourseList;
 
 const Container = styled.div`
   width: 400px;
-  height: 700px;
-  background-color: #ffffff;
+  height: 800px;
+  background-color: none;
   border-radius: 8px;
   position: absolute;
-  top: 28px;
+  top: 10px;
   right: 100px;
   flex-direction: column;
   overflow: hidden;
@@ -64,8 +65,7 @@ const Header = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 16px;
-  background-color: #ffffff;
-  border-bottom: 1px solid #e0e0e0;
+  background-color: none;
   border-radius: 8px 8px 0 0;
 `;
 
@@ -90,7 +90,8 @@ const Content = styled.div`
   align-items: center;
   padding: 16px;
   background-color: #ffffff;
-  border-radius: 0 0 8px 8px;
+  border-radius: 8px;
+  height: 100%;
 `;
 
 const EmptyMessage = styled.div`
@@ -113,6 +114,7 @@ const CourseItem = styled.div`
   padding: 12px;
   background-color: none;
   width: 400px;
+  border-bottom: 1px solid #e0e0e0;
 `;
 
 const CourseIconContainer = styled.img`
@@ -142,6 +144,7 @@ const CourseTitle = styled.div`
   font-style: normal;
   font-weight: 600;
   line-height: 150%;
+  width: 85px;
 `;
 
 const CoursePeriod = styled.div`

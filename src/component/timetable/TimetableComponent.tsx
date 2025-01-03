@@ -10,6 +10,7 @@ type Course = {
   end_time: string;
   location: string;
   color?: string;
+  term: string;
 };
 
 type TimetableProps = {
@@ -34,6 +35,10 @@ const TimetableComponent: React.FC<TimetableProps> = ({ courses }) => {
 
   return (
     <Container>
+      <Header>
+        <Title>{courses[0]?.term}</Title>
+        <OptionsButton>▼</OptionsButton>
+      </Header>
       <Table>
         <Thead>
           <Tr>
@@ -94,13 +99,33 @@ export default TimetableComponent;
 
 const Container = styled.div`
   position: absolute;
-  top: 1px;
+  top: -8px;
   right: 550px;
   align-items: center;
   padding: 20px;
   background-color: none;
 `;
+const Header = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  background-color: none;
+  border-radius: 8px 8px 0 0;
+`;
+const Title = styled.div`
+  font-family: Pretendard;
+  font-size: 18px;
+  font-weight: bold;
+`;
 
+const OptionsButton = styled.button`
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: #656565;
+  cursor: pointer;
+`;
 const Thead = styled.thead`
   color: #000;
   font-family: Pretendard;
