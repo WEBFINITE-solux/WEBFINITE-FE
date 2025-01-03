@@ -112,6 +112,7 @@ const Header = styled.div`
   padding: 16px;
   background-color: none;
   border-radius: 8px 8px 0 0;
+  width: 203px;
 `;
 const Title = styled.div`
   font-family: Pretendard;
@@ -122,9 +123,10 @@ const Title = styled.div`
 const OptionsButton = styled.button`
   background: none;
   border: none;
-  font-size: 20px;
-  color: #656565;
+  font-size: 18px;
+  color: #1a1a1a;
   cursor: pointer;
+  margin-top: -5px;
 `;
 const Thead = styled.thead`
   color: #000;
