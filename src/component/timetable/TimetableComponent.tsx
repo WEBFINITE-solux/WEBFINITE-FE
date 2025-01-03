@@ -4,9 +4,9 @@ import styled from "styled-components";
 type Lecture = {
   course_title: string;
   period: string;
-  day: string[]; // 요일 목록 (e.g., ["MON", "WED"])
-  start_time: string; // "HH:mm"
-  end_time: string; // "HH:mm"
+  day: string[];
+  start_time: string;
+  end_time: string;
   location: string;
 };
 
@@ -21,8 +21,6 @@ const TimetableComponent: React.FC = () => {
       location: "본관 101호",
     },
   ]);
-
-  // 요일 변환 (e.g., "MON" -> "월")
   const dayMap: Record<string, string> = {
     SUN: "일",
     MON: "월",
@@ -33,7 +31,6 @@ const TimetableComponent: React.FC = () => {
     SAT: "토",
   };
 
-  // 시간을 숫자(시간 단위)로 변환
   const timeToNumber = (time: string) => {
     const [hours, minutes] = time.split(":").map(Number);
     return hours + minutes / 60;
