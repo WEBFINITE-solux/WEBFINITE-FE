@@ -8,19 +8,36 @@ type Lecture = {
   start_time: string;
   end_time: string;
   location: string;
+  color?: string;
 };
 
 const TimetableComponent: React.FC = () => {
-  const [lectures, setLectures] = useState<Lecture[]>([
-    {
-      course_title: "선형대수학",
-      period: "2024-01-10",
-      day: ["MON", "WED"],
-      start_time: "10:00",
-      end_time: "11:15",
-      location: "본관 101호",
-    },
-  ]);
+  const colors = ["#FFD3A9", "#C2B1FF", "#FF9E9E", "#95BAFF", "#9EFFEA"];
+
+  const [lectures, setLectures] = useState<Lecture[]>(
+    [
+      {
+        course_title: "선형대수학",
+        period: "2024-01-10",
+        day: ["MON", "WED"],
+        start_time: "10:30",
+        end_time: "11:45",
+        location: "명신관 221호",
+      },
+      {
+        course_title: "컴퓨터구조",
+        period: "2024-01-10",
+        day: ["MON", "WED"],
+        start_time: "12:00",
+        end_time: "13:15",
+        location: "명신관 702호",
+      },
+    ].map((lecture) => ({
+      ...lecture,
+      color: colors[Math.floor(Math.random() * colors.length)],
+    }))
+  );
+
   const dayMap: Record<string, string> = {
     SUN: "일",
     MON: "월",
@@ -39,14 +56,14 @@ const TimetableComponent: React.FC = () => {
   return (
     <Container>
       <Table>
-        <thead>
-          <tr>
+        <Thead>
+          <Tr>
             <Th />
             {["일", "월", "화", "수", "목", "금", "토"].map((day) => (
               <Th key={day}>{day}</Th>
             ))}
-          </tr>
-        </thead>
+          </Tr>
+        </Thead>
         <tbody>
           {[...Array(10)].map((_, i) => (
             <Tr key={i}>
@@ -61,7 +78,7 @@ const TimetableComponent: React.FC = () => {
                             (key) => dayMap[key] === day
                           )!
                         ) &&
-                        timeToNumber(lecture.start_time) <= i + 9 &&
+                        timeToNumber(lecture.start_time) < i + 10 &&
                         timeToNumber(lecture.end_time) > i + 9
                     )
                     .map((lecture, idx) => (
@@ -73,6 +90,10 @@ const TimetableComponent: React.FC = () => {
                               timeToNumber(lecture.start_time)) *
                             100
                           }%`,
+                          top: `${
+                            (timeToNumber(lecture.start_time) - (i + 9)) * 100
+                          }%`,
+                          backgroundColor: lecture.color,
                         }}
                       >
                         <strong>{lecture.course_title}</strong>
@@ -93,25 +114,39 @@ const TimetableComponent: React.FC = () => {
 export default TimetableComponent;
 
 const Container = styled.div`
-  display: flex;
-  justify-content: center;
+  position: absolute;
+  top: 1px;
+  right: 600px;
   align-items: center;
   padding: 20px;
-  background-color: #f9f9f9;
+  background-color: none;
+`;
+
+const Thead = styled.thead`
+  color: #000;
+  font-family: Pretendard;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 150%;
 `;
 
 const Table = styled.table`
   border-collapse: collapse;
-  width: 900px;
+  width: 890px;
+  height: 700px;
+  flex-shrink: 0;
   background-color: #ffffff;
-  border: 1px solid #e0e0e0;
+  border-radius: 25px;
+  table-layout: fixed;
+  overflow: hidden;
 `;
 
 const Th = styled.th`
   border: 1px solid #e0e0e0;
   padding: 10px;
   text-align: center;
-  background-color: #f5f5f5;
+  background-color: #ffffff;
 `;
 
 const Tr = styled.tr`
@@ -122,17 +157,24 @@ const Td = styled.td`
   border: 1px solid #e0e0e0;
   text-align: center;
   position: relative;
+  color: #000;
+  font-family: Pretendard;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 150%;
 `;
 
 const LectureBlock = styled.div`
   position: absolute;
-  top: 0;
   left: 0;
   right: 0;
-  font-size: 12px;
-  font-weight: bold;
-  color: #ffffff;
-  background-color: #7ea9ff;
+  color: #303030;
+  font-family: Pretendard;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 150%;
   text-align: center;
   padding: 5px;
   box-sizing: border-box;

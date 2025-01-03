@@ -1,12 +1,14 @@
 import React from "react";
 import styled from "styled-components";
 import TimetableComponent from "../component/timetable/TimetableComponent";
+import CourseList from "../component/timetable/courseList";
 const Timetable: React.FC = () => {
   return (
     <Container>
       <TimetableBack src="/timetableBackground.png" />
       <TimetableContainer>
         <TimetableComponent />
+        <CourseList />
       </TimetableContainer>
     </Container>
   );
