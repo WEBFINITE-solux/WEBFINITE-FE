@@ -1,12 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import CourseFirst from "../component/timetable/CourseFirst";
-import { useNavigate } from "react-router-dom";
 const Timetable: React.FC = () => {
-  const navigate = useNavigate();
-  const handleTimeblock = () => {
-    navigate("/timetable");
-  };
   return (
     <Container>
       <TimetableBack src="/timetableBackground.png" />
