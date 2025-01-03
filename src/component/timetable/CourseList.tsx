@@ -2,15 +2,21 @@ import React from "react";
 import styled from "styled-components";
 
 type Course = {
-  id: number;
-  title: string;
+  course_id: number;
+  course_title: string;
+  period: string;
+  day: string[];
+  start_time: string;
+  end_time: string;
   location: string;
-  time: string;
+  color?: string;
 };
 
-const CourseList: React.FC = () => {
-  const courses: Course[] = [];
+type CourseListProps = {
+  courses: Course[];
+};
 
+const CourseList: React.FC<CourseListProps> = ({ courses }) => {
   return (
     <Container>
       <Header>
@@ -23,11 +29,13 @@ const CourseList: React.FC = () => {
         ) : (
           <CourseListContainer>
             {courses.map((course) => (
-              <CourseItem key={course.id}>
-                <CourseTitle>{course.title}</CourseTitle>
-                <CourseDetails>
-                  {course.location} | {course.time}
-                </CourseDetails>
+              <CourseItem key={course.course_id}>
+                <CourseIconContainer src="/courseImg.png" alt="강의 이미지" />
+                <CourseInfo>
+                  <CourseTitle>{course.course_title}</CourseTitle>
+                  <CoursePeriod>{course.period}</CoursePeriod>
+                </CourseInfo>
+                <UploadButton>강의 자료</UploadButton>
               </CourseItem>
             ))}
           </CourseListContainer>
@@ -41,11 +49,14 @@ export default CourseList;
 
 const Container = styled.div`
   width: 400px;
-  height: 100%;
-  background-color: #f3f3f3;
+  height: 700px;
+  background-color: #ffffff;
   border-radius: 8px;
-  display: flex;
+  position: absolute;
+  top: 28px;
+  right: 100px;
   flex-direction: column;
+  overflow: hidden;
 `;
 
 const Header = styled.div`
@@ -75,10 +86,10 @@ const OptionsButton = styled.button`
 const Content = styled.div`
   flex: 1;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
   padding: 16px;
-  background-color: #f3f3f3;
+  background-color: #ffffff;
   border-radius: 0 0 8px 8px;
 `;
 
@@ -93,27 +104,68 @@ const CourseListContainer = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
 `;
 
 const CourseItem = styled.div`
-  background-color: #ffffff;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  padding: 12px;
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  padding: 12px;
+  background-color: none;
+  width: 400px;
+`;
+
+const CourseIconContainer = styled.img`
+  width: 63px;
+  height: 62px;
+  background-color: none;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 16px;
+`;
+
+const CourseInfo = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 40px;
+  margin-top: 3px;
 `;
 
 const CourseTitle = styled.div`
+  color: #000;
   font-family: Pretendard;
-  font-size: 16px;
-  font-weight: bold;
-  margin-bottom: 4px;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 150%;
 `;
 
-const CourseDetails = styled.div`
+const CoursePeriod = styled.div`
+  color: #b3b3b3;
+  font-family: Pretendard;
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%;
+`;
+
+const UploadButton = styled.button`
+  border: 1px solid #e0e0e0;
+  border-radius: 28.858px;
+  background: #fff;
+  padding: 8px 16px;
   font-family: Pretendard;
   font-size: 14px;
-  color: #656565;
+  font-weight: bold;
+  color: #1a1a1a;
+  cursor: pointer;
+  margin-left: 15px;
+
+  &:hover {
+    background-color: #f1f3f5;
+  }
 `;

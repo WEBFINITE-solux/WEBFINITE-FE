@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 
 type Course = {
+  course_id: number;
   course_title: string;
   period: string;
   day: string[];
@@ -11,33 +12,11 @@ type Course = {
   color?: string;
 };
 
-const TimetableComponent: React.FC = () => {
-  const colors = ["#FFD3A9", "#C2B1FF", "#FF9E9E", "#95BAFF", "#9EFFEA"];
+type TimetableProps = {
+  courses: Course[];
+};
 
-  const [courses, setCourses] = useState<Course[]>(
-    [
-      {
-        course_title: "선형대수학",
-        period: "2024-01-10",
-        day: ["MON", "WED"],
-        start_time: "10:30",
-        end_time: "11:45",
-        location: "명신관 221호",
-      },
-      {
-        course_title: "컴퓨터구조",
-        period: "2024-01-10",
-        day: ["MON", "WED"],
-        start_time: "12:00",
-        end_time: "13:15",
-        location: "명신관 702호",
-      },
-    ].map((course) => ({
-      ...course,
-      color: colors[Math.floor(Math.random() * colors.length)],
-    }))
-  );
-
+const TimetableComponent: React.FC<TimetableProps> = ({ courses }) => {
   const dayMap: Record<string, string> = {
     SUN: "일",
     MON: "월",
@@ -81,9 +60,9 @@ const TimetableComponent: React.FC = () => {
                         timeToNumber(course.start_time) < i + 10 &&
                         timeToNumber(course.end_time) > i + 9
                     )
-                    .map((course, idx) => (
+                    .map((course) => (
                       <CourseBlock
-                        key={idx}
+                        key={course.course_id}
                         style={{
                           height: `${
                             (timeToNumber(course.end_time) -
@@ -116,7 +95,7 @@ export default TimetableComponent;
 const Container = styled.div`
   position: absolute;
   top: 1px;
-  right: 600px;
+  right: 550px;
   align-items: center;
   padding: 20px;
   background-color: none;
