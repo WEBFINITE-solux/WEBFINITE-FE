@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 
-type Lecture = {
+type Course = {
   course_title: string;
   period: string;
   day: string[];
@@ -14,7 +14,7 @@ type Lecture = {
 const TimetableComponent: React.FC = () => {
   const colors = ["#FFD3A9", "#C2B1FF", "#FF9E9E", "#95BAFF", "#9EFFEA"];
 
-  const [lectures, setLectures] = useState<Lecture[]>(
+  const [courses, setCourses] = useState<Course[]>(
     [
       {
         course_title: "선형대수학",
@@ -32,8 +32,8 @@ const TimetableComponent: React.FC = () => {
         end_time: "13:15",
         location: "명신관 702호",
       },
-    ].map((lecture) => ({
-      ...lecture,
+    ].map((course) => ({
+      ...course,
       color: colors[Math.floor(Math.random() * colors.length)],
     }))
   );
@@ -70,36 +70,36 @@ const TimetableComponent: React.FC = () => {
               <Td>{i + 9}</Td>
               {["일", "월", "화", "수", "목", "금", "토"].map((day) => (
                 <Td key={day}>
-                  {lectures
+                  {courses
                     .filter(
-                      (lecture) =>
-                        lecture.day.includes(
+                      (course) =>
+                        course.day.includes(
                           Object.keys(dayMap).find(
                             (key) => dayMap[key] === day
                           )!
                         ) &&
-                        timeToNumber(lecture.start_time) < i + 10 &&
-                        timeToNumber(lecture.end_time) > i + 9
+                        timeToNumber(course.start_time) < i + 10 &&
+                        timeToNumber(course.end_time) > i + 9
                     )
-                    .map((lecture, idx) => (
-                      <LectureBlock
+                    .map((course, idx) => (
+                      <CourseBlock
                         key={idx}
                         style={{
                           height: `${
-                            (timeToNumber(lecture.end_time) -
-                              timeToNumber(lecture.start_time)) *
+                            (timeToNumber(course.end_time) -
+                              timeToNumber(course.start_time)) *
                             100
                           }%`,
                           top: `${
-                            (timeToNumber(lecture.start_time) - (i + 9)) * 100
+                            (timeToNumber(course.start_time) - (i + 9)) * 100
                           }%`,
-                          backgroundColor: lecture.color,
+                          backgroundColor: course.color,
                         }}
                       >
-                        <strong>{lecture.course_title}</strong>
+                        <strong>{course.course_title}</strong>
                         <br />
-                        {lecture.location}
-                      </LectureBlock>
+                        {course.location}
+                      </CourseBlock>
                     ))}
                 </Td>
               ))}
@@ -165,7 +165,7 @@ const Td = styled.td`
   line-height: 150%;
 `;
 
-const LectureBlock = styled.div`
+const CourseBlock = styled.div`
   position: absolute;
   left: 0;
   right: 0;

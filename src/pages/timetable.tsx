@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import TimetableComponent from "../component/timetable/TimetableComponent";
 import CourseList from "../component/timetable/courseList";
+
 const Timetable: React.FC = () => {
   return (
     <Container>
