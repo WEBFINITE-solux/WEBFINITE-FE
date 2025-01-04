@@ -7,8 +7,12 @@ type CourseAddProps = {
 
 const CourseAdd: React.FC<CourseAddProps> = ({ onBackToList }) => {
   const [courseName, setCourseName] = useState("");
-  const [startTime, setStartTime] = useState("10:00");
-  const [endTime, setEndTime] = useState("11:15");
+  const [startHour, setStartHour] = useState("10");
+  const [startMinute, setStartMinute] = useState("00");
+  const [startAmPm, setStartAmPm] = useState("AM");
+  const [endHour, setEndHour] = useState("11");
+  const [endMinute, setEndMinute] = useState("15");
+  const [endAmPm, setEndAmPm] = useState("AM");
   const [day, setDay] = useState("");
   const [location, setLocation] = useState("");
   const [isOptionsOpen, setIsOptionsOpen] = useState(false);
@@ -31,6 +35,7 @@ const CourseAdd: React.FC<CourseAddProps> = ({ onBackToList }) => {
   const handleAddClick = () => {
     setIsAdding(true);
   };
+
   const handleBackToList = () => {
     setIsAdding(false);
   };
@@ -46,6 +51,11 @@ const CourseAdd: React.FC<CourseAddProps> = ({ onBackToList }) => {
     alert("강의가 추가되었습니다!");
     onBackToList();
   };
+
+  const generateHourOptions = () =>
+    Array.from({ length: 12 }, (_, i) => (i + 1).toString().padStart(2, "0"));
+  const generateMinuteOptions = () =>
+    Array.from({ length: 60 }, (_, i) => i.toString().padStart(2, "0"));
 
   return (
     <Container>
@@ -79,23 +89,63 @@ const CourseAdd: React.FC<CourseAddProps> = ({ onBackToList }) => {
             onChange={(e) => setCourseName(e.target.value)}
           />
           <FormTitle>시간</FormTitle>
-          <TimeContainer>
+          <TimePickerContainer>
             <TimeSelect
-              value={startTime}
-              onChange={(e) => setStartTime(e.target.value)}
+              value={startAmPm}
+              onChange={(e) => setStartAmPm(e.target.value)}
             >
-              <option>10:00</option>
-              <option>11:00</option>
+              <option value="AM">AM</option>
+              <option value="PM">PM</option>
+            </TimeSelect>
+            <TimeSelect
+              value={startHour}
+              onChange={(e) => setStartHour(e.target.value)}
+            >
+              {generateHourOptions().map((hour) => (
+                <option key={hour} value={hour}>
+                  {hour}
+                </option>
+              ))}
+            </TimeSelect>
+            <TimeSelect
+              value={startMinute}
+              onChange={(e) => setStartMinute(e.target.value)}
+            >
+              {generateMinuteOptions().map((minute) => (
+                <option key={minute} value={minute}>
+                  {minute}
+                </option>
+              ))}
             </TimeSelect>
             <span>~</span>
             <TimeSelect
-              value={endTime}
-              onChange={(e) => setEndTime(e.target.value)}
+              value={endAmPm}
+              onChange={(e) => setEndAmPm(e.target.value)}
             >
-              <option>11:15</option>
-              <option>12:00</option>
+              <option value="AM">AM</option>
+              <option value="PM">PM</option>
             </TimeSelect>
-          </TimeContainer>
+            <TimeSelect
+              value={endHour}
+              onChange={(e) => setEndHour(e.target.value)}
+            >
+              {generateHourOptions().map((hour) => (
+                <option key={hour} value={hour}>
+                  {hour}
+                </option>
+              ))}
+            </TimeSelect>
+            <TimeSelect
+              value={endMinute}
+              onChange={(e) => setEndMinute(e.target.value)}
+            >
+              {generateMinuteOptions().map((minute) => (
+                <option key={minute} value={minute}>
+                  {minute}
+                </option>
+              ))}
+            </TimeSelect>
+          </TimePickerContainer>
           <FormTitle>요일</FormTitle>
           <DaySelect onChange={(e) => setDay(e.target.value)}>
             <option>월요일</option>
@@ -122,8 +172,9 @@ const CourseAdd: React.FC<CourseAddProps> = ({ onBackToList }) => {
 export default CourseAdd;
 
 const Container = styled.div`
-  height: 710px;
+  height: 735px;
   padding: 20px;
+  margin-top: -25px;
   border-radius: 8px;
   background-color: none;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -243,19 +294,23 @@ const Input = styled.input`
   border-radius: 10px;
 `;
 
-const TimeContainer = styled.div`
+const TimePickerContainer = styled.div`
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 4px;
 `;
 
 const TimeSelect = styled.select`
-  padding: 12px;
+  width: 60px;
+  padding: 8px;
   font-size: 14px;
   border: 1px solid #ccc;
-  border-radius: 10px;
-  width: 185px;
+  border-radius: 6px;
+  text-align: center;
+  background: #f9f9f9;
+  appearance: none;
 `;
+
 const DaySelect = styled.select`
   padding: 12px;
   font-size: 14px;
@@ -279,7 +334,7 @@ const Button = styled.button`
   line-height: 150%;
   cursor: pointer;
   margin-left: 200px;
-  margin-top: 150px;
+  margin-top: 170px;
 
   &:hover {
     background-color: #f1f3f5;
