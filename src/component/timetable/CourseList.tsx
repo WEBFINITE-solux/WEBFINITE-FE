@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 
 type Course = {
@@ -18,11 +18,48 @@ type CourseListProps = {
 };
 
 const CourseList: React.FC<CourseListProps> = ({ courses }) => {
+  const [isOptionsOpen, setIsOptionsOpen] = useState(false);
+  const optionsRef = useRef<HTMLDivElement>(null);
+
+  const toggleOptions = () => {
+    setIsOptionsOpen(!isOptionsOpen);
+  };
+
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+      optionsRef.current &&
+      !optionsRef.current.contains(event.target as Node)
+    ) {
+      setIsOptionsOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
     <Container>
       <Header>
         <Title>나의 강의 목록</Title>
-        <OptionsButton>⋮</OptionsButton>
+        <OptionsContainer ref={optionsRef}>
+          <OptionsButton onClick={toggleOptions}>⋮</OptionsButton>
+          {isOptionsOpen && (
+            <OptionsMenu>
+              <OptionItem onClick={() => alert("강의 추가하기")}>
+                <OptionLogo src="/add.png" />
+                <OptionContent>추가하기</OptionContent>
+              </OptionItem>
+              <OptionItem onClick={() => alert("강의 삭제하기")}>
+                <OptionLogo src="/delete.png" />
+                <OptionContent>삭제하기</OptionContent>
+              </OptionItem>
+            </OptionsMenu>
+          )}
+        </OptionsContainer>
       </Header>
       <Content>
         {courses.length === 0 ? (
@@ -75,6 +112,10 @@ const Title = styled.div`
   font-weight: bold;
 `;
 
+const OptionsContainer = styled.div`
+  position: relative;
+`;
+
 const OptionsButton = styled.button`
   background: none;
   border: none;
@@ -83,6 +124,47 @@ const OptionsButton = styled.button`
   cursor: pointer;
 `;
 
+const OptionsMenu = styled.div`
+  position: absolute;
+  top: 72px;
+  right: -10px;
+  background: #ffffff;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  width: 287px;
+  height: 124px;
+  flex-shrink: 0;
+`;
+
+const OptionItem = styled.div`
+  padding: 14px 18px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  white-space: nowrap;
+  &:hover {
+    background-color: #f1f3f5;
+  }
+`;
+const OptionContent = styled.div`
+  color: #1a1a1a;
+  text-align: center;
+  font-family: Pretendard;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 150%;
+`;
+const OptionLogo = styled.img`
+  width: 35.602px;
+  height: 35.602px;
+  flex-shrink: 0;
+`;
 const Content = styled.div`
   flex: 1;
   display: flex;
