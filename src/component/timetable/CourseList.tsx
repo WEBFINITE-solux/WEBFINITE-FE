@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
+import CourseAdd from "./CourseAdd";
 
 type Course = {
   course_id: number;
@@ -19,6 +20,7 @@ type CourseListProps = {
 
 const CourseList: React.FC<CourseListProps> = ({ courses }) => {
   const [isOptionsOpen, setIsOptionsOpen] = useState(false);
+  const [isAdding, setIsAdding] = useState(false);
   const optionsRef = useRef<HTMLDivElement>(null);
 
   const toggleOptions = () => {
@@ -34,6 +36,13 @@ const CourseList: React.FC<CourseListProps> = ({ courses }) => {
     }
   };
 
+  const handleAddClick = () => {
+    setIsAdding(true);
+  };
+  const handleBackToList = () => {
+    setIsAdding(false);
+  };
+
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
@@ -43,42 +52,51 @@ const CourseList: React.FC<CourseListProps> = ({ courses }) => {
 
   return (
     <Container>
-      <Header>
-        <Title>나의 강의 목록</Title>
-        <OptionsContainer ref={optionsRef}>
-          <OptionsButton onClick={toggleOptions}>⋮</OptionsButton>
-          {isOptionsOpen && (
-            <OptionsMenu>
-              <OptionItem onClick={() => alert("강의 추가하기")}>
-                <OptionLogo src="/add.png" />
-                <OptionContent>추가하기</OptionContent>
-              </OptionItem>
-              <OptionItem onClick={() => alert("강의 삭제하기")}>
-                <OptionLogo src="/delete.png" />
-                <OptionContent>삭제하기</OptionContent>
-              </OptionItem>
-            </OptionsMenu>
-          )}
-        </OptionsContainer>
-      </Header>
-      <Content>
-        {courses.length === 0 ? (
-          <EmptyMessage>아직 등록된 강의가 없습니다.</EmptyMessage>
-        ) : (
-          <CourseListContainer>
-            {courses.map((course) => (
-              <CourseItem key={course.course_id}>
-                <CourseIconContainer src="/courseImg.png" alt="강의 이미지" />
-                <CourseInfo>
-                  <CourseTitle>{course.course_title}</CourseTitle>
-                  <CoursePeriod>{course.period}</CoursePeriod>
-                </CourseInfo>
-                <UploadButton>강의 자료</UploadButton>
-              </CourseItem>
-            ))}
-          </CourseListContainer>
-        )}
-      </Content>
+      {isAdding ? (
+        <CourseAdd onBackToList={handleBackToList} />
+      ) : (
+        <>
+          <Header>
+            <Title>나의 강의 목록</Title>
+            <OptionsContainer ref={optionsRef}>
+              <OptionsButton onClick={toggleOptions}>⋮</OptionsButton>
+              {isOptionsOpen && (
+                <OptionsMenu>
+                  <OptionItem onClick={handleAddClick}>
+                    <OptionLogo src="/add.png" />
+                    <OptionContent>추가하기</OptionContent>
+                  </OptionItem>
+                  <OptionItem onClick={() => alert("강의 삭제하기")}>
+                    <OptionLogo src="/delete.png" />
+                    <OptionContent>삭제하기</OptionContent>
+                  </OptionItem>
+                </OptionsMenu>
+              )}
+            </OptionsContainer>
+          </Header>
+          <Content>
+            {courses.length === 0 ? (
+              <EmptyMessage>아직 등록된 강의가 없습니다.</EmptyMessage>
+            ) : (
+              <CourseListContainer>
+                {courses.map((course) => (
+                  <CourseItem key={course.course_id}>
+                    <CourseIconContainer
+                      src="/courseImg.png"
+                      alt="강의 이미지"
+                    />
+                    <CourseInfo>
+                      <CourseTitle>{course.course_title}</CourseTitle>
+                      <CoursePeriod>{course.period}</CoursePeriod>
+                    </CourseInfo>
+                    <UploadButton>강의 자료</UploadButton>
+                  </CourseItem>
+                ))}
+              </CourseListContainer>
+            )}
+          </Content>
+        </>
+      )}
     </Container>
   );
 };
@@ -151,6 +169,7 @@ const OptionItem = styled.div`
     background-color: #f1f3f5;
   }
 `;
+
 const OptionContent = styled.div`
   color: #1a1a1a;
   text-align: center;
@@ -160,11 +179,13 @@ const OptionContent = styled.div`
   font-weight: 600;
   line-height: 150%;
 `;
+
 const OptionLogo = styled.img`
   width: 35.602px;
   height: 35.602px;
   flex-shrink: 0;
 `;
+
 const Content = styled.div`
   flex: 1;
   display: flex;
