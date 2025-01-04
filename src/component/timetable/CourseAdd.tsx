@@ -97,11 +97,15 @@ const CourseAdd: React.FC<CourseAddProps> = ({ onBackToList }) => {
             </TimeSelect>
           </TimeContainer>
           <FormTitle>요일</FormTitle>
-          <Input
-            placeholder="요일을 선택하세요."
-            value={day}
-            onChange={(e) => setDay(e.target.value)}
-          />
+          <DaySelect onChange={(e) => setDay(e.target.value)}>
+            <option>월요일</option>
+            <option>화요일</option>
+            <option>수요일</option>
+            <option>목요일</option>
+            <option>금요일</option>
+            <option>토요일</option>
+            <option>일요일</option>
+          </DaySelect>
           <FormTitle>위치</FormTitle>
           <Input
             placeholder="강의실을 입력하세요."
@@ -136,7 +140,7 @@ const Component = styled.div`
   width: 100%;
   height: 100%;
   flex-shrink: 0;
-  padding: 20px;
+  padding: 18px;
   background-color: #fff;
   border-radius: 25px;
   box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.1);
@@ -236,7 +240,7 @@ const Input = styled.input`
   padding: 12px;
   font-size: 14px;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 10px;
 `;
 
 const TimeContainer = styled.div`
@@ -249,7 +253,14 @@ const TimeSelect = styled.select`
   padding: 12px;
   font-size: 14px;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 10px;
+  width: 185px;
+`;
+const DaySelect = styled.select`
+  padding: 12px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
 `;
 
 const Button = styled.button`
