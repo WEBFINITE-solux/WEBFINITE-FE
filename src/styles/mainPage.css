@@ -18,3 +18,32 @@
     );
     transform: rotate(90deg);
 }
+
+.logo-container {
+  position: absolute;
+  width: 27vw; 
+  height: 9.8vh;
+  left: 7.5vw;
+  top: calc(50% - 4.9vh);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.logo {
+  width: 4.8vw;
+  height: 4.8vw;
+}
+
+.title {
+  font-family: 'Pretendard', sans-serif;
+  font-size: 4.17vw; 
+  font-weight: bold;
+  color: #1A1A1A;
+  margin: 0;
+  text-align: left;
+}
+
+.highlight {
+  color: #2D41FF;
+}
