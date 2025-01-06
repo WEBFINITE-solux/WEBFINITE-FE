@@ -9,6 +9,11 @@ const MainPage: React.FC = () => {
       <div className="logo-container">
         <img src="/LearnAIbleLogo.png" alt="LearnAIble Logo" className="logo" />
         <h1 className="title">Learn<span className="highlight">AI</span>ble</h1>
+
+        <p className="description">
+        러네이블은 사용자의 입력기반 맞춤형 학습계획을 제공하고 <br />
+        여러 기능을 통해 효율적인 학습을 지원하는 AI기반 학습관리 플랫폼입니다.
+        </p>
       </div>
     </div>
   );
