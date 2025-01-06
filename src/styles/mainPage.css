@@ -27,7 +27,7 @@
   top: calc(50% - 4.9vh);
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  align-items: flex-start;
 }
 
 .logo {
@@ -42,6 +42,7 @@
   color: #1A1A1A;
   text-align: left;
   margin: 0;
+  margin-left: 0.3vw;
 }
 
 .highlight {
@@ -53,5 +54,7 @@
   font-size: 0.55vw;
   color: #666666;
   line-height: 1.5;
-  margin-top: 0.5vh;
+  text-align: left;
+  margin-top: 1.7vh;
+  margin-left: 0.5vw;
 }
