@@ -15,6 +15,16 @@ const MainPage: React.FC = () => {
         여러 기능을 통해 효율적인 학습을 지원하는 AI기반 학습관리 플랫폼입니다.
         </p>
       </div>
+
+      <button className="login-button">
+        <span className="button-text">로그인</span>
+        <img src="/arrow.png" alt="Arrow Icon" className="button-arrow" />
+      </button>
+
+      <button className="signup-button">
+        <span className="button-text">회원가입</span>
+        <img src="/arrow.png" alt="Arrow Icon" className="button-arrow" />
+      </button>
     </div>
   );
 };
