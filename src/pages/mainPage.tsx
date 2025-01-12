@@ -28,6 +28,9 @@ const MainPage: React.FC = () => {
         <span className="button-text">회원가입</span>
         <img src="/arrow.png" alt="Arrow Icon" className="button-arrow" />
       </button>
+
+      <img src="/monitor.png" alt="노트북 이미지" className="monitor-image"
+/>
     </div>
   );
 };

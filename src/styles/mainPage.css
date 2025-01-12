@@ -118,3 +118,12 @@ button:hover .button-text {
 button:hover .button-arrow {
   filter: brightness(0) invert(1);
 }
+
+.monitor-image {
+  position: absolute;
+  width: calc(1015 / 1920 * 100%);
+  height: auto;
+  left: calc(910 / 1920 * 100%);
+  top: calc(223 / 1080 * 100%);
+  object-fit: contain;
+}
