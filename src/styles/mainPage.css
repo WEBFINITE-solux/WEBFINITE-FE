@@ -71,6 +71,7 @@ button {
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
 .login-button {
@@ -83,6 +84,16 @@ button {
   left: 20vw;
 }
 
+button:hover {
+  background: #2D41FF;
+  color: #FFFFFF;
+  box-shadow: 0px 0px 10px rgba(45, 65, 255, 0.5);
+}
+
+button:focus {
+  outline: none;
+}
+
 .button-text {
   font-family: 'Pretendard', sans-serif;
   font-style: normal;
@@ -91,9 +102,19 @@ button {
   color: #1a1a1a;
   text-align: center;
   margin-right: 0.5vw;
+  transition: color 0.3s ease;
+}
+
+button:hover .button-text {
+  color: #FFFFFF;
 }
 
 .button-arrow {
   width: 1.15vw;
   height: auto;
+  transition: filter 0.3s ease;
+}
+
+button:hover .button-arrow {
+  filter: brightness(0) invert(1);
 }
