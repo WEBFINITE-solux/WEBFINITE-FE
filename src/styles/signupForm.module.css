@@ -1,36 +1,114 @@
-.form {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    max-width: 400px;
-    margin: 0 auto;
-  }
-  
-  input {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  
-  button {
-    background-color: blue;
-    color: white;
-    padding: 10px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  button:disabled {
-    background-color: lightgray;
-    cursor: not-allowed;
-  }
-  
-  .error {
-    color: red;
-    font-size: 12px;
-    margin-top: 4px;
-  }
-  
-  
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background: #f5f6fb;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.formContainer {
+  width: 40vw;
+  height: 75vh;
+  background: #ffffff;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.15);
+  border-radius: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 4%;
+  gap: 3%;
+  box-sizing: border-box;
+}
+
+.title {
+  font-family: 'Pretendard', sans-serif;
+  font-style: normal;
+  width: 14vw;
+  height: 3.75vh;
+  text-align: center;
+  color: #000000;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  width: 26.5vw;
+  gap: 0.5vh;
+}
+
+.inputLabel {
+  font-family: 'Pretendard', sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 1vw;
+  line-height: 1;
+  color: #6a6a6a;
+  height: 1.8vh;
+  width: 1.3vw;
+  white-space: nowrap;
+}
+
+.inputContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 5.75vh;
+  gap: 1%;
+  background: #e3e3e3;
+  border-radius: 31.5px;
+  padding: 0 1%;
+  box-sizing: border-box;
+}
+
+.inputField {
+  flex: 3;
+  height: 100%;
+  background: transparent;
+  border: none;
+  font-size: 1vw;
+  padding: 0 1%;
+  border-radius: 31.5px;
+  outline: none;
+}
+
+.duplicateButton {
+  flex: 1;
+  height: 100%;
+  background: #e3e3e3;
+  color: #000000;
+  border: none;
+  border-radius: 31.5px;
+  font-size: 1vw;
+  cursor: pointer;
+}
+
+.terms {
+  font-family: 'Pretendard', sans-serif;
+  font-size: 1vw;
+  color: #7c7c7c;
+  margin-top: 8%;
+  text-align: center;
+}
+
+.createButton {
+  width: 26.5vw;
+  height: 5.75vh;
+  background-color: #2d41ff;
+  color: white;
+  border: none;
+  border-radius: 15px;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 1.2vw;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 4%;
+}
+
+.createButton:disabled {
+  background-color: lightgray;
+  cursor: not-allowed;
+}
