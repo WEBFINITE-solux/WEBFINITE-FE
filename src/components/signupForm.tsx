@@ -1,7 +1,10 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styles from "../styles/signupForm.module.css";
 
 const SignupForm: React.FC = () => {
+  const navigate = useNavigate();
+
   const [form, setForm] = useState({
     id: "",
     password: "",
@@ -10,19 +13,38 @@ const SignupForm: React.FC = () => {
     email: "",
   });
 
+  const [termsAccepted, setTermsAccepted] = useState(false);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setForm((prevForm) => ({ ...prevForm, [name]: value }));
   };
 
+  const handleCheckboxChange = () => {
+    setTermsAccepted((prevState) => !prevState);
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("회원가입 데이터", form);
+    if (termsAccepted) {
+      console.log("회원가입 데이터", form);
+    }
   };
 
   return (
     <div className={styles.formContainer}>
+      {/* Back Button */}
+      <img
+        src="backButton.png"
+        alt="Back Button"
+        className={styles.backButton}
+        onClick={() => navigate("/mainPage")}
+      />
+
+      {/* Title */}
       <h2 className={styles.title}>Create your account</h2>
+
+      {/* Form */}
       <form onSubmit={handleSubmit}>
         <div className={styles.inputGroup}>
           <label className={styles.inputLabel}>ID</label>
@@ -39,10 +61,12 @@ const SignupForm: React.FC = () => {
               className={styles.duplicateButton}
               onClick={() => console.log("ID 중복 확인")}
             >
-              중복확인
+              <span>중복확인</span>
+              <img src="checkButton.png" alt="체크버튼" />
             </button>
           </div>
         </div>
+
         <div className={styles.inputGroup}>
           <label className={styles.inputLabel}>Password</label>
           <div className={styles.inputContainer}>
@@ -55,6 +79,7 @@ const SignupForm: React.FC = () => {
             />
           </div>
         </div>
+
         <div className={styles.inputGroup}>
           <label className={styles.inputLabel}>Password</label>
           <div className={styles.inputContainer}>
@@ -67,6 +92,7 @@ const SignupForm: React.FC = () => {
             />
           </div>
         </div>
+
         <div className={styles.inputGroup}>
           <label className={styles.inputLabel}>Nickname</label>
           <div className={styles.inputContainer}>
@@ -82,10 +108,12 @@ const SignupForm: React.FC = () => {
               className={styles.duplicateButton}
               onClick={() => console.log("닉네임 중복 확인")}
             >
-              중복확인
+              <span>중복확인</span>
+              <img src="checkButton.png" alt="체크버튼" />
             </button>
           </div>
         </div>
+
         <div className={styles.inputGroup}>
           <label className={styles.inputLabel}>E-mail</label>
           <div className={styles.inputContainer}>
@@ -98,11 +126,22 @@ const SignupForm: React.FC = () => {
             />
           </div>
         </div>
+
         <div className={styles.terms}>
-          <input type="checkbox" id="terms" />
+          <input
+            type="checkbox"
+            id="terms"
+            checked={termsAccepted}
+            onChange={handleCheckboxChange}
+            className={styles.checkbox}
+          />
           <label htmlFor="terms">이용약관에 대한 동의가 필요해요.</label>
         </div>
-        <button type="submit" className={styles.createButton}>
+        <button
+          type="submit"
+          className={styles.createButton}
+          disabled={!termsAccepted}
+        >
           Create
         </button>
       </form>

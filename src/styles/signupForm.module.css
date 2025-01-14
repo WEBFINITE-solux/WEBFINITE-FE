@@ -10,8 +10,9 @@ html, body {
 }
 
 .formContainer {
-  width: 40vw;
-  height: 75vh;
+  position: relative;
+  width: 45vw;
+  height: 80vh;
   background: #ffffff;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.15);
   border-radius: 40px;
@@ -26,16 +27,27 @@ html, body {
 .title {
   font-family: 'Pretendard', sans-serif;
   font-style: normal;
-  width: 14vw;
-  height: 3.75vh;
+  width: 16vw;
+  height: 4.25vh;
   text-align: center;
   color: #000000;
+  margin: 0;
+  margin-bottom: -3vh;
+}
+
+.backButton {
+  position: absolute;
+  top: 5%;
+  left: 5%;
+  height: 2.5vh;
+  width: auto;
+  cursor: pointer; 
 }
 
 .inputGroup {
   display: flex;
   flex-direction: column;
-  width: 26.5vw;
+  width: 30vw;
   gap: 0.5vh;
 }
 
@@ -43,12 +55,11 @@ html, body {
   font-family: 'Pretendard', sans-serif;
   font-style: normal;
   font-weight: 600;
-  font-size: 1vw;
   line-height: 1;
   color: #6a6a6a;
-  height: 1.8vh;
-  width: 1.3vw;
-  white-space: nowrap;
+  margin-top: 3.5vh;
+  margin-left: 0.5vw;
+  margin-bottom: 0.2vh;
 }
 
 .inputContainer {
@@ -56,56 +67,111 @@ html, body {
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  height: 5.75vh;
-  gap: 1%;
-  background: #e3e3e3;
-  border-radius: 31.5px;
-  padding: 0 1%;
-  box-sizing: border-box;
+  gap: 3%;
 }
 
 .inputField {
-  flex: 3;
-  height: 100%;
-  background: transparent;
+  flex: 70%;
+  height: 5vh;
+  background: #e3e3e3;
   border: none;
-  font-size: 1vw;
+  font-size: 1.1vw;
   padding: 0 1%;
   border-radius: 31.5px;
   outline: none;
+  box-sizing: border-box;
 }
 
 .duplicateButton {
-  flex: 1;
-  height: 100%;
-  background: #e3e3e3;
-  color: #000000;
+  position: relative;
+  flex: 30%;
+  height: 5vh; 
+  background: #E3E3E3; 
+  color: #6A6A6A;
   border: none;
   border-radius: 31.5px;
-  font-size: 1vw;
+  font-family: 'Pretendard', sans-serif;
+  font-style: normal;
+  font-size: 0.9vw;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 10%;
+  box-sizing: border-box;
+}
+
+.duplicateButton span {
+  position: relative;
+  flex: none;
+  margin-right: 5px;
+}
+
+.duplicateButton img {
+  position: relative;
+  width: 0.9vw;
+  aspect-ratio: 1;
 }
 
 .terms {
+  display: flex;
+  align-items: center;
   font-family: 'Pretendard', sans-serif;
-  font-size: 1vw;
-  color: #7c7c7c;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1;
+  font-size: 1.1vw; 
+  color: #7c7c7c; 
   margin-top: 8%;
   text-align: center;
+  gap: 0.5vw;
+}
+
+
+.checkbox {
+  width: 20px;
+  height: 20px;
+  appearance: none;
+  background: #e3e3e3;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.checkbox:checked {
+  background: #2d41ff;
+}
+
+.checkbox:checked::after {
+  content: '';
+  position: absolute;
+  width: 6px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  top: 40%;
+  left: 51%;
+  transform: translate(-50%, -50%) rotate(45deg);
 }
 
 .createButton {
-  width: 26.5vw;
-  height: 5.75vh;
+  width: 30vw;
+  height: 5.5vh;
   background-color: #2d41ff;
   color: white;
   border: none;
-  border-radius: 15px;
+  border-radius: 31.5px;
   font-family: 'Pretendard', sans-serif;
-  font-size: 1.2vw;
+  font-size: 1.5vw;
   font-weight: 700;
   cursor: pointer;
   margin-top: 4%;
+  padding: 0;
 }
 
 .createButton:disabled {
