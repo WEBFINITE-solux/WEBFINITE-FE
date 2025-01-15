@@ -13,7 +13,7 @@ const CourseAdd: React.FC<CourseAddProps> = ({ onBackToList }) => {
   const [endHour, setEndHour] = useState("11");
   const [endMinute, setEndMinute] = useState("15");
   const [endAmPm, setEndAmPm] = useState("AM");
-  const [day, setDay] = useState("");
+  const [days, setDays] = useState<string[]>([]); // 여러 요일 선택
   const [location, setLocation] = useState("");
   const [isOptionsOpen, setIsOptionsOpen] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
@@ -48,8 +48,16 @@ const CourseAdd: React.FC<CourseAddProps> = ({ onBackToList }) => {
   }, []);
 
   const handleSubmit = () => {
-    alert("강의가 추가되었습니다!");
+    alert(`강의가 추가되었습니다! 선택된 요일: ${days.join(", ")}`);
     onBackToList();
+  };
+
+  const handleDayChange = (day: string) => {
+    if (days.includes(day)) {
+      setDays(days.filter((d) => d !== day)); // 이미 선택된 요일 제거
+    } else {
+      setDays([...days, day]); // 새로운 요일 추가
+    }
   };
 
   const generateHourOptions = () =>
@@ -147,15 +155,28 @@ const CourseAdd: React.FC<CourseAddProps> = ({ onBackToList }) => {
             </TimeSelect>
           </TimePickerContainer>
           <FormTitle>요일</FormTitle>
-          <DaySelect onChange={(e) => setDay(e.target.value)}>
-            <option>월요일</option>
-            <option>화요일</option>
-            <option>수요일</option>
-            <option>목요일</option>
-            <option>금요일</option>
-            <option>토요일</option>
-            <option>일요일</option>
-          </DaySelect>
+          <DayCheckboxContainer>
+            {[
+              "월요일",
+              "화요일",
+              "수요일",
+              "목요일",
+              "금요일",
+              "토요일",
+              "일요일",
+            ].map((day) => (
+              <DayCheckbox key={day}>
+                <input
+                  type="checkbox"
+                  id={day}
+                  value={day}
+                  checked={days.includes(day)}
+                  onChange={() => handleDayChange(day)}
+                />
+                <label htmlFor={day}>{day}</label>
+              </DayCheckbox>
+            ))}
+          </DayCheckboxContainer>
           <FormTitle>위치</FormTitle>
           <Input
             placeholder="강의실을 입력하세요."
@@ -311,11 +332,24 @@ const TimeSelect = styled.select`
   appearance: none;
 `;
 
-const DaySelect = styled.select`
-  padding: 12px;
-  font-size: 14px;
-  border: 1px solid #ccc;
-  border-radius: 10px;
+const DayCheckboxContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+`;
+
+const DayCheckbox = styled.div`
+  display: flex;
+  align-items: center;
+
+  input {
+    margin-right: 8px;
+  }
+
+  label {
+    font-family: Pretendard;
+    font-size: 14px;
+  }
 `;
 
 const Button = styled.button`
@@ -334,7 +368,7 @@ const Button = styled.button`
   line-height: 150%;
   cursor: pointer;
   margin-left: 200px;
-  margin-top: 170px;
+  margin-top: 17px;
 
   &:hover {
     background-color: #f1f3f5;
