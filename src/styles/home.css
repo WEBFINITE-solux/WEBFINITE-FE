@@ -1,6 +1,25 @@
+.home{
+    background: #F5F6FB;
+    width: 100vw;
+    height: 100vh;
+}
+.left{
+    padding-top: 12.3vh;
+    padding-left: 3.4375vw;
+    
+    height: 100vh;
+    float: left;
+
+}
+.right{
+    height: 100vh;
+    float: left;
+    padding-top: 5.09vh;
+    padding-left: 3.62vw;
+}
 .title{
-    width: 1060px;
-    height: 121px;
+    width: 55.2vw;
+    height: 11.2vh;
     flex-shrink: 0;
     border-radius: 25px;
     background: linear-gradient(90deg, #2D41FF 0%, #7E8AFC 67.5%, #C8CDF9 100%);
@@ -11,48 +30,36 @@
     font-size: 36px;
     font-style: normal;
     font-weight: 500;
-    line-height: 150%; /* 54px */
-    margin-top: 23px;
-    margin-left: 43px;
+    line-height: 150%;
+    margin-top: 2vh;
+    margin-left: 4vh;
 }
-.left{
-    padding-top: 133px;
-    padding-left: 66px;
-    
-    height: 1080px;
-    float: left;
 
-}
-.right{
-    float: left;
-    padding-top: 55px;
-    padding-left: 69px;
-}
 .text{
     color: #1A1A1A;
     font-family: Pretendard;
     font-size: 20px;
     font-style: normal;
     font-weight: 800;
-    line-height: 150%; /* 30px */
+    line-height: 150%;
 }
 .table{
-    height: 240px;
+    height: 22.2vh;
     flex-shrink: 0;
     border-radius: 25px;
     background: #FFF;
     box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.05);
 }
 .gpt{
-    width: 248px;
-    height: 48px;
+    width: 13vw;
+    height: 4vh;
     flex-shrink: 0;
     border-radius: 24px;
     border: 1px solid #000;
     background: #FFF;
     box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.25);
     float:right;
-    margin-top:24px
+    margin-top:2vh
 }
 .gpttext{
     color: #1A1A1A;
@@ -60,14 +67,14 @@
     font-size: 18px;
     font-style: normal;
     font-weight: 700;
-    line-height: 150%; /* 27px */
+    line-height: 150%;
     margin-top: auto;
     margin-bottom:auto;
     float: left;
 }
 .personal{
-    width: 409px;
-    height: 885px;
+    width: 37vw;
+    height: 46vh;
     flex-shrink: 0;
     border-radius: 25px;
     background: #FFF;
