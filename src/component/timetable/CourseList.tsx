@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
+import CourseAdd from "./CourseAdd";
 
 type Course = {
   course_id: number;
@@ -18,30 +19,84 @@ type CourseListProps = {
 };
 
 const CourseList: React.FC<CourseListProps> = ({ courses }) => {
+  const [isOptionsOpen, setIsOptionsOpen] = useState(false);
+  const [isAdding, setIsAdding] = useState(false);
+  const optionsRef = useRef<HTMLDivElement>(null);
+
+  const toggleOptions = () => {
+    setIsOptionsOpen(!isOptionsOpen);
+  };
+
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+      optionsRef.current &&
+      !optionsRef.current.contains(event.target as Node)
+    ) {
+      setIsOptionsOpen(false);
+    }
+  };
+
+  const handleAddClick = () => {
+    setIsAdding(true);
+  };
+  const handleBackToList = () => {
+    setIsAdding(false);
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
     <Container>
-      <Header>
-        <Title>나의 강의 목록</Title>
-        <OptionsButton>⋮</OptionsButton>
-      </Header>
-      <Content>
-        {courses.length === 0 ? (
-          <EmptyMessage>아직 등록된 강의가 없습니다.</EmptyMessage>
-        ) : (
-          <CourseListContainer>
-            {courses.map((course) => (
-              <CourseItem key={course.course_id}>
-                <CourseIconContainer src="/courseImg.png" alt="강의 이미지" />
-                <CourseInfo>
-                  <CourseTitle>{course.course_title}</CourseTitle>
-                  <CoursePeriod>{course.period}</CoursePeriod>
-                </CourseInfo>
-                <UploadButton>강의 자료</UploadButton>
-              </CourseItem>
-            ))}
-          </CourseListContainer>
-        )}
-      </Content>
+      {isAdding ? (
+        <CourseAdd onBackToList={handleBackToList} />
+      ) : (
+        <>
+          <Header>
+            <Title>나의 강의 목록</Title>
+            <OptionsContainer ref={optionsRef}>
+              <OptionsButton onClick={toggleOptions}>⋮</OptionsButton>
+              {isOptionsOpen && (
+                <OptionsMenu>
+                  <OptionItem onClick={handleAddClick}>
+                    <OptionLogo src="/add.png" />
+                    <OptionContent>추가하기</OptionContent>
+                  </OptionItem>
+                  <OptionItem onClick={() => alert("강의 삭제하기")}>
+                    <OptionLogo src="/delete.png" />
+                    <OptionContent>삭제하기</OptionContent>
+                  </OptionItem>
+                </OptionsMenu>
+              )}
+            </OptionsContainer>
+          </Header>
+          <Content>
+            {courses.length === 0 ? (
+              <EmptyMessage>아직 등록된 강의가 없습니다.</EmptyMessage>
+            ) : (
+              <CourseListContainer>
+                {courses.map((course) => (
+                  <CourseItem key={course.course_id}>
+                    <CourseIconContainer
+                      src="/courseImg.png"
+                      alt="강의 이미지"
+                    />
+                    <CourseInfo>
+                      <CourseTitle>{course.course_title}</CourseTitle>
+                      <CoursePeriod>{course.period}</CoursePeriod>
+                    </CourseInfo>
+                    <UploadButton>강의 자료</UploadButton>
+                  </CourseItem>
+                ))}
+              </CourseListContainer>
+            )}
+          </Content>
+        </>
+      )}
     </Container>
   );
 };
@@ -75,12 +130,60 @@ const Title = styled.div`
   font-weight: bold;
 `;
 
+const OptionsContainer = styled.div`
+  position: relative;
+`;
+
 const OptionsButton = styled.button`
   background: none;
   border: none;
   font-size: 20px;
   color: #656565;
   cursor: pointer;
+`;
+
+const OptionsMenu = styled.div`
+  position: absolute;
+  top: 72px;
+  right: -10px;
+  background: #ffffff;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  width: 287px;
+  height: 124px;
+  flex-shrink: 0;
+`;
+
+const OptionItem = styled.div`
+  padding: 14px 18px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  white-space: nowrap;
+  &:hover {
+    background-color: #f1f3f5;
+  }
+`;
+
+const OptionContent = styled.div`
+  color: #1a1a1a;
+  text-align: center;
+  font-family: Pretendard;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 150%;
+`;
+
+const OptionLogo = styled.img`
+  width: 35.602px;
+  height: 35.602px;
+  flex-shrink: 0;
 `;
 
 const Content = styled.div`
