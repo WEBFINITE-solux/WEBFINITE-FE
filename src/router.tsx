@@ -4,6 +4,7 @@ import Timetable from "./pages/timetable";
 import MainPage from "./pages/mainPage";
 import Home from "./pages/home";
 import Study from "./pages/study";
+import AiPlan from "./pages/aiPlan";
 
 const router = createBrowserRouter([
   {
@@ -14,7 +15,10 @@ const router = createBrowserRouter([
   {
     path: "/study",
     element: <Layout />,
-    children: [{ path: "", element: <Study />}]
+    children: [
+      { path: "", element: <Study />},
+      { path: "aiPlan", element: <AiPlan /> },
+    ]
   },
   {
     path: "/timetable",
