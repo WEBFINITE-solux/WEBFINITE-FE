@@ -33,7 +33,6 @@ const SignupForm: React.FC = () => {
 
   return (
     <div className={styles.formContainer}>
-      {/* Back Button */}
       <img
         src="backButton.png"
         alt="Back Button"
@@ -41,10 +40,8 @@ const SignupForm: React.FC = () => {
         onClick={() => navigate("/mainPage")}
       />
 
-      {/* Title */}
       <h2 className={styles.title}>Create your account</h2>
 
-      {/* Form */}
       <form onSubmit={handleSubmit}>
         <div className={styles.inputGroup}>
           <label className={styles.inputLabel}>ID</label>
