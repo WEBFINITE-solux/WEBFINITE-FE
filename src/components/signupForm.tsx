@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "../styles/signupForm.module.css";
 
@@ -13,20 +13,137 @@ const SignupForm: React.FC = () => {
     email: "",
   });
 
+  const [idStatus, setIdStatus] = useState<"none" | "valid" | "invalid" | "unchecked">("none");
+  const [nicknameStatus, setNicknameStatus] = useState<"none" | "valid" | "invalid" | "unchecked">("none");
+  const [passwordError, setPasswordError] = useState<"none" | "mismatch" | "correct">("none");
+  const [emailError, setEmailError] = useState("");
   const [termsAccepted, setTermsAccepted] = useState(false);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+
+  useEffect(() => {
+    const hasError =
+      idStatus === "invalid" ||
+      nicknameStatus === "invalid" ||
+      passwordError === "mismatch" ||
+      emailError !== "" ||
+      idStatus === "unchecked" ||
+      nicknameStatus === "unchecked";
+
+    const isFormValid =
+      idStatus === "valid" &&
+      nicknameStatus === "valid" &&
+      passwordError === "correct" &&
+      emailError === "" &&
+      form.email.trim() &&
+      termsAccepted &&
+      !hasError;
+
+    setIsButtonDisabled(!isFormValid);
+  }, [idStatus, nicknameStatus, passwordError, emailError, termsAccepted]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setForm((prevForm) => ({ ...prevForm, [name]: value }));
+
+    if (name === "id") {
+      setIdStatus("none");
+    }
+
+    if (name === "nickname") {
+      setNicknameStatus("none");
+    }
+
+    if (name === "password" || name === "confirmPassword") {
+      setPasswordError("none");
+    }
+
+    if (name === "email") {
+      setEmailError("");
+    }
   };
 
   const handleCheckboxChange = () => {
     setTermsAccepted((prevState) => !prevState);
   };
 
+  const handleIdBlur = () => {
+    if (!form.id.trim()) {
+      setIdStatus("none");
+    } else if (idStatus !== "valid" && idStatus !== "invalid") {
+      setIdStatus("unchecked");
+    }
+  };
+
+  const handleIdCheck = () => {
+    if (!form.id.trim()) {
+      setIdStatus("none");
+      return;
+    }
+  
+    setIdStatus("none");
+    const mockApiResponse = true;
+    setTimeout(() => {
+      setIdStatus(mockApiResponse ? "valid" : "invalid");
+    },);
+  };
+  const handleIdFocus = () => {
+    setIdStatus("none");
+  };
+
+  const handleNicknameBlur = () => {
+    if (!form.nickname.trim()) {
+      setNicknameStatus("none");
+    } else if (nicknameStatus !== "valid" && nicknameStatus !== "invalid") {
+      setNicknameStatus("unchecked");
+    }
+  };
+
+  const handleNicknameCheck = () => {
+    if (!form.nickname.trim()) {
+      setNicknameStatus("none");
+      return;
+    }
+  
+    setNicknameStatus("none");
+    const mockApiResponse = true;
+    setTimeout(() => {
+      setNicknameStatus(mockApiResponse ? "valid" : "invalid");
+    },);
+  };
+
+  const handleNicknameFocus = () => {
+    setNicknameStatus("none");
+  };
+
+  const handlePasswordBlur = () => {
+    if (!form.password.trim() || !form.confirmPassword.trim()) {
+      setPasswordError("none");
+    } else if (form.password !== form.confirmPassword) {
+      setPasswordError("mismatch");
+    } else {
+      setPasswordError("correct");
+    }
+  };
+  
+
+  const handlePasswordFocus = () => {
+    setPasswordError("none");
+  };  
+
+  const handleEmailBlur = () => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!form.email.trim()) {
+      setEmailError("");
+    } else if (!emailRegex.test(form.email)) {
+      setEmailError("올바른 메일 형식을 입력해주세요.");
+    } else {
+      setEmailError("");
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (termsAccepted) {
+    if (!isButtonDisabled) {
       console.log("회원가입 데이터", form);
     }
   };
@@ -52,15 +169,26 @@ const SignupForm: React.FC = () => {
               name="id"
               value={form.id}
               onChange={handleChange}
+              onBlur={handleIdBlur}
+              onFocus={handleIdFocus}
             />
             <button
               type="button"
               className={styles.duplicateButton}
-              onClick={() => console.log("ID 중복 확인")}
+              onClick={handleIdCheck}
             >
               <span>중복확인</span>
-              <img src="checkButton.png" alt="체크버튼" />
+              <img
+                src={idStatus === "invalid" || idStatus === "unchecked" ? "xButton.png" : "checkButton.png"}
+                alt={idStatus === "invalid" || idStatus === "unchecked" ? "X 버튼" : "체크 버튼"}
+              />
             </button>
+          </div>
+          <div className={styles.messageContainer}>
+            {idStatus === "none" && <span className={styles.invalidMessage}></span>}
+            {idStatus === "unchecked" && <span className={styles.invalidMessage}>아이디 중복을 확인해주세요.</span>}
+            {idStatus === "valid" && <span className={styles.validMessage}>사용할 수 있는 아이디입니다.</span>}
+            {idStatus === "invalid" && <span className={styles.invalidMessage}>사용할 수 없는 아이디입니다.</span>}
           </div>
         </div>
 
@@ -73,8 +201,11 @@ const SignupForm: React.FC = () => {
               name="password"
               value={form.password}
               onChange={handleChange}
+              onBlur={handlePasswordBlur}
+              onFocus={handlePasswordFocus}
             />
           </div>
+          <div className={styles.messageContainer}></div>
         </div>
 
         <div className={styles.inputGroup}>
@@ -86,8 +217,20 @@ const SignupForm: React.FC = () => {
               name="confirmPassword"
               value={form.confirmPassword}
               onChange={handleChange}
+              onBlur={handlePasswordBlur}
+              onFocus={handlePasswordFocus}
+              disabled={!form.password.trim()}
             />
           </div>
+            <div className={styles.messageContainer}>
+              {passwordError === "mismatch" && (
+                <span className={styles.invalidMessage}>비밀번호가 일치하지 않습니다.</span>
+              )}
+              {passwordError === "correct" && (
+                <span className={styles.validMessage}></span>
+              )}
+          </div>
+
         </div>
 
         <div className={styles.inputGroup}>
@@ -99,15 +242,26 @@ const SignupForm: React.FC = () => {
               name="nickname"
               value={form.nickname}
               onChange={handleChange}
+              onBlur={handleNicknameBlur}
+              onFocus={handleNicknameFocus}
             />
             <button
               type="button"
               className={styles.duplicateButton}
-              onClick={() => console.log("닉네임 중복 확인")}
+              onClick={handleNicknameCheck}
             >
               <span>중복확인</span>
-              <img src="checkButton.png" alt="체크버튼" />
+              <img
+                src={nicknameStatus === "invalid" || nicknameStatus === "unchecked" ? "xButton.png" : "checkButton.png"}
+                alt={nicknameStatus === "invalid" || nicknameStatus === "unchecked" ? "X 버튼" : "체크 버튼"}
+              />
             </button>
+          </div>
+          <div className={styles.messageContainer}>
+            {nicknameStatus === "none" && <span className={styles.invalidMessage}></span>}
+            {nicknameStatus === "unchecked" && <span className={styles.invalidMessage}>닉네임 중복을 확인해주세요.</span>}
+            {nicknameStatus === "valid" && <span className={styles.validMessage}>사용할 수 있는 닉네임입니다.</span>}
+            {nicknameStatus === "invalid" && <span className={styles.invalidMessage}>사용할 수 없는 닉네임입니다.</span>}
           </div>
         </div>
 
@@ -120,7 +274,11 @@ const SignupForm: React.FC = () => {
               name="email"
               value={form.email}
               onChange={handleChange}
+              onBlur={handleEmailBlur}
             />
+          </div>
+          <div className={styles.messageContainer}>
+            {emailError && <span className={styles.invalidMessage}>{emailError}</span>}
           </div>
         </div>
 
@@ -137,10 +295,24 @@ const SignupForm: React.FC = () => {
         <button
           type="submit"
           className={styles.createButton}
-          disabled={!termsAccepted}
+          style={{
+            backgroundColor:
+              idStatus === "invalid" ||
+                idStatus === "unchecked" ||
+                nicknameStatus === "invalid" ||
+                nicknameStatus === "unchecked" ||
+                passwordError === "mismatch" ||
+                emailError
+                ? "#FFC3C3"
+                : isButtonDisabled
+                  ? "#C9CEFF"
+                  : "#2d41ff",
+          }}
+          disabled={isButtonDisabled}
         >
           Create
         </button>
+
       </form>
     </div>
   );

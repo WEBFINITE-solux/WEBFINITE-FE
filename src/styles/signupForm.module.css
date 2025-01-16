@@ -33,12 +33,13 @@ html, body {
   color: #000000;
   margin: 0;
   margin-bottom: -4vh;
+  margin-top: -0.5vh;
 }
 
 .backButton {
   position: absolute;
-  top: 5%;
-  left: 4.5%;
+  top: 4.5%;
+  left: 4%;
   height: 2.5vh;
   width: auto;
   cursor: pointer; 
@@ -57,8 +58,8 @@ html, body {
   font-weight: 600;
   line-height: 1;
   color: #6a6a6a;
-  margin-top: 3.5vh;
-  margin-left: 0.5vw;
+  margin-top: 2vh;
+  margin-left: 0.7vw;
   margin-bottom: 0.2vh;
 }
 
@@ -74,12 +75,20 @@ html, body {
   flex: 76%;
   height: 5vh;
   background: #e3e3e3;
+  color: #525252;
   border: none;
-  font-size: 1.1vw;
-  padding: 0 1%;
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 400;
+  font-size: 1.8vh;
+  padding: 0;
   border-radius: 31.5px;
   outline: none;
   box-sizing: border-box;
+  padding-left: 1.2vw;
+  padding-right: 1.2vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .duplicateButton {
@@ -122,9 +131,9 @@ html, body {
   font-weight: 700;
   font-size: 1.5vh; 
   color: #7c7c7c; 
-  margin-top: 5.2vh;
+  margin-top: 3.5vh;
   text-align: center;
-  margin-left: 0.5vw;
+  margin-left: 0.7vw;
   gap: 0.4vw;
 }
 
@@ -177,9 +186,33 @@ html, body {
   align-items: center;
   justify-content: center;
   text-align: center;
+  outline: none;
+}
+
+.createButton:focus {
+  outline: none;
 }
 
 .createButton:disabled {
   background-color: #C9CEFF;
   cursor: not-allowed;
+}
+
+.messageContainer {
+  height: 1.5vh;
+  display: flex;
+  align-items: center;
+  margin-left: 0.7vw;
+}
+
+.validMessage {
+  color: #5ddc77;
+  font-size: 1.1vh;
+  font-family: 'Pretendard', sans-serif;
+}
+
+.invalidMessage {
+  color: #FF5C5C;
+  font-size: 1.1vh;
+  font-family: 'Pretendard', sans-serif;
 }
