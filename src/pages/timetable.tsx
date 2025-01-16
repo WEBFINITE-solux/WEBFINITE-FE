@@ -1,7 +1,6 @@
-import React from "react";
 import styled from "styled-components";
 import TimetableComponent from "../component/timetable/TimetableComponent";
-import CourseList from "../component/timetable/courseList";
+import CourseList from "../component/timetable/CourseList";
 
 type Course = {
   course_id: number;

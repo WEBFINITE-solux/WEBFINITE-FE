@@ -13,7 +13,7 @@ const CourseAdd: React.FC<CourseAddProps> = ({ onBackToList }) => {
   const [endHour, setEndHour] = useState("11");
   const [endMinute, setEndMinute] = useState("15");
   const [endAmPm, setEndAmPm] = useState("AM");
-  const [days, setDays] = useState<string[]>([]); // 여러 요일 선택
+  const [days, setDays] = useState<string[]>([]); 
   const [location, setLocation] = useState("");
   const [isOptionsOpen, setIsOptionsOpen] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
@@ -36,10 +36,6 @@ const CourseAdd: React.FC<CourseAddProps> = ({ onBackToList }) => {
     setIsAdding(true);
   };
 
-  const handleBackToList = () => {
-    setIsAdding(false);
-  };
-
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
@@ -48,15 +44,15 @@ const CourseAdd: React.FC<CourseAddProps> = ({ onBackToList }) => {
   }, []);
 
   const handleSubmit = () => {
-    alert(`강의가 추가되었습니다! 선택된 요일: ${days.join(", ")}`);
+    alert(`강의가 추가되었습니다!`);
     onBackToList();
   };
 
   const handleDayChange = (day: string) => {
     if (days.includes(day)) {
-      setDays(days.filter((d) => d !== day)); // 이미 선택된 요일 제거
+      setDays(days.filter((d) => d !== day)); 
     } else {
-      setDays([...days, day]); // 새로운 요일 추가
+      setDays([...days, day]); 
     }
   };
 
