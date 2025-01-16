@@ -1,4 +1,4 @@
-.main-page {
+/* .main-page {
     position: relative;
     width: 100vw;
     height: 100vh;
@@ -58,7 +58,7 @@
   margin-top: 2vh;
   margin-left: 0.75vw;
 }
-
+/* 
 button {
   position: absolute;
   width: 11vw;
@@ -72,8 +72,8 @@ button {
   justify-content: center;
   cursor: pointer;
   transition: background 0.3s ease, color 0.3s ease;
-}
-
+} */
+/*
 .login-button {
   top: 80vh;
   left: 7vw;
@@ -126,4 +126,4 @@ button:hover .button-arrow {
   left: calc(910 / 1920 * 100%);
   top: calc(223 / 1080 * 100%);
   object-fit: contain;
-}
+} */
