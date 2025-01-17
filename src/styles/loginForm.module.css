@@ -24,3 +24,154 @@ html, body {
     box-sizing: border-box;
 }
   
+.logo {
+    width: 3.795vw;
+    height: auto;
+    background: #ffffff;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    margin-bottom: -0.15vw;
+    margin-top: 2.8vw;
+}
+  
+.title {
+    font-size: 2vw;
+    text-align: center;
+    color: #333333;
+    margin: 0;
+}
+
+.googleLoginButton {
+    width: 25vw;
+    height: 2.58vw;
+    box-sizing: border-box;
+    border: 1px solid #000000;
+    border-radius: 31.5px;
+    background-color: #ffffff;
+    color: #4A4A4A;
+    font-size: 1.1vw;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    gap: 1vw;
+    margin-top: 0.7vw;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.googleLoginButton:focus,
+.googleLoginButton:focus-visible,
+.googleLoginButton:hover {
+    outline: none;
+    border: 1px solid #000000;
+}
+
+.googleLoginButton:active {
+    outline: none;
+    border: 1px solid #000000;
+}
+
+.googleLogo {
+    width: 1.7vw;
+    height: auto;
+}
+
+.orContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 25vw;
+    position: relative;
+    overflow: hidden;
+    margin: 0;
+}
+
+.dottedLine {
+    flex-shrink: 0;
+    width: calc((25vw - 2vw) / 2); 
+    height: auto;
+}
+
+.orText {
+    font-size: 1vw;
+    font-weight: 500;
+    color: #888888;
+    text-align: center;
+    white-space: nowrap;
+    padding: 0 1vw;
+    position: relative;
+    z-index: 1;
+}
+
+.inputField {
+    width: 25vw;
+    height: 3vw; 
+    box-sizing: border-box;
+    border-radius: 31.5px;
+    background: #E3E3E3;
+    font-family: 'Pretendard', sans-serif;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 1.1vw;
+    color: #525252;
+    padding: 0 1.5vw 0 1.5vw;
+    outline: none;
+    border: none;
+}
+
+.inputField::placeholder {
+    color: #9A9A9A;
+}
+
+.checkboxContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 25vw;
+}
+
+.checkbox {
+    width: 1.1vw;
+    height: 1.1vw;
+    background: #E3E3E3;
+    border-radius: 16.67%;
+    border: none;
+    cursor: pointer;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    position: relative;
+}
+
+.checkbox:checked {
+    background: #E3E3E3;
+}
+
+.checkbox:checked::after {
+    content: "";
+    position: absolute;
+    top: 8%;
+    left: 22.5%; 
+    width: 0.4vw; 
+    height: 0.6vw;
+    border: solid white;
+    border-width: 0 0.2vw 0.2vw 0;
+    transform: rotate(45deg);
+}
+
+.checkboxLabel {
+    font-size: 1.1vw;
+    color: #4A4A4A;
+    margin-left: 0.5vw;
+}
+
+.forgotPassword {
+    font-size: 1.1vw;
+    color: #007BFF;
+    text-decoration: none;
+    margin-left: auto;
+    cursor: pointer;
+}
