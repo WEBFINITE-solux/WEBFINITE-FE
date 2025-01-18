@@ -6,7 +6,7 @@ import Home from "./pages/home";
 import Study from "./pages/study";
 import AiPlan from "./pages/aiPlan";
 import SignupForm from "./pages/signupForm";
-import LoginForm from "./components/loginFom";
+import LoginForm from "./pages/loginFom";
 
 const router = createBrowserRouter([
   {
