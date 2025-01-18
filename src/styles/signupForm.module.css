@@ -78,14 +78,13 @@ html, body {
   color: #525252;
   border: none;
   font-family: 'Pretendard', sans-serif;
-  font-weight: 400;
-  font-size: 1.8vh;
+  font-weight: 500;
+  font-size: 1.7vh;
   padding: 0;
   border-radius: 31.5px;
   outline: none;
   box-sizing: border-box;
-  padding-left: 1.2vw;
-  padding-right: 1.2vw;
+  padding: 0 1.6vw 0 1.6vw;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -171,10 +170,10 @@ html, body {
 .checkbox:checked::after {
   content: '';
   position: absolute;
-  width: 6px;
-  height: 10px;
+  width: 0.3vw; 
+  height: 0.7vw;
   border: solid white;
-  border-width: 0 2px 2px 0;
+  border-width: 0 0.18vw 0.18vw 0;
   transform: rotate(45deg);
   top: 40%;
   left: 51%;
