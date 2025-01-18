@@ -6,6 +6,7 @@ import Home from "./pages/home";
 import Study from "./pages/study";
 import AiPlan from "./pages/aiPlan";
 import SignupForm from "./pages/signupForm";
+import LoginForm from "./components/loginFom";
 
 const router = createBrowserRouter([
   {
@@ -37,6 +38,10 @@ const router = createBrowserRouter([
   {
     path: "*",
     element: <Navigate to="/signup" replace />,
+  },
+  {
+        path: "/",
+        element: <LoginForm />,
   },
 ]);
 
