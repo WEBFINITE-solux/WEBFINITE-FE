@@ -1,0 +1,218 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background: #f5f6fb;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.formContainer {
+  position: relative;
+  width: 45vw;
+  height: 80vh;
+  background: #ffffff;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.15);
+  border-radius: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 4%;
+  gap: 3%;
+  box-sizing: border-box;
+}
+
+.title {
+  font-family: 'Pretendard', sans-serif;
+  font-style: normal;
+  width: 16vw;
+  height: 4.25vh;
+  text-align: center;
+  color: #000000;
+  margin: 0;
+  margin-bottom: -4vh;
+  margin-top: -0.5vh;
+}
+
+.backButton {
+  position: absolute;
+  top: 4.5%;
+  left: 4%;
+  height: 2.5vh;
+  width: auto;
+  cursor: pointer; 
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  width: 30vw;
+  gap: 0.5vh;
+}
+
+.inputLabel {
+  font-family: 'Pretendard', sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1;
+  color: #6a6a6a;
+  margin-top: 2vh;
+  margin-left: 0.7vw;
+  margin-bottom: 0.2vh;
+}
+
+.inputContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 3%;
+}
+
+.inputField {
+  flex: 76%;
+  height: 5vh;
+  background: #e3e3e3;
+  color: #525252;
+  border: none;
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 400;
+  font-size: 1.8vh;
+  padding: 0;
+  border-radius: 31.5px;
+  outline: none;
+  box-sizing: border-box;
+  padding-left: 1.2vw;
+  padding-right: 1.2vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.duplicateButton {
+  position: relative;
+  flex: 24%;
+  height: 5vh; 
+  background: #E3E3E3; 
+  color: #6A6A6A;
+  border: none;
+  border-radius: 31.5px;
+  font-family: 'Pretendard', sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 0.85vw;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 10%;
+  box-sizing: border-box;
+}
+
+.duplicateButton span {
+  position: relative;
+  flex: none;
+  margin-right: 5px;
+}
+
+.duplicateButton img {
+  position: relative;
+  width: 0.85vw;
+  aspect-ratio: 1;
+}
+
+.terms {
+  display: flex;
+  align-items: center;
+  font-family: 'Pretendard', sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 1.5vh; 
+  color: #7c7c7c; 
+  margin-top: 3.5vh;
+  text-align: center;
+  margin-left: 0.7vw;
+  gap: 0.4vw;
+}
+
+
+.checkbox {
+  width: 2.5vh;
+  height: 2.5vh;
+  appearance: none;
+  background: #e3e3e3;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.checkbox:checked {
+  background: #e3e3e3;
+}
+
+.checkbox:checked::after {
+  content: '';
+  position: absolute;
+  width: 6px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  top: 40%;
+  left: 51%;
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.createButton {
+  width: 30vw;
+  height: 5.5vh;
+  background-color: #2d41ff;
+  color: white;
+  border: none;
+  border-radius: 31.5px;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 1.5vw;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 2.5%;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  outline: none;
+}
+
+.createButton:focus {
+  outline: none;
+}
+
+.createButton:disabled {
+  background-color: #C9CEFF;
+  cursor: not-allowed;
+}
+
+.messageContainer {
+  height: 1.5vh;
+  display: flex;
+  align-items: center;
+  margin-left: 0.7vw;
+}
+
+.validMessage {
+  color: #5ddc77;
+  font-size: 1.1vh;
+  font-family: 'Pretendard', sans-serif;
+}
+
+.invalidMessage {
+  color: #FF5C5C;
+  font-size: 1.1vh;
+  font-family: 'Pretendard', sans-serif;
+}
