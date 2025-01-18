@@ -13,8 +13,8 @@ const SignupForm: React.FC = () => {
     email: "",
   });
 
-  const [idStatus, setIdStatus] = useState<"none" | "valid" | "invalid" | "unchecked">("none");
-  const [nicknameStatus, setNicknameStatus] = useState<"none" | "valid" | "invalid" | "unchecked">("none");
+  const [idStatus, setIdStatus] = useState<"none" | "valid" | "invalid" | "unchecked" | "checking">("none");
+  const [nicknameStatus, setNicknameStatus] = useState<"none" | "valid" | "invalid" | "unchecked" | "checking">("none");
   const [passwordError, setPasswordError] = useState<"none" | "mismatch" | "correct">("none");
   const [emailError, setEmailError] = useState("");
   const [termsAccepted, setTermsAccepted] = useState(false);
@@ -38,49 +38,57 @@ const SignupForm: React.FC = () => {
       termsAccepted &&
       !hasError;
 
-    setIsButtonDisabled(!isFormValid);
-  }, [idStatus, nicknameStatus, passwordError, emailError, termsAccepted]);
+      if (idStatus === "checking" || nicknameStatus === "checking") {
+        setIsButtonDisabled(true);
+      } else {
+        setIsButtonDisabled(!isFormValid);
+      }
+    }, [idStatus, nicknameStatus, passwordError, emailError, termsAccepted]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setForm((prevForm) => ({ ...prevForm, [name]: value }));
-
-    if (name === "id") {
-      setIdStatus("none");
-    }
-
-    if (name === "nickname") {
-      setNicknameStatus("none");
-    }
-
-    if (name === "password" || name === "confirmPassword") {
-      setPasswordError("none");
-    }
-
-    if (name === "email") {
-      setEmailError("");
-    }
-  };
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = e.target;
+      setForm((prevForm) => ({ ...prevForm, [name]: value }));
+    
+      if (name === "id" && idStatus !== "checking") {
+        setIdStatus("none");
+      }
+    
+      if (name === "nickname" && nicknameStatus !== "checking") {
+        setNicknameStatus("none");
+      }
+    
+      if (name === "password" || name === "confirmPassword") {
+        setPasswordError("none");
+      }
+    
+      if (name === "email") {
+        setEmailError("");
+      }
+    };    
 
   const handleCheckboxChange = () => {
     setTermsAccepted((prevState) => !prevState);
   };
 
-  const handleIdBlur = () => {
+  const handleIdBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    if (idStatus === "checking") {
+      return;
+    }
+  
     if (!form.id.trim()) {
       setIdStatus("none");
     } else if (idStatus !== "valid" && idStatus !== "invalid") {
       setIdStatus("unchecked");
     }
   };
-
+  
   const handleIdCheck = () => {
     if (!form.id.trim()) {
       setIdStatus("none");
       return;
     }
   
-    setIdStatus("none");
+    setIdStatus("checking");
     const mockApiResponse = true;
     setTimeout(() => {
       setIdStatus(mockApiResponse ? "valid" : "invalid");
@@ -90,13 +98,18 @@ const SignupForm: React.FC = () => {
     setIdStatus("none");
   };
 
-  const handleNicknameBlur = () => {
+  const handleNicknameBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    if (nicknameStatus === "checking") {
+      return;
+    }
+  
     if (!form.nickname.trim()) {
       setNicknameStatus("none");
     } else if (nicknameStatus !== "valid" && nicknameStatus !== "invalid") {
       setNicknameStatus("unchecked");
     }
   };
+  
 
   const handleNicknameCheck = () => {
     if (!form.nickname.trim()) {
@@ -104,7 +117,7 @@ const SignupForm: React.FC = () => {
       return;
     }
   
-    setNicknameStatus("none");
+    setNicknameStatus("checking");
     const mockApiResponse = true;
     setTimeout(() => {
       setNicknameStatus(mockApiResponse ? "valid" : "invalid");
@@ -141,12 +154,32 @@ const SignupForm: React.FC = () => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+  
     if (!isButtonDisabled) {
       console.log("회원가입 데이터", form);
+  
+      try {
+        const response = await fetch("/api/signup", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(form),
+        });
+  
+        if (response.ok) {
+          console.log("회원가입 성공");
+          navigate("/");
+        } else {
+          console.error("회원가입 실패");
+        }
+      } catch (error) {
+        console.error("회원가입 요청 에러:", error);
+      }
     }
-  };
+  };  
 
   return (
     <div className={styles.formContainer}>
@@ -175,6 +208,7 @@ const SignupForm: React.FC = () => {
             <button
               type="button"
               className={styles.duplicateButton}
+              onMouseDown={(e) => e.preventDefault()}
               onClick={handleIdCheck}
             >
               <span>중복확인</span>
@@ -185,6 +219,7 @@ const SignupForm: React.FC = () => {
             </button>
           </div>
           <div className={styles.messageContainer}>
+            {idStatus === "checking" && <span></span>}
             {idStatus === "none" && <span className={styles.invalidMessage}></span>}
             {idStatus === "unchecked" && <span className={styles.invalidMessage}>아이디 중복을 확인해주세요.</span>}
             {idStatus === "valid" && <span className={styles.validMessage}>사용할 수 있는 아이디입니다.</span>}
@@ -248,6 +283,7 @@ const SignupForm: React.FC = () => {
             <button
               type="button"
               className={styles.duplicateButton}
+              onMouseDown={(e) => e.preventDefault()}
               onClick={handleNicknameCheck}
             >
               <span>중복확인</span>
@@ -258,6 +294,7 @@ const SignupForm: React.FC = () => {
             </button>
           </div>
           <div className={styles.messageContainer}>
+            {nicknameStatus === "checking" && <span></span>}
             {nicknameStatus === "none" && <span className={styles.invalidMessage}></span>}
             {nicknameStatus === "unchecked" && <span className={styles.invalidMessage}>닉네임 중복을 확인해주세요.</span>}
             {nicknameStatus === "valid" && <span className={styles.validMessage}>사용할 수 있는 닉네임입니다.</span>}
@@ -297,17 +334,20 @@ const SignupForm: React.FC = () => {
           className={styles.createButton}
           style={{
             backgroundColor:
-              idStatus === "invalid" ||
-                idStatus === "unchecked" ||
-                nicknameStatus === "invalid" ||
-                nicknameStatus === "unchecked" ||
-                passwordError === "mismatch" ||
-                emailError
+              idStatus === "checking" || nicknameStatus === "checking"
+                ? "#C9CEFF"
+                : idStatus === "invalid" ||
+                  idStatus === "unchecked" ||
+                  nicknameStatus === "invalid" ||
+                  nicknameStatus === "unchecked" ||
+                  passwordError === "mismatch" ||
+                  emailError
                 ? "#FFC3C3"
                 : isButtonDisabled
-                  ? "#C9CEFF"
-                  : "#2d41ff",
+                ? "#C9CEFF"
+                : "#2d41ff", 
           }}
+          
           disabled={isButtonDisabled}
         >
           Create
