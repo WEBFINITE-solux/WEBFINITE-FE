@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 
 type Course = {
@@ -18,6 +18,25 @@ type TimetableProps = {
 };
 
 const TimetableComponent: React.FC<TimetableProps> = ({ courses }) => {
+  const [selectedTerm, setSelectedTerm] = useState(courses[0]?.term || "");
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const terms = [
+    "2024년 2학기",
+    "2024년 여름학기",
+    "2024년 1학기",
+    "2023년 겨울학기",
+    "2023년 1학기",
+    "2022년 2학기",
+    "2022년 1학기",
+  ]; 
+  const toggleDropdown = () => setIsDropdownOpen((prev) => !prev);
+
+  const selectTerm = (term: string) => {
+    setSelectedTerm(term);
+    setIsDropdownOpen(false);
+  };
+
   const dayMap: Record<string, string> = {
     SUN: "일",
     MON: "월",
@@ -36,8 +55,28 @@ const TimetableComponent: React.FC<TimetableProps> = ({ courses }) => {
   return (
     <Container>
       <Header>
-        <Title>{courses[0]?.term}</Title>
-        <OptionsButton>▼</OptionsButton>
+        <Dropdown>
+          <DropdownButton onClick={toggleDropdown}>
+            {selectedTerm} ▼
+          </DropdownButton>
+          {isDropdownOpen && (
+            <DropdownMenu>
+              <DropdownHeader>학기 선택하기</DropdownHeader>
+              {terms.map((term) => (
+                <DropdownItem
+                  key={term}
+                  onClick={() => selectTerm(term)}
+                  isSelected={selectedTerm === term}
+                >
+                  {term}
+                </DropdownItem>
+              ))}
+              <CompleteButton onClick={() => setIsDropdownOpen(false)}>
+                선택 완료
+              </CompleteButton>
+            </DropdownMenu>
+          )}
+        </Dropdown>
       </Header>
       <Table>
         <Thead>
@@ -57,6 +96,7 @@ const TimetableComponent: React.FC<TimetableProps> = ({ courses }) => {
                   {courses
                     .filter(
                       (course) =>
+                        course.term === selectedTerm &&
                         course.day.includes(
                           Object.keys(dayMap).find(
                             (key) => dayMap[key] === day
@@ -97,6 +137,7 @@ const TimetableComponent: React.FC<TimetableProps> = ({ courses }) => {
 
 export default TimetableComponent;
 
+// Styled Components
 const Container = styled.div`
   position: absolute;
   top: -8px;
@@ -105,6 +146,7 @@ const Container = styled.div`
   padding: 20px;
   background-color: none;
 `;
+
 const Header = styled.div`
   display: flex;
   justify-content: space-between;
@@ -112,29 +154,70 @@ const Header = styled.div`
   padding: 16px;
   background-color: none;
   border-radius: 8px 8px 0 0;
-  width: 203px;
-`;
-const Title = styled.div`
-  font-family: Pretendard;
-  font-size: 18px;
-  font-weight: bold;
 `;
 
-const OptionsButton = styled.button`
+const Dropdown = styled.div`
+  position: relative;
+`;
+
+const DropdownButton = styled.button`
   background: none;
   border: none;
   font-size: 18px;
   color: #1a1a1a;
   cursor: pointer;
-  margin-top: -5px;
-`;
-const Thead = styled.thead`
-  color: #000;
   font-family: Pretendard;
-  font-size: 15px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 150%;
+`;
+
+const DropdownMenu = styled.div`
+  position: absolute;
+  top: 50px;
+  left: 0;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  padding: 16px;
+  width: 200px;
+`;
+
+const DropdownHeader = styled.div`
+  font-family: Pretendard;
+  font-size: 14px;
+  color: #656565;
+  margin-bottom: 8px;
+`;
+
+const DropdownItem = styled.div<{ isSelected: boolean }>`
+  padding: 10px;
+  border-radius: 8px;
+  background: ${({ isSelected }) => (isSelected ? "#eaecff" : "transparent")};
+  font-family: Pretendard;
+  font-size: 14px;
+  color: ${({ isSelected }) => (isSelected ? "#000" : "#656565")};
+  cursor: pointer;
+  margin-bottom: 8px;
+
+  &:hover {
+    background: #eaecff;
+  }
+`;
+
+const CompleteButton = styled.button`
+  width: 100%;
+  height: 35px;
+  background: #2d41ff;
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-family: Pretendard;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+
+  &:hover {
+    background: #1b31ff;
+  }
 `;
 
 const Table = styled.table`
@@ -146,6 +229,15 @@ const Table = styled.table`
   border-radius: 25px;
   table-layout: fixed;
   overflow: hidden;
+`;
+
+const Thead = styled.thead`
+  color: #000;
+  font-family: Pretendard;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 150%;
 `;
 
 const Th = styled.th`
