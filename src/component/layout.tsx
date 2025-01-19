@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { Outlet, useLocation } from "react-router-dom";
-import LogoutModal from "./logoutModal"; //추가
+import LogoutModal from "./logoutModal";
 
 const Layout: React.FC = () => {
   const location = useLocation();
-  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false); // 추가
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
   const getActiveItem = () => {
     switch (location.pathname) {
@@ -72,19 +72,19 @@ const Layout: React.FC = () => {
             Quiz
           </MenuItem>
         </Menu>
-      </Sidebar> 
-          <UserContainer>
-              <LogoutButton onClick={() => setIsLogoutModalOpen(true)}>
-                  <LogoutLogo src="/logout.svg" />
-                  <LogoutContent>로그아웃</LogoutContent>
-              </LogoutButton>
-              <UserImg src="/user.svg" />
+      </Sidebar>
+        <UserContainer>
+          <LogoutButton onClick={() => setIsLogoutModalOpen(true)}>
+            <LogoutLogo src="/logout.svg" />
+            <LogoutContent>로그아웃</LogoutContent>
+          </LogoutButton>
+          <UserImg src="/user.svg" />
           </UserContainer>
           <Outlet />
           {isLogoutModalOpen && (
               <LogoutModal onClose={() => setIsLogoutModalOpen(false)} />
           )}
-      </Container>
+    </Container>
   );
 };
 
@@ -109,6 +109,7 @@ const UserContainer = styled.div`
   align-items: center;
   gap: 10px;
   margin-top: 10px;
+  background : none;
 `;
 const UserImg = styled.img`
   width: 47.834px;
@@ -121,6 +122,7 @@ const LogoutButton = styled.button`
   justify-content: space-between;
   align-items: center;
   gap: 10px;
+  background : none;
 `;
 const LogoutLogo = styled.img`
   width: 25px;

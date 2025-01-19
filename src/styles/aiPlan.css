@@ -1,0 +1,83 @@
+.ai-plan {
+  width: 100vw;
+  height: 100vh;
+  padding: 70px;
+  background-image: url('/timetableBackground.png');
+  border-radius: 10px;
+  margin: 0 auto;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.section {
+  margin-bottom: 20px;
+}
+
+.section label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.material-selection,
+.date-selection,
+.range-selection {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.material-selection input,
+.date-selection input,
+.range-selection select,
+textarea {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #fff;
+  width: 300px;
+}
+
+textarea {
+  resize: none;
+  height: 80px;
+}
+
+.popup {
+  position: fixed;
+  top: 0; /* 화면 중앙으로 위치 */
+  left: 0; /* 화면 중앙으로 위치 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw; /* 고정된 너비 */
+  height: 100vh; /* 고정된 높이 */
+  background-color: rgba(0, 0, 0, 0.2); /* 반투명 배경 */
+  z-index: 100; /* 다른 요소보다 위에 표시 */
+}
+
+
+
+.popup-content {
+  background: white;
+  padding-top: 20px;
+  border-radius: 10px;
+  width: 500px;
+  height: 500px;
+  overflow-y: auto;
+}
+
+.popup-item {
+  list-style:none;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  cursor: pointer;
+}
+
+.popup-item:hover {
+  background-color: #f0f0f0;
+}
+
+.footer {
+  display: flex;
+  flex-direction: row-reverse;
+}
