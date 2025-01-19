@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 import CourseAdd from "./CourseAdd";
+import CourseDelete from "./CourseDelete";
 
 type Course = {
   course_id: number;
@@ -21,6 +22,8 @@ type CourseListProps = {
 const CourseList: React.FC<CourseListProps> = ({ courses }) => {
   const [isOptionsOpen, setIsOptionsOpen] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [courseData, setCourseData] = useState(courses);
   const optionsRef = useRef<HTMLDivElement>(null);
 
   const toggleOptions = () => {
@@ -39,8 +42,20 @@ const CourseList: React.FC<CourseListProps> = ({ courses }) => {
   const handleAddClick = () => {
     setIsAdding(true);
   };
+
+  const handleDeleteClick = () => {
+    setIsDeleting(true);
+  };
+
   const handleBackToList = () => {
     setIsAdding(false);
+    setIsDeleting(false);
+  };
+
+  const handleDeleteCourse = (courseId: number) => {
+    const updatedCourses = courseData.filter((course) => course.course_id !== courseId);
+    setCourseData(updatedCourses);
+    setIsDeleting(false);
   };
 
   useEffect(() => {
@@ -54,6 +69,8 @@ const CourseList: React.FC<CourseListProps> = ({ courses }) => {
     <Container>
       {isAdding ? (
         <CourseAdd onBackToList={handleBackToList} />
+      ) : isDeleting ? (
+        <CourseDelete courses={courseData} onDelete={handleDeleteCourse} onBackToList={handleBackToList} />
       ) : (
         <>
           <Header>
@@ -66,7 +83,7 @@ const CourseList: React.FC<CourseListProps> = ({ courses }) => {
                     <OptionLogo src="/add.png" />
                     <OptionContent>추가하기</OptionContent>
                   </OptionItem>
-                  <OptionItem onClick={() => alert("강의 삭제하기")}>
+                  <OptionItem onClick={handleDeleteClick}>
                     <OptionLogo src="/delete.png" />
                     <OptionContent>삭제하기</OptionContent>
                   </OptionItem>
@@ -75,11 +92,11 @@ const CourseList: React.FC<CourseListProps> = ({ courses }) => {
             </OptionsContainer>
           </Header>
           <Content>
-            {courses.length === 0 ? (
+            {courseData.length === 0 ? (
               <EmptyMessage>아직 등록된 강의가 없습니다.</EmptyMessage>
             ) : (
               <CourseListContainer>
-                {courses.map((course) => (
+                {courseData.map((course) => (
                   <CourseItem key={course.course_id}>
                     <CourseIconContainer
                       src="/courseImg.png"
@@ -166,7 +183,7 @@ const OptionItem = styled.div`
   cursor: pointer;
   white-space: nowrap;
   &:hover {
-    background-color: #f1f3f5;
+    background-color: #eaecff;
   }
 `;
 
