@@ -1,7 +1,5 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useRef, useState } from "react";
 import styled from "styled-components";
-import CourseAdd from "./CourseAdd";
-import CourseDelete from "./CourseDelete";
 
 type Course = {
   course_id: number;
@@ -15,30 +13,22 @@ type Course = {
   term: string;
 };
 
-type CourseListProps = {
+type CourseDeleteProps = {
   courses: Course[];
+  onDelete: (courseId: number) => void;
+  onBackToList: () => void;
 };
 
-const CourseList: React.FC<CourseListProps> = ({ courses }) => {
-  const [isOptionsOpen, setIsOptionsOpen] = useState(false);
-  const [isAdding, setIsAdding] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [courseData, setCourseData] = useState(courses);
-  const optionsRef = useRef<HTMLDivElement>(null);
 
-  const toggleOptions = () => {
-    setIsOptionsOpen(!isOptionsOpen);
+const CourseDelete: React.FC<CourseDeleteProps> = ({ courses, onDelete, onBackToList }) => {
+  const [hoveredId, setHoveredId] = useState<number | null>(null);
+    const [isOptionsOpen, setIsOptionsOpen] = useState(false);
+    const [isAdding, setIsAdding] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
+    const optionsRef = useRef<HTMLDivElement>(null);
+  const handleDeleteCourse = (courseId: number) => {
+    onDelete(courseId);
   };
-
-  const handleClickOutside = (event: MouseEvent) => {
-    if (
-      optionsRef.current &&
-      !optionsRef.current.contains(event.target as Node)
-    ) {
-      setIsOptionsOpen(false);
-    }
-  };
-
   const handleAddClick = () => {
     setIsAdding(true);
   };
@@ -46,35 +36,14 @@ const CourseList: React.FC<CourseListProps> = ({ courses }) => {
   const handleDeleteClick = () => {
     setIsDeleting(true);
   };
-
-  const handleBackToList = () => {
-    setIsAdding(false);
-    setIsDeleting(false);
+  const toggleOptions = () => {
+    setIsOptionsOpen(!isOptionsOpen);
   };
-
-  const handleDeleteCourse = (courseId: number) => {
-    const updatedCourses = courseData.filter((course) => course.course_id !== courseId);
-    setCourseData(updatedCourses);
-    setIsDeleting(false);
-  };
-
-  useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
 
   return (
     <Container>
-      {isAdding ? (
-        <CourseAdd onBackToList={handleBackToList} />
-      ) : isDeleting ? (
-        <CourseDelete courses={courseData} onDelete={handleDeleteCourse} onBackToList={handleBackToList} />
-      ) : (
-        <>
-          <Header>
-            <Title>나의 강의 목록</Title>
+      <Header>
+            <Title onClick={onBackToList}>나의 강의 목록</Title>
             <OptionsContainer ref={optionsRef}>
               <OptionsButton onClick={toggleOptions}>⋮</OptionsButton>
               {isOptionsOpen && (
@@ -91,43 +60,50 @@ const CourseList: React.FC<CourseListProps> = ({ courses }) => {
               )}
             </OptionsContainer>
           </Header>
-          <Content>
-            {courseData.length === 0 ? (
-              <EmptyMessage>아직 등록된 강의가 없습니다.</EmptyMessage>
-            ) : (
-              <CourseListContainer>
-                {courseData.map((course) => (
-                  <CourseItem key={course.course_id}>
-                    <CourseIconContainer
+      <Content>
+        {courses.length === 0 ? (
+          <EmptyMessage>아직 등록된 강의가 없습니다.</EmptyMessage>
+        ) : (
+          <CourseListContainer>
+            {courses.map((course) => (
+              <CourseItem
+                key={course.course_id}
+                onMouseEnter={() => setHoveredId(course.course_id)}
+                onMouseLeave={() => setHoveredId(null)}
+              >
+                <CourseInfo isHovered={hoveredId === course.course_id}>
+                <CourseIconContainer
                       src="/courseImg.png"
                       alt="강의 이미지"
                     />
-                    <CourseInfo>
-                      <CourseTitle>{course.course_title}</CourseTitle>
-                      <CoursePeriod>{course.period}</CoursePeriod>
-                    </CourseInfo>
-                    <UploadButton>강의 자료</UploadButton>
-                  </CourseItem>
-                ))}
-              </CourseListContainer>
-            )}
-          </Content>
-        </>
-      )}
+                  <CourseTitle>{course.course_title}</CourseTitle>
+                  <CoursePeriod>{course.period}</CoursePeriod>
+                  <UploadButton>강의 자료</UploadButton>
+                </CourseInfo>
+                {hoveredId === course.course_id && (
+                  <DeleteButton onClick={() => handleDeleteCourse(course.course_id)}>
+                    <DeleteLogo src="/DeleteLogo.png" alt="삭제" />
+                  </DeleteButton>
+                )}
+              </CourseItem>
+            ))}
+          </CourseListContainer>
+        )}
+      </Content>
     </Container>
   );
 };
 
-export default CourseList;
+export default CourseDelete;
 
 const Container = styled.div`
-  width: 400px;
-  height: 800px;
+    width: 400px;
+  height: 780px;
   background-color: none;
   border-radius: 8px;
   position: absolute;
-  top: 10px;
-  right: 100px;
+  top: -10px;
+  right: -5px;
   flex-direction: column;
   overflow: hidden;
 `;
@@ -145,6 +121,7 @@ const Title = styled.div`
   font-family: Pretendard;
   font-size: 18px;
   font-weight: bold;
+  cursor: pointer;
 `;
 
 const OptionsContainer = styled.div`
@@ -202,7 +179,6 @@ const OptionLogo = styled.img`
   height: 35.602px;
   flex-shrink: 0;
 `;
-
 const Content = styled.div`
   flex: 1;
   display: flex;
@@ -215,26 +191,30 @@ const Content = styled.div`
 `;
 
 const EmptyMessage = styled.div`
-  color: #656565;
+  text-align: center;
   font-family: Pretendard;
   font-size: 16px;
-  text-align: center;
+  color: #656565;
 `;
 
 const CourseListContainer = styled.div`
-  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 16px;
+  width : 100%;
 `;
 
 const CourseItem = styled.div`
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  background-color: #ffffff;
   padding: 12px;
-  background-color: none;
-  width: 400px;
-  border-bottom: 1px solid #e0e0e0;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  position: relative;
+  transition: all 0.3s ease;
+  height : 80px;
 `;
 
 const CourseIconContainer = styled.img`
@@ -248,34 +228,31 @@ const CourseIconContainer = styled.img`
   margin-right: 16px;
 `;
 
-const CourseInfo = styled.div`
+const CourseInfo = styled.div<{ isHovered: boolean }>`
   display: flex;
+  widhth : 100%;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  gap: 40px;
+  gap: 10px;
   margin-top: 3px;
+  transition: transform 0.3s ease;
+  transform: ${({ isHovered }) => (isHovered ? "translateX(-20px)" : "translateX(0)")};
 `;
 
 const CourseTitle = styled.div`
-  color: #000;
   font-family: Pretendard;
-  font-size: 15px;
-  font-style: normal;
-  font-weight: 600;
-  line-height: 150%;
-  width: 85px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #000;
 `;
 
 const CoursePeriod = styled.div`
-  color: #b3b3b3;
   font-family: Pretendard;
   font-size: 13px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 150%;
+  color: #b3b3b3;
+  margin-left : 17px;
 `;
-
 const UploadButton = styled.button`
   border: 1px solid #e0e0e0;
   border-radius: 28.858px;
@@ -286,9 +263,32 @@ const UploadButton = styled.button`
   font-weight: bold;
   color: #1a1a1a;
   cursor: pointer;
-  margin-left: 15px;
+  margin-left: 2px;
 
   &:hover {
     background-color: #f1f3f5;
   }
+`;
+
+
+const DeleteButton = styled.button`
+  background-color: #FF5C5C;
+  border: none;
+  position: absolute;
+  right: 0px;
+  top: 50%;
+  width : 73px;
+  height : 100%;
+  transform: translateY(-50%);
+  cursor: pointer;
+
+  &:hover img {
+    transform: scale(1.1);
+  }
+`;
+
+const DeleteLogo = styled.img`
+  width: 24px;
+  height: 24px;
+  transition: transform 0.3s ease;
 `;

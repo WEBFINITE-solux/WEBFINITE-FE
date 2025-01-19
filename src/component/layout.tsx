@@ -104,6 +104,7 @@ const UserContainer = styled.div`
   align-items: center;
   gap: 10px;
   margin-top: 10px;
+  background : none;
 `;
 const UserImg = styled.img`
   width: 47.834px;
@@ -116,6 +117,7 @@ const LogoutButton = styled.button`
   justify-content: space-between;
   align-items: center;
   gap: 10px;
+  background : none;
 `;
 const LogoutLogo = styled.img`
   width: 25px;

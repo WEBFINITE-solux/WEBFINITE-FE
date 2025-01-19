@@ -16,7 +16,6 @@ const CourseAdd: React.FC<CourseAddProps> = ({ onBackToList }) => {
   const [days, setDays] = useState<string[]>([]); 
   const [location, setLocation] = useState("");
   const [isOptionsOpen, setIsOptionsOpen] = useState(false);
-  const [isAdding, setIsAdding] = useState(false);
   const optionsRef = useRef<HTMLDivElement>(null);
 
   const toggleOptions = () => {
@@ -30,10 +29,6 @@ const CourseAdd: React.FC<CourseAddProps> = ({ onBackToList }) => {
     ) {
       setIsOptionsOpen(false);
     }
-  };
-
-  const handleAddClick = () => {
-    setIsAdding(true);
   };
 
   useEffect(() => {
@@ -64,12 +59,12 @@ const CourseAdd: React.FC<CourseAddProps> = ({ onBackToList }) => {
   return (
     <Container>
       <Header>
-        <Title>나의 강의 목록</Title>
+        <Title onClick={onBackToList}>나의 강의 목록</Title>
         <OptionsContainer ref={optionsRef}>
           <OptionsButton onClick={toggleOptions}>⋮</OptionsButton>
           {isOptionsOpen && (
             <OptionsMenu>
-              <OptionItem onClick={handleAddClick}>
+              <OptionItem>
                 <OptionLogo src="/add.png" />
                 <OptionContent>추가하기</OptionContent>
               </OptionItem>
@@ -210,7 +205,7 @@ const Component = styled.div`
   flex-shrink: 0;
   padding: 18px;
   background-color: #fff;
-  border-radius: 25px;
+  border-radius: 10px;
   box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.1);
 `;
 const Title = styled.div`
