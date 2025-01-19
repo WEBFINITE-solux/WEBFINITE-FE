@@ -3,6 +3,15 @@ import styled from "styled-components";
 
 const UploadButton = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [isTypePopupOpen, setIsTypePopupOpen] = useState(false);
+
+  const handleOpenTypePopup = () => {
+    setIsTypePopupOpen(true);
+  };
+
+  const handleCloseTypePopup = () => {
+    setIsTypePopupOpen(false);
+  };
 
   const handleOpenPopup = () => {
     setIsPopupOpen(true);
@@ -10,6 +19,17 @@ const UploadButton = () => {
 
   const handleClosePopup = () => {
     setIsPopupOpen(false);
+  };
+
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      if (file.type !== "application/pdf") {
+        alert("PDF 파일만 업로드 가능합니다.");
+      } else {
+        alert(`이 파일을 올리시는게 맞으시나요?\n\n${file.name}`);
+      }
+    }
   };
 
   return (
@@ -22,18 +42,43 @@ const UploadButton = () => {
               <CloseButton onClick={handleClosePopup}>×</CloseButton>
             </PopupHeader>
             <PopupContent>
-              <OptionCard>
+              <UploadCard onClick={handleOpenTypePopup}>
                 <OptionIcon src="fileUpload.svg" alt="업로드 아이콘" />
                 <OptionText1>강의 자료/스크립트 업로드</OptionText1>
                 <SemiText>파일 업로드하기 →</SemiText>
-              </OptionCard>
-              <OptionCard>
+              </UploadCard>
+              <ViewCard>
                 <OptionIcon src="fileCheck.svg" alt="열람 아이콘" />
                 <OptionText2>강의 자료 열람</OptionText2>
                 <SemiText>자료 보러가기 →</SemiText>
-              </OptionCard>
+              </ViewCard>
             </PopupContent>
           </PopupContainer>
+        </PopupOverlay>
+      )}
+      {isTypePopupOpen && (
+        <PopupOverlay>
+          <TypePopupContainer>
+            <CloseButton onClick={handleCloseTypePopup}>×</CloseButton>
+            <TypePopupContent>
+              <TypePopupTitle>자료 형식을 선택해주세요.</TypePopupTitle>
+              <TypePopupButtons>
+                <FileUploadButton>
+                  자료 업로드
+                  <input
+                    type="file"
+                    accept="application/pdf"
+                    onChange={handleFileUpload}
+                  />
+                  <ArrowIcon src="arrow.svg" />
+                </FileUploadButton>
+                <TypePopupButton>
+                  스크립트 업로드
+                  <ArrowIcon src="arrowB.svg" />
+                </TypePopupButton>
+              </TypePopupButtons>
+            </TypePopupContent>
+          </TypePopupContainer>
         </PopupOverlay>
       )}
     </>
@@ -58,7 +103,6 @@ const BasicButton = styled.button`
     background-color: #f1f3f5;
   }
 `;
-
 
 const PopupOverlay = styled.div`
   position: fixed;
@@ -110,7 +154,24 @@ const PopupContent = styled.div`
   padding: 16px;
 `;
 
-const OptionCard = styled.div`
+const ViewCard = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 180px;
+  height: 120px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: #f1f3f5;
+  }
+`;
+
+const UploadCard = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -131,10 +192,10 @@ const OptionIcon = styled.img`
   width: 46px;
   height: 46px;
   border-radius: 10px;
-background: #2D41FF;
-padding : 10px;
+  background: #2d41ff;
+  padding: 10px;
   margin-bottom: 12px;
-  display : flex;
+  display: flex;
   margin-right : 100px;
 `;
 
@@ -143,24 +204,101 @@ const OptionText1 = styled.div`
   font-size: 14px;
   font-weight: bold;
   color: #1a1a1a;
-  margin-right : 15px;
+  margin-right : 5px;
 `;
+
 const OptionText2 = styled.div`
   font-family: Pretendard;
   font-size: 14px;
   font-weight: bold;
   color: #1a1a1a;
-  margin-right : 70px;
+  margin-right : 80px;
 `;
 
 const SemiText = styled.div`
-color: #2D41FF;
-text-align: right;
-font-family: Pretendard;
-font-size: 12px;
-font-style: normal;
-font-weight: 700;
-line-height: 150%;
-margin-left : 90px;
-margin-top : 10px;
-`
+  color: #2d41ff;
+  text-align: right;
+  font-family: Pretendard;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 150%;
+  margin-left : 90px;
+  margin-top : 5px;
+`;
+
+const TypePopupContainer = styled(PopupContainer)`
+  width: 360px;
+  padding: 20px;
+`;
+
+const TypePopupContent = styled.div`
+  text-align: center;
+`;
+
+const TypePopupTitle = styled.div`
+  color: #1a1a1a;
+  text-align: center;
+  font-family: Pretendard;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 150%;
+  margin-bottom: 20px;
+`;
+
+const TypePopupButtons = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+`;
+
+const FileUploadButton = styled.label`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #2d41ff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-family: Pretendard;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  position: relative;
+
+  &:hover {
+    background: #1b31ff;
+  }
+
+  input {
+    display: none;
+  }
+`;
+
+const TypePopupButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  color: #1a1a1a;
+  border: 1px solid #e0e0e0;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-family: Pretendard;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background: #f1f3f5;
+  }
+`;
+
+const ArrowIcon = styled.img`
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  margin-left: 3px;
+`;

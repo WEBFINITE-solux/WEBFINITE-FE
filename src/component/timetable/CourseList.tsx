@@ -256,6 +256,7 @@ const CourseInfo = styled.div`
   align-items: center;
   gap: 40px;
   margin-top: 3px;
+  margin-right : 5px;
 `;
 
 const CourseTitle = styled.div`
