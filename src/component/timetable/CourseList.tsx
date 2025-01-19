@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 import CourseAdd from "./CourseAdd";
 import CourseDelete from "./CourseDelete";
+import UploadButton from "./uploadButton";
 
 type Course = {
   course_id: number;
@@ -106,7 +107,7 @@ const CourseList: React.FC<CourseListProps> = ({ courses }) => {
                       <CourseTitle>{course.course_title}</CourseTitle>
                       <CoursePeriod>{course.period}</CoursePeriod>
                     </CourseInfo>
-                    <UploadButton>강의 자료</UploadButton>
+                    <UploadButton/>
                   </CourseItem>
                 ))}
               </CourseListContainer>
@@ -274,21 +275,4 @@ const CoursePeriod = styled.div`
   font-style: normal;
   font-weight: 400;
   line-height: 150%;
-`;
-
-const UploadButton = styled.button`
-  border: 1px solid #e0e0e0;
-  border-radius: 28.858px;
-  background: #fff;
-  padding: 8px 16px;
-  font-family: Pretendard;
-  font-size: 14px;
-  font-weight: bold;
-  color: #1a1a1a;
-  cursor: pointer;
-  margin-left: 15px;
-
-  &:hover {
-    background-color: #f1f3f5;
-  }
 `;
