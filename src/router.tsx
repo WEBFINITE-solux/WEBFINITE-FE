@@ -7,6 +7,7 @@ import Study from "./pages/study";
 import AiPlan from "./pages/aiPlan";
 import SignupForm from "./pages/signupForm";
 import LoginForm from "./pages/loginFom";
+import LogoutModal from "./component/logoutModal";
 
 const router = createBrowserRouter([
   {
@@ -43,6 +44,16 @@ const router = createBrowserRouter([
         path: "/",
         element: <LoginForm />,
   },
+  {
+        path: "/",
+        element: <Layout />,
+        children: [
+          {
+            path: "layout",
+            element: <LogoutModal onClose={() => console.log("모달 닫기")} />,
+          },
+        ],
+      },
 ]);
 
 export default router;

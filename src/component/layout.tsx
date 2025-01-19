@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { Outlet, useLocation } from "react-router-dom";
+import LogoutModal from "./logoutModal";
 
 const Layout: React.FC = () => {
   const location = useLocation();
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
   const getActiveItem = () => {
     switch (location.pathname) {
@@ -71,14 +73,17 @@ const Layout: React.FC = () => {
           </MenuItem>
         </Menu>
       </Sidebar>
-      <UserContainer>
-        <LogoutButton>
-          <LogoutLogo src="/logout.svg" />
-          <LogoutContent>로그아웃</LogoutContent>
-        </LogoutButton>
-        <UserImg src="/user.svg" />
-      </UserContainer>
-      <Outlet />
+        <UserContainer>
+          <LogoutButton onClick={() => setIsLogoutModalOpen(true)}>
+            <LogoutLogo src="/logout.svg" />
+            <LogoutContent>로그아웃</LogoutContent>
+          </LogoutButton>
+          <UserImg src="/user.svg" />
+          </UserContainer>
+          <Outlet />
+          {isLogoutModalOpen && (
+              <LogoutModal onClose={() => setIsLogoutModalOpen(false)} />
+          )}
     </Container>
   );
 };
