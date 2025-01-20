@@ -99,17 +99,16 @@ const CourseList: React.FC<CourseListProps> = ({ courses }) => {
               <CourseListContainer>
                 {courseData.map((course) => (
                   <CourseItem key={course.course_id}>
-                  <CourseIconContainer
-                    src="/courseImg.png"
-                    alt="강의 이미지"
-                  />
-                  <CourseInfo>
-                    <CourseTitle>{course.course_title}</CourseTitle>
-                    <CoursePeriod>{course.period}</CoursePeriod>
-                  </CourseInfo>
-                  <UploadButton courseId={course.course_id} />
-                </CourseItem>
-                
+                    <CourseIconContainer
+                      src="/courseImg.png"
+                      alt="강의 이미지"
+                    />
+                    <CourseInfo>
+                      <CourseTitle>{course.course_title}</CourseTitle>
+                      <CoursePeriod>{course.period}</CoursePeriod>
+                    </CourseInfo>
+                    <UploadButton/>
+                  </CourseItem>
                 ))}
               </CourseListContainer>
             )}

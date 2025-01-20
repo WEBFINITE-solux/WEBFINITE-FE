@@ -1,8 +1,22 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 
-
-const FileUpload: React.FC = () => {
+type Course = {
+    course_id: number;
+    course_title: string;
+    period: string;
+    day: string[];
+    start_time: string;
+    end_time: string;
+    location: string;
+    color?: string;
+    term: string;
+  };
+  
+  type CourseListProps = {
+    courses: Course[];
+  };
+const FileUpload: React.FC<CourseListProps> = ({ courses }) => {
   const [files, setFiles] = useState<File[]>([]);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {

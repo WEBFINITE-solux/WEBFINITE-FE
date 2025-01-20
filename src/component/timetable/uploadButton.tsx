@@ -21,27 +21,6 @@ const UploadButton = () => {
     setIsPopupOpen(false);
   };
 
-  const handlePdfUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      if (file.type !== "application/pdf") {
-        alert("PDF 파일만 업로드 가능합니다.");
-      } else {
-        alert(`이 파일을 올리시는게 맞으시나요?\n\n${file.name}`);
-      }
-    }
-  };
-  const handleTxtUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      if (file.type !== "text/plain") {
-        alert("TXT 파일만 업로드 가능합니다.");
-      } else {
-        alert(`이 파일을 올리시는게 맞으시나요?\n\n${file.name}`);
-      }
-    }
-  };
-
   return (
     <>
       <BasicButton onClick={handleOpenPopup}>강의 자료</BasicButton>
@@ -64,36 +43,6 @@ const UploadButton = () => {
               </ViewCard>
             </PopupContent>
           </PopupContainer>
-        </PopupOverlay>
-      )}
-      {isTypePopupOpen && (
-        <PopupOverlay>
-          <TypePopupContainer>
-            <CloseButton onClick={handleCloseTypePopup}>×</CloseButton>
-            <TypePopupContent>
-              <TypePopupTitle>자료 형식을 선택해주세요.</TypePopupTitle>
-              <TypePopupButtons>
-                <FilePDFUploadButton>
-                  자료 업로드
-                  <input
-                    type="file"
-                    accept="application/pdf"
-                    onChange={handlePdfUpload}
-                  />
-                  <ArrowIcon src="arrow.svg" />
-                </FilePDFUploadButton>
-                <FileTXTUploadButton>
-                스크립트 업로드
-                <input
-                  type="file"
-                  accept="text/plain"
-                  onChange={handleTxtUpload}
-                />
-                  <ArrowIcon src="arrowB.svg" />
-                </FileTXTUploadButton>
-              </TypePopupButtons>
-            </TypePopupContent>
-          </TypePopupContainer>
         </PopupOverlay>
       )}
     </>
@@ -241,85 +190,3 @@ const SemiText = styled.div`
   margin-top : 5px;
 `;
 
-const TypePopupContainer = styled(PopupContainer)`
-  width: 360px;
-  padding: 20px;
-`;
-
-const TypePopupContent = styled.div`
-  text-align: center;
-`;
-
-const TypePopupTitle = styled.div`
-  color: #1a1a1a;
-  text-align: center;
-  font-family: Pretendard;
-  font-size: 18px;
-  font-weight: 500;
-  line-height: 150%;
-  margin-bottom: 20px;
-`;
-
-const TypePopupButtons = styled.div`
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-`;
-
-const FilePDFUploadButton = styled.label`
-  width : 150px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #2d41ff;
-  color: #fff;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-family: Pretendard;
-  font-size: 14px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-  position: relative;
-
-  &:hover {
-    background: #1b31ff;
-  }
-
-  input {
-    display: none;
-  }
-`;
-const FileTXTUploadButton = styled.label`
-  width : 150px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #fff;
-  color: #1a1a1a;
-  border: 1px solid #e0e0e0;
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-family: Pretendard;
-  font-size: 14px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-  position: relative;
-
-  &:hover {
-    background:rgb(230, 230, 230);
-  }
-
-  input {
-    display: none;
-  }
-`;
-
-const ArrowIcon = styled.img`
-  width: 15px;
-  height: 15px;
-  flex-shrink: 0;
-  margin-left: 3px;
-`;
