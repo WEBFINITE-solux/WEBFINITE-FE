@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './../styles/home.css';
 import ToDoList from '../component/study/toDoList';
+import AttendanceGrid from '../component/home/AttendanceGrid';
 
 const Home: React.FC = () => {
   const openChatGPT = () => {
@@ -17,6 +18,27 @@ const Home: React.FC = () => {
     { id: 2, task: "JavaScript 복습", time: "1:00", checked: false },
     { id: 3, task: "CSS 디자인 수정", time: "3:00", checked: false },
   ];
+  const data = {
+    message: "success",
+    code: 200,
+    attend: [
+      {
+        user_id: 1,
+        attend_id: 1,
+        attend_date: "2025-01-02T08:00:00Z", // ISO 형식
+        is_attended: true,
+        attend_date_cnt: 5,
+      },
+      {
+        user_id: 1,
+        attend_id: 2,
+        attend_date: "2025-01-05T10:00:00Z",
+        is_attended: true,
+        attend_date_cnt: 6,
+      },
+      // 추가 데이터...
+    ],
+  };
 
   // 상태 관리
   const [tasks, setTasks] = useState(initialTasks);
@@ -46,7 +68,7 @@ const Home: React.FC = () => {
   return (
     <div className="home">
       <div className="left">
-        <div className="title">
+        <div className="home-title">
           <p className="titletext">Hello, {name}.</p>
         </div>
 
@@ -66,7 +88,9 @@ const Home: React.FC = () => {
           </div>
           <div style={{ float: 'left', marginLeft: '2vh' }}>
             <p className="text" style={{ marginTop: '4vh' }}>학습 달성률</p>
-            <div className="table" style={{ width: '19vw' }}></div>
+            <div className="table" style={{ width: '19vw' }}>
+            <AttendanceGrid data={data.attend} />
+            </div>
           </div>
         </div>
 
