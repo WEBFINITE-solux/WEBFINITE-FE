@@ -1,0 +1,44 @@
+.attendance-grid {
+    text-align: center;
+  }
+  
+  .grid-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .grid-header {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .header-item {
+    width: 40px;
+    text-align: center;
+    font-weight: bold;
+  }
+  
+  .grid-body {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .day-column {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  
+  .grid-item {
+    width: 40px;
+    height: 40px;
+    background-color: #e0e0e0; /* 기본 회색 */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .grid-item.attended {
+    background-color: #4a90e2; /* 참석된 경우 파란색 */
+  }
+  
