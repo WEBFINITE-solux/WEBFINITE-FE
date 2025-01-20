@@ -75,7 +75,7 @@ const CourseDelete: React.FC<CourseDeleteProps> = ({ courses, onDelete, onBackTo
                 <OptionLogo src="/add.png" />
                 <OptionContent>추가하기</OptionContent>
               </OptionItem>
-              <OptionItem onClick={() => setShowPopup(true)}>
+              <OptionItem>
                 <OptionLogo src="/delete.png" />
                 <OptionContent>삭제하기</OptionContent>
               </OptionItem>

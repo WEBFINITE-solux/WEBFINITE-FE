@@ -21,11 +21,21 @@ const UploadButton = () => {
     setIsPopupOpen(false);
   };
 
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePdfUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       if (file.type !== "application/pdf") {
         alert("PDF 파일만 업로드 가능합니다.");
+      } else {
+        alert(`이 파일을 올리시는게 맞으시나요?\n\n${file.name}`);
+      }
+    }
+  };
+  const handleTxtUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      if (file.type !== "text/plain") {
+        alert("TXT 파일만 업로드 가능합니다.");
       } else {
         alert(`이 파일을 올리시는게 맞으시나요?\n\n${file.name}`);
       }
@@ -63,19 +73,24 @@ const UploadButton = () => {
             <TypePopupContent>
               <TypePopupTitle>자료 형식을 선택해주세요.</TypePopupTitle>
               <TypePopupButtons>
-                <FileUploadButton>
+                <FilePDFUploadButton>
                   자료 업로드
                   <input
                     type="file"
                     accept="application/pdf"
-                    onChange={handleFileUpload}
+                    onChange={handlePdfUpload}
                   />
                   <ArrowIcon src="arrow.svg" />
-                </FileUploadButton>
-                <TypePopupButton>
-                  스크립트 업로드
+                </FilePDFUploadButton>
+                <FileTXTUploadButton>
+                스크립트 업로드
+                <input
+                  type="file"
+                  accept="text/plain"
+                  onChange={handleTxtUpload}
+                />
                   <ArrowIcon src="arrowB.svg" />
-                </TypePopupButton>
+                </FileTXTUploadButton>
               </TypePopupButtons>
             </TypePopupContent>
           </TypePopupContainer>
@@ -251,7 +266,8 @@ const TypePopupButtons = styled.div`
   gap: 8px;
 `;
 
-const FileUploadButton = styled.label`
+const FilePDFUploadButton = styled.label`
+  width : 150px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -275,8 +291,8 @@ const FileUploadButton = styled.label`
     display: none;
   }
 `;
-
-const TypePopupButton = styled.button`
+const FileTXTUploadButton = styled.label`
+  width : 150px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -290,9 +306,14 @@ const TypePopupButton = styled.button`
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.2s ease;
+  position: relative;
 
   &:hover {
-    background: #f1f3f5;
+    background:rgb(230, 230, 230);
+  }
+
+  input {
+    display: none;
   }
 `;
 
