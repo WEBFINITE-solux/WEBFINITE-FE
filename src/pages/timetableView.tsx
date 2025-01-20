@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import TimetableComponent from "../component/timetable/TimetableComponent";
-import FileUpload from "../component/timetable/FileUpload";
+import FileView from "../component/timetable/FileView";
 
 type Course = {
   course_id: number;
@@ -14,7 +14,7 @@ type Course = {
   term: string;
 };
 
-const TimetableUpload: React.FC = () => {
+const TimetableView: React.FC = () => {
   const colors = ["#FFD3A9", "#C2B1FF", "#FF9E9E", "#95BAFF", "#9EFFEA"];
   const courses: Course[] = [
     {
@@ -59,7 +59,7 @@ const TimetableUpload: React.FC = () => {
       <TimetableContainer>
         <TimetableComponent courses={courses} />
         <FileUploadContainer>
-         <FileUpload courses={courses} />
+         <FileView courses={courses} />
          </FileUploadContainer>
       </TimetableContainer>
       </HorizontalContainer>
@@ -67,7 +67,7 @@ const TimetableUpload: React.FC = () => {
   );
 };
 
-export default TimetableUpload;
+export default TimetableView;
 
 const Container = styled.div`
   height: 100vh;

@@ -3,22 +3,22 @@ import Layout from "./component/layout";
 import Timetable from "./pages/timetable";
 import MainPage from "./pages/mainPage";
 import TimetableUpload from "./pages/timetableUpload";
+import TimetableView from "./pages/timetableView";
 
 const router = createBrowserRouter([
   {
-    path: "/timetable",
-    element: <Layout />,
-    children: [{ path: "", element: <Timetable /> }],
+    path: "/", 
+    element: <MainPage />,
   },
   {
-    path: "/timetable",
+    path: "/timetable", 
     element: <Layout />,
-    children: [{ path: "/upload", element: <TimetableUpload /> }],
+    children: [
+      { path: "", element: <Timetable /> },
+      { path: "upload", element: <TimetableUpload /> }, 
+      { path: "view", element: <TimetableView /> }, 
+    ],
   },
-  {
-        path: "/",
-        element: <MainPage />,
-    },
 ]);
 
 export default router;

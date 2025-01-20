@@ -15,7 +15,11 @@ const UploadButton = () => {
   };
   const handleUpload = ()=>{
     navigate("/timetable/upload");
-  }
+  };
+
+  const handleView = ()=>{
+    navigate("/timetable/view");
+  };
 
   return (
     <>
@@ -32,7 +36,7 @@ const UploadButton = () => {
                 <OptionText1>강의 자료/스크립트 업로드</OptionText1>
                 <SemiText>파일 업로드하기 →</SemiText>
               </UploadCard>
-              <ViewCard>
+              <ViewCard onClick={handleView}>
                 <OptionIcon src="fileCheck.svg" alt="열람 아이콘" />
                 <OptionText2>강의 자료 열람</OptionText2>
                 <SemiText>자료 보러가기 →</SemiText>
