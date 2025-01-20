@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 type Course = {
@@ -18,6 +19,7 @@ type Course = {
   };
 const FileUpload: React.FC<CourseListProps> = ({ courses }) => {
   const [files, setFiles] = useState<File[]>([]);
+  const navigate = useNavigate();
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = event.target.files;
@@ -34,20 +36,20 @@ const FileUpload: React.FC<CourseListProps> = ({ courses }) => {
   };
 
   const getFileLogo = (type: string) => {
-    if (type === "application/pdf") return "pdfLogo.svg";
-    if (type === "text/plain") return "txtLogo.svg";
+    if (type === "application/pdf") return "/pdfLogo.svg";
+    if (type === "text/plain") return "/txtLogo.svg";
     return "";
   };
 
   return (
     <Container>
       <Header>
+      <BackButton onClick={() => navigate("/timetable")}>{"<"}</BackButton>
         <Title>강의 자료 업로드</Title>
-        <CloseButton>×</CloseButton>
       </Header>
       <UploadBox>
         <UploadArea>
-          <CloudIcon src="cloud.svg" alt="Upload" />
+          <CloudIcon src="/cloud.svg" alt="Upload" />
           <UploadText>파일을 업로드해주세요.</UploadText>
           <UploadSubtitle>TXT,PDF...</UploadSubtitle>
         </UploadArea>
@@ -64,7 +66,9 @@ const FileUpload: React.FC<CourseListProps> = ({ courses }) => {
               <FileName>{file.name}</FileName>
               <FileSize>{(file.size / 1024).toFixed(2)}KB</FileSize>
             </FileInfo>
-            <DeleteButton onClick={() => handleFileDelete(index)}>🗑</DeleteButton>
+            <DeleteButton onClick={() => handleFileDelete(index)}>
+                <DeleteLogo src="/deleteLogo.svg"/>
+            </DeleteButton>
           </FileItem>
         ))}
       </FileList>
@@ -76,6 +80,7 @@ export default FileUpload;
 
 const Container = styled.div`
   width: 400px;
+  height : 692px;
   background: #fff;
   border-radius: 8px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
@@ -85,7 +90,7 @@ const Container = styled.div`
 
 const Header = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   margin-bottom: 16px;
 `;
@@ -94,15 +99,20 @@ const Title = styled.h2`
   font-size: 16px;
   font-weight: bold;
   color: #1a1a1a;
-  margin: 0;
+  margin-left : 80px;
+  margin-right :120px;
 `;
 
-const CloseButton = styled.button`
+const BackButton = styled.button`
   background: none;
   border: none;
-  font-size: 20px;
-  color: #656565;
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
   cursor: pointer;
+  &:hover {
+    color: #2D41FF;
+  }
 `;
 
 const UploadBox = styled.div`
@@ -114,6 +124,7 @@ const UploadBox = styled.div`
   padding: 16px;
   text-align: center;
   margin-bottom: 16px;
+  height : 126px;
 `;
 
 const UploadArea = styled.div`
@@ -126,37 +137,49 @@ const CloudIcon = styled.img`
   width: 48px;
   height: 48px;
   margin-bottom: 8px;
+  margin-right : 270px;
 `;
 
 const UploadText = styled.div`
   font-size: 14px;
   font-weight: bold;
   color: #1a1a1a;
+  margin-right : 200px;
 `;
 
 const UploadSubtitle = styled.div`
   font-size: 12px;
   color: #656565;
   margin-top: 4px;
+  margin-right : 270px;
 `;
 
 const BrowseButton = styled.label`
+  width: 127px;
+  height: 32px;
+  flex-shrink: 0;
+  padding : 4px;
   display: inline-block;
-  margin-top: 12px;
-  background: #2d41ff;
-  color: #fff;
-  padding: 8px 16px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: bold;
+  border-radius: 10px;
+  border: 1.5px solid var(--C6C6C6, #C6C6C6);
+  box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.15);
+  xcolor: var(--6A6A6A, #6A6A6A);
+  font-family: Pretendard;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 150%;
+  letter-spacing: -0.304px;
   cursor: pointer;
+  margin-left : 210px;
+  margin-top : -35px;
 
   input {
     display: none;
   }
 
   &:hover {
-    background: #1b31ff;
+    background:rgb(234, 234, 234);
   }
 `;
 
@@ -201,11 +224,11 @@ const FileSize = styled.div`
 const DeleteButton = styled.button`
   background: none;
   border: none;
-  font-size: 16px;
-  color: #ff5c5c;
   cursor: pointer;
-
-  &:hover {
-    color: #d9534f;
-  }
 `;
+
+const DeleteLogo = styled.img`
+width: 14.769px;
+height: 16px;
+flex-shrink: 0;
+`

@@ -6,18 +6,10 @@ const Layout: React.FC = () => {
   const location = useLocation();
 
   const getActiveItem = () => {
-    switch (location.pathname) {
-      case "/home":
-        return "home";
-      case "/study":
-        return "study";
-      case "/timetable":
-        return "timetable";
-      case "/quiz":
-        return "quiz";
-      default:
-        return "home";
-    }
+    if (location.pathname.startsWith("/timetable")) return "timetable";
+    if (location.pathname.startsWith("/study")) return "study";
+    if (location.pathname.startsWith("/quiz")) return "quiz";
+    return "home";
   };
 
   const [activeItem, setActiveItem] = useState<
@@ -82,6 +74,7 @@ const Layout: React.FC = () => {
     </Container>
   );
 };
+
 
 export default Layout;
 

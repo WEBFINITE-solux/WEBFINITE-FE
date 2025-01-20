@@ -1,17 +1,10 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 const UploadButton = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const [isTypePopupOpen, setIsTypePopupOpen] = useState(false);
-
-  const handleOpenTypePopup = () => {
-    setIsTypePopupOpen(true);
-  };
-
-  const handleCloseTypePopup = () => {
-    setIsTypePopupOpen(false);
-  };
+  const navigate = useNavigate();
 
   const handleOpenPopup = () => {
     setIsPopupOpen(true);
@@ -20,6 +13,9 @@ const UploadButton = () => {
   const handleClosePopup = () => {
     setIsPopupOpen(false);
   };
+  const handleUpload = ()=>{
+    navigate("/timetable/upload");
+  }
 
   return (
     <>
@@ -31,7 +27,7 @@ const UploadButton = () => {
               <CloseButton onClick={handleClosePopup}>×</CloseButton>
             </PopupHeader>
             <PopupContent>
-              <UploadCard onClick={handleOpenTypePopup}>
+              <UploadCard onClick={handleUpload}>
                 <OptionIcon src="fileUpload.svg" alt="업로드 아이콘" />
                 <OptionText1>강의 자료/스크립트 업로드</OptionText1>
                 <SemiText>파일 업로드하기 →</SemiText>

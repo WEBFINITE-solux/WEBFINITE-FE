@@ -15,7 +15,7 @@ type Course = {
   term: string;
 };
 
-const Timetable: React.FC = () => {
+const TimetableUpload: React.FC = () => {
   const colors = ["#FFD3A9", "#C2B1FF", "#FF9E9E", "#95BAFF", "#9EFFEA"];
   const courses: Course[] = [
     {
@@ -56,18 +56,21 @@ const Timetable: React.FC = () => {
   return (
     <Container>
       <TimetableBack src="/timetableBackground.png" />
+      <HorizontalContainer>
       <TimetableContainer>
         <TimetableComponent courses={courses} />
-        <FileUpload courses={courses} />
+        <FileUploadContainer>
+         <FileUpload courses={courses} />
+         </FileUploadContainer>
       </TimetableContainer>
+      </HorizontalContainer>
     </Container>
   );
 };
 
-export default Timetable;
+export default TimetableUpload;
 
 const Container = styled.div`
-  display: flex;
   height: 100vh;
   background-color: #ffffff;
 `;
@@ -85,3 +88,16 @@ const TimetableContainer = styled.div`
   top: 75px;
   right: 10px;
 `;
+
+const HorizontalContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+`;
+const FileUploadContainer =styled.div`
+ margin-top : 90px;
+ margin-right : 100px;
+`
