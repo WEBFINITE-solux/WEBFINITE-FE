@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import UploadButton from "./uploadButton";
 
 type Course = {
   course_id: number;
@@ -101,7 +100,6 @@ const CourseDelete: React.FC<CourseDeleteProps> = ({ courses, onDelete, onBackTo
                   />
                   <CourseTitle>{course.course_title}</CourseTitle>
                   <CoursePeriod>{course.period}</CoursePeriod>
-                  <UploadButton/>
                 </CourseInfo>
                 {hoveredId === course.course_id && (
                   <DeleteButton onClick={() => handleDeleteClick(course)}>
