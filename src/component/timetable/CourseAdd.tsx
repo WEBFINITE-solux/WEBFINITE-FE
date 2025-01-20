@@ -68,7 +68,7 @@ const CourseAdd: React.FC<CourseAddProps> = ({ onBackToList }) => {
                 <OptionLogo src="/add.png" />
                 <OptionContent>추가하기</OptionContent>
               </OptionItem>
-              <OptionItem onClick={() => alert("강의 삭제하기")}>
+              <OptionItem >
                 <OptionLogo src="/delete.png" />
                 <OptionContent>삭제하기</OptionContent>
               </OptionItem>

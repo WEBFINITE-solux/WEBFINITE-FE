@@ -2,6 +2,8 @@ import { createBrowserRouter, Navigate } from "react-router-dom";
 import Layout from "./component/layout";
 import Timetable from "./pages/timetable";
 import MainPage from "./pages/mainPage";
+import TimetableUpload from "./pages/timetableUpload";
+import TimetableView from "./pages/timetableView";
 import Home from "./pages/home";
 import Study from "./pages/study";
 import AiPlan from "./pages/aiPlan";
@@ -23,10 +25,14 @@ const router = createBrowserRouter([
       { path: "aiPlan", element: <AiPlan /> },
     ]
   },
-  {
-    path: "/timetable",
+    {
+    path: "/timetable", 
     element: <Layout />,
-    children: [{ path: "", element: <Timetable /> }],
+    children: [
+      { path: "", element: <Timetable /> },
+      { path: "upload", element: <TimetableUpload /> }, 
+      { path: "view", element: <TimetableView /> }, 
+    ],
   },
   {
         path: "/",

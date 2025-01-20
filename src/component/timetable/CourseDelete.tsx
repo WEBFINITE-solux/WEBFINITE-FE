@@ -74,7 +74,7 @@ const CourseDelete: React.FC<CourseDeleteProps> = ({ courses, onDelete, onBackTo
                 <OptionLogo src="/add.png" />
                 <OptionContent>추가하기</OptionContent>
               </OptionItem>
-              <OptionItem onClick={() => setShowPopup(true)}>
+              <OptionItem>
                 <OptionLogo src="/delete.png" />
                 <OptionContent>삭제하기</OptionContent>
               </OptionItem>
@@ -100,7 +100,6 @@ const CourseDelete: React.FC<CourseDeleteProps> = ({ courses, onDelete, onBackTo
                   />
                   <CourseTitle>{course.course_title}</CourseTitle>
                   <CoursePeriod>{course.period}</CoursePeriod>
-                  <UploadButton>강의 자료</UploadButton>
                 </CourseInfo>
                 {hoveredId === course.course_id && (
                   <DeleteButton onClick={() => handleDeleteClick(course)}>
@@ -263,7 +262,7 @@ const CourseInfo = styled.div<{ isHovered: boolean }>`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  gap: 10px;
+  gap: 2px;
   margin-top: 3px;
   transition: transform 0.3s ease;
   transform: ${({ isHovered }) => (isHovered ? "translateX(-20px)" : "translateX(0)")};
@@ -274,6 +273,7 @@ const CourseTitle = styled.div`
   font-size: 14px;
   font-weight: bold;
   color: #000;
+  width : 80px;
 `;
 
 const CoursePeriod = styled.div`
@@ -281,23 +281,6 @@ const CoursePeriod = styled.div`
   font-size: 13px;
   color: #b3b3b3;
   margin-left: 17px;
-`;
-
-const UploadButton = styled.button`
-  border: 1px solid #e0e0e0;
-  border-radius: 28.858px;
-  background: #fff;
-  padding: 8px 16px;
-  font-family: Pretendard;
-  font-size: 14px;
-  font-weight: bold;
-  color: #1a1a1a;
-  cursor: pointer;
-  margin-left: 2px;
-
-  &:hover {
-    background-color: #f1f3f5;
-  }
 `;
 
 const DeleteButton = styled.button`
