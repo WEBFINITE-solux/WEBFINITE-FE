@@ -11,6 +11,7 @@ import SignupForm from "./pages/signupForm";
 import LoginForm from "./pages/loginFom";
 import LogoutModal from "./component/logoutModal";
 import Quiz from "./pages/quiz";
+import QuizCreate from "./pages/quizCreate";
 
 const router = createBrowserRouter([
   {
@@ -38,7 +39,10 @@ const router = createBrowserRouter([
   {
     path : "/quiz",
     element:<Layout/>,
-    children:[{path:"",element:<Quiz/>}]
+    children:[
+      {path:"",element:<Quiz/>},
+      {path:"create",element:<QuizCreate/>}
+    ]
   },
   {
         path: "/",

@@ -1,14 +1,14 @@
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom"; 
 
-const Quiz: React.FC = () => {
+const QuizCreate: React.FC = () => {
   const navigate = useNavigate();
 
-  const handleCreateQuiz = () => {
-    navigate("/quiz/create");
+  const handleList = () => {
+    navigate("/quiz");
   };
 
-  const handleEdit = () => {
+  const handleAdd = () => {
   };
 
   return (
@@ -17,18 +17,20 @@ const Quiz: React.FC = () => {
       <Content>
         <TabContainer>
           <TabWrapper>
-            <Tab active>생성된 퀴즈 목록</Tab>
-            <Tab onClick={handleCreateQuiz}>AI기반 퀴즈 만들기</Tab>
+            <Tab onClick={handleList}>생성된 퀴즈 목록</Tab>
+            <Tab active>AI기반 퀴즈 만들기</Tab>
           </TabWrapper>
-          <EditButton onClick={handleEdit}>편집</EditButton>
+          <AddButton onClick={handleAdd}>
+            <AddLogo src="/quizAdd.svg"/>
+          </AddButton>
         </TabContainer>
-        <Message>아직 등록된 퀴즈가 없습니다.</Message>
+        <Message>상단 우측에 +버튼을 이용하여 퀴즈를 생성해주세요.</Message>
       </Content>
     </Container>
   );
 };
 
-export default Quiz;
+export default QuizCreate;
 
 const Container = styled.div`
   display: flex;
@@ -78,29 +80,20 @@ const Tab = styled.div<{ active?: boolean }>`
   border-bottom: ${(props) => (props.active ? "3px solid #007BFF" : "none")};
 `;
 
-const EditButton = styled.button`
-  width: 89px;
-  height: 33px;
-  flex-shrink: 0;
-  padding: 3px 16px;
-  color: var(--1A1A1A, #1A1A1A);
-text-align: center;
-font-family: Pretendard;
-font-size: 16px;
-font-style: normal;
-font-weight: 700;
-line-height: 150%; 
-  border-radius: 28.858px;
-background: #FFF;
-box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.25);
+const AddButton = styled.button`
+  background : none;
   cursor: pointer;
   transition: background-color 0.3s;
-
-  &:hover {
-    background-color: #0056b3;
-  }
+  margin-bottom : -10px;
+  margin-top : 10px;
 `;
 
+const AddLogo = styled.img`
+width: 42.797px;
+height: 42.797px;
+flex-shrink: 0;
+
+`
 const Message = styled.div`
    width: 420px;
   height: 51px;
