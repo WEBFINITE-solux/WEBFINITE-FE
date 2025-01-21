@@ -1,34 +1,64 @@
+import React, { useState } from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
+import CourseSelectModal from "../component/quiz/CourseSelectModal";
 
 const QuizCreate: React.FC = () => {
-  const navigate = useNavigate();
-
-  const handleList = () => {
-    navigate("/quiz");
+    const navigate = useNavigate();
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedCourse, setSelectedCourse] = useState<any>(null);
+  
+    const courses = [
+      { id: 1, title: "강의 1", description: "강의1 수업자료", date: "2024.09" },
+      { id: 2, title: "선형대수", description: "1-4강 수업자료", date: "2024.10" },
+      { id: 3, title: "선형대수(1)", description: "1-5강 수업자료", date: "2024.10" },
+      { id: 4, title: "강의 2", description: "강의2 수업자료", date: "2024.10" },
+      { id: 5, title: "강의 3", description: "강의3 수업자료", date: "2024.10" },
+    ];
+  
+    const handleList = () => {
+      navigate("/quiz");
+    };
+  
+    const handleAdd = () => {
+      setIsModalOpen(true);
+    };
+  
+    const handleCloseModal = () => {
+      setIsModalOpen(false);
+    };
+  
+    const handleSelectCourse = (course: any) => {
+      setSelectedCourse(course);
+    };
+  
+    return (
+      <Container>
+        <QuizBack src="/quizBackground.png" />
+        <Content>
+          <TabContainer>
+            <TabWrapper>
+              <Tab onClick={handleList}>생성된 퀴즈 목록</Tab>
+              <Tab active>AI기반 퀴즈 만들기</Tab>
+            </TabWrapper>
+            <AddButton onClick={handleAdd}>
+              <AddLogo src="/quizAdd.svg" />
+            </AddButton>
+          </TabContainer>
+          <Message>상단 우측에 +버튼을 이용하여 퀴즈를 생성해주세요.</Message>
+        </Content>
+  
+        {isModalOpen && (
+          <CourseSelectModal
+            courses={courses}
+            onClose={handleCloseModal}
+            onSelect={handleSelectCourse}
+          />
+        )}
+      </Container>
+    );
   };
-
-  const handleAdd = () => {
-  };
-
-  return (
-    <Container>
-      <QuizBack src="/quizBackground.png" />
-      <Content>
-        <TabContainer>
-          <TabWrapper>
-            <Tab onClick={handleList}>생성된 퀴즈 목록</Tab>
-            <Tab active>AI기반 퀴즈 만들기</Tab>
-          </TabWrapper>
-          <AddButton onClick={handleAdd}>
-            <AddLogo src="/quizAdd.svg"/>
-          </AddButton>
-        </TabContainer>
-        <Message>상단 우측에 +버튼을 이용하여 퀴즈를 생성해주세요.</Message>
-      </Content>
-    </Container>
-  );
-};
+  
 export default QuizCreate;
 
 const Container = styled.div`
@@ -62,8 +92,8 @@ const TabContainer = styled.div`
   border-bottom: 2px solid #ccc;
   margin-bottom: 20px;
   width: 100%;
-  padding-left: 20px; 
-  margin-top : -5px;
+  padding-left: 20px;
+  margin-top: -5px;
 `;
 
 const TabWrapper = styled.div`
@@ -71,11 +101,11 @@ const TabWrapper = styled.div`
 `;
 
 const Tab = styled.div<{ active?: boolean }>`
-  width : 220px;
+  width: 220px;
   flex: 1;
   text-align: center;
   padding: 10px 0;
-  margin-bottom : -5px;
+  margin-bottom: -5px;
   cursor: pointer;
   font-weight: ${(props) => (props.active ? "bold" : "normal")};
   border-bottom: ${(props) => (props.active ? "3px solid #007BFF" : "none")};
@@ -104,7 +134,7 @@ const Message = styled.div`
   font-size: 14px;
   font-style: normal;
   font-weight: 500;
-  line-height: 150%; 
+  line-height: 150%;
   padding: 15px;
   margin-top: 200px;
   border-radius: 11px;
