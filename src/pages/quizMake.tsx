@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import QuizMakeComponent from "../component/quiz/QuizMakeComponent";
+import NoticeModal from "../component/quiz/noticeModal";
 
 const QuizMake: React.FC = () => {
     const navigate = useNavigate();
@@ -26,6 +27,7 @@ const QuizMake: React.FC = () => {
           </TabContainer>
            <QuizMakeComponent/>
         </Content>
+        <NoticeModal/>
       </Container>
     );
   };

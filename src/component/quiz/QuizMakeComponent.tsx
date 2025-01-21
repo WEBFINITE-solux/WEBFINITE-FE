@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import styled from "styled-components";
 
 const QuizMakeComponent = () => {
@@ -10,6 +10,20 @@ const QuizMakeComponent = () => {
   });
   const [detailedRequirements, setDetailedRequirements] = useState("");
 
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    type: "min" | "max"
+  ) => {
+    const value = parseInt(e.target.value, 10);
+  
+    if (value < 1 || value > 5) {
+      alert("퀴즈 개수는 최소 1개에서 최대 5개까지 입력 가능합니다.");
+      return;
+    }
+  
+    setQuizCount({ ...quizCount, [type]: value.toString() });
+  };
+  
   const handleSubmit = () => {
     if (!quizCount.min || !quizCount.max || !detailedRequirements) {
       alert("모든 필드를 채워주세요.");
@@ -24,12 +38,11 @@ const QuizMakeComponent = () => {
         : quizType.trueFalse
         ? "TRUE_FALSE"
         : "SHORT_ANSWER",
-      quiz_count: quizCount.min && quizCount.max ? Number(quizCount.max) : 0,
+      quiz_count: Number(quizCount.max),
       detailed_requirements: detailedRequirements,
     };
 
-    console.log("Request Data: ", requestData);
-    alert("퀴즈 생성 요청 완료!" + JSON.stringify(requestData, null, 2));
+    console.log("Request data:", requestData);
   };
 
   return (
@@ -40,18 +53,14 @@ const QuizMakeComponent = () => {
           type="number"
           placeholder="최소"
           value={quizCount.min}
-          onChange={(e) =>
-            setQuizCount({ ...quizCount, min: e.target.value })
-          }
+          onChange={(e) => handleInputChange(e, "min")}
         />
         <span>~</span>
         <Input
           type="number"
           placeholder="최대"
           value={quizCount.max}
-          onChange={(e) =>
-            setQuizCount({ ...quizCount, max: e.target.value })
-          }
+          onChange={(e) => handleInputChange(e, "max")}
         />
       </InputGroup>
 
@@ -104,23 +113,23 @@ export default QuizMakeComponent;
 
 const Container = styled.div`
   width: 1181px;
-height: 580px;
-flex-shrink: 0;
-border-radius: 20px;
-background: #FFF;
-padding : 40px 40px;
+  height: 580px;
+  flex-shrink: 0;
+  border-radius: 20px;
+  background: #fff;
+  padding: 40px 40px;
 `;
 
 const Label = styled.label`
   display: block;
-  color: #1A1A1A;
+  color: #1a1a1a;
   font-family: Pretendard;
   font-size: 24px;
   font-style: normal;
   font-weight: 700;
   line-height: 150%;
   margin-bottom: 8px;
-  margin-top : 30px;
+  margin-top: 30px;
 `;
 
 const InputGroup = styled.div`
@@ -144,17 +153,17 @@ const Textarea = styled.textarea`
   border: 1px solid #d1d5db;
   border-radius: 4px;
   margin-bottom: 80px;
-  font-size : 12px;
-  font-family : Pretendard;
+  font-size: 12px;
+  font-family: Pretendard;
 
   &::placeholder {
-  color: rgba(0, 0, 0, 0.50);
-  font-family: Pretendard;
-  font-size: 12px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 150%;
-  letter-spacing: -0.418px;
+    color: rgba(0, 0, 0, 0.5);
+    font-family: Pretendard;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%;
+    letter-spacing: -0.418px;
   }
 `;
 
@@ -168,12 +177,12 @@ const CheckboxLabel = styled.label`
   display: flex;
   align-items: center;
   gap: 4px;
-  color: #1A1A1A;
+  color: #1a1a1a;
   font-family: Pretendard;
   font-size: 18px;
   font-style: normal;
   font-weight: 600;
-  line-height: 150%; 
+  line-height: 150%;
 `;
 
 const Button = styled.button`
@@ -184,6 +193,7 @@ const Button = styled.button`
   border-radius: 4px;
   cursor: pointer;
   font-size: 0.9rem;
+
   &:hover {
     background-color: #1e40af;
   }
