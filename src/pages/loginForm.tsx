@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import styles from "../styles/LoginForm.module.css";
 
 const LoginForm: React.FC = () => {
@@ -8,13 +7,11 @@ const LoginForm: React.FC = () => {
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  const navigate = useNavigate();
-
   const isButtonEnabled = id.trim() !== "" && password.trim() !== "";
 
   const handleLogin = () => {
-    if (id === "webfinite1003" && password === "web2025*") {
-      navigate("/home");
+    if (id === "webfininte1003" && password === "web2025*") {
+      window.location.href = "/home";
     } else {
       setError(true);
       setErrorMessage("아이디 또는 비밀번호가 일치하지 않습니다.");
@@ -31,7 +28,7 @@ const LoginForm: React.FC = () => {
   };
 
   const handleBackButtonClick = () => {
-    navigate("/");
+    window.location.href = "/mainPage";
   };
 
   return (
@@ -92,7 +89,7 @@ const LoginForm: React.FC = () => {
           className={styles.forgotPassword}
           onClick={(e) => {
             e.preventDefault();
-            navigate("/passwordRecovery");
+            window.location.href = "/passwordRecovery";
           }}
         >
           Forgot Password?
