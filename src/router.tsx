@@ -14,6 +14,7 @@ import Quiz from "./pages/quiz";
 import QuizCreate from "./pages/quizCreate";
 import QuizMake from "./pages/quizMake";
 import QuizSolve from "./pages/quizSolve";
+import QuizAnswerPage from "./pages/quizAnswerPage";
 
 const router = createBrowserRouter([
   {
@@ -46,6 +47,7 @@ const router = createBrowserRouter([
       {path:"create",element:<QuizCreate/>},
       {path:"create/choose",element:<QuizMake/>},
       {path:"solve",element:<QuizSolve/>},
+      {path:"answer",element:<QuizAnswerPage/>},
     ]
   },
   {

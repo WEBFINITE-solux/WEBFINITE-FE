@@ -86,6 +86,9 @@ const QuizMulti = () => {
       setSelectedAnswer(null);
     }
   };
+  const handleAnswer = ()=>{
+    navigate("/quiz/answer");
+  }
 
   const handleSubmit = () => {
     if (!selectedAnswer) {
@@ -162,7 +165,7 @@ const QuizMulti = () => {
               <PopupButton onClick={handleGoToQuizList} primary>
                 퀴즈 목록으로
               </PopupButton>
-              <PopupButton>결과 확인</PopupButton>
+              <PopupButton onClick={handleAnswer}>결과 확인</PopupButton>
             </PopupButtons>
           </PopupContent>
         </Popup>

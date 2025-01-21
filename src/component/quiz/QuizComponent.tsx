@@ -16,7 +16,7 @@ interface QuizComponentProps {
 const QuizComponent: React.FC<QuizComponentProps> = ({ quizzes }) => {
   const navigate = useNavigate();
   const handleRefresh = (quizId: number) => {
-    alert(`퀴즈 ${quizId} 새로고침!`);
+    alert(`퀴즈 ${quizId} 다시풀기!`);
   };
 
   const handleSolveQuiz = (quizId: number) => {
@@ -24,7 +24,7 @@ const QuizComponent: React.FC<QuizComponentProps> = ({ quizzes }) => {
   };
 
   const handleViewAiExplanation = (quizId: number) => {
-    alert(`퀴즈 ${quizId}의 AI 해설 보기!`);
+    navigate("/quiz/answer");
   };
 
   return (
