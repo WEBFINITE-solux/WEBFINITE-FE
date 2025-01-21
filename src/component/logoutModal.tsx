@@ -30,7 +30,7 @@ const LogoutModal: React.FC<LogoutModalProps> = ({ onClose }) => {
             className={styles.confirmButton}
             onClick={() => {
               console.log("로그아웃 완료!");
-              navigate("/mainPage");
+              navigate("/");
             }}
           >
             로그아웃 하기
