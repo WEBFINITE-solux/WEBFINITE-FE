@@ -45,6 +45,10 @@ const SignupForm: React.FC = () => {
       }
     }, [idStatus, nicknameStatus, passwordError, emailError, termsAccepted]);
 
+    const handleBackButtonClick = () => {
+      navigate("/");
+    };
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const { name, value } = e.target;
       setForm((prevForm) => ({ ...prevForm, [name]: value }));
@@ -161,25 +165,14 @@ const SignupForm: React.FC = () => {
       console.log("회원가입 데이터", form);
   
       try {
-        const response = await fetch("/api/signup", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(form),
-        });
-  
-        if (response.ok) {
-          console.log("회원가입 성공");
-          navigate("/");
-        } else {
-          console.error("회원가입 실패");
-        }
+        console.log("회원가입 성공");
+        navigate("/");
       } catch (error) {
         console.error("회원가입 요청 에러:", error);
+        alert("회원가입 요청 중 문제가 발생했습니다. 다시 시도해주세요.");
       }
     }
-  };  
+  };
 
   return (
     <div className={styles.formContainer}>
@@ -187,7 +180,7 @@ const SignupForm: React.FC = () => {
         src="backButton.png"
         alt="Back Button"
         className={styles.backButton}
-        onClick={() => navigate("/mainPage")}
+        onClick={handleBackButtonClick}
       />
 
       <h2 className={styles.title}>Create your account</h2>
