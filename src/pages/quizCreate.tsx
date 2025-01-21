@@ -29,7 +29,6 @@ const QuizCreate: React.FC = () => {
     </Container>
   );
 };
-
 export default QuizCreate;
 
 const Container = styled.div`
@@ -64,6 +63,7 @@ const TabContainer = styled.div`
   margin-bottom: 20px;
   width: 100%;
   padding-left: 20px; 
+  margin-top : -5px;
 `;
 
 const TabWrapper = styled.div`
@@ -75,27 +75,27 @@ const Tab = styled.div<{ active?: boolean }>`
   flex: 1;
   text-align: center;
   padding: 10px 0;
+  margin-bottom : -5px;
   cursor: pointer;
   font-weight: ${(props) => (props.active ? "bold" : "normal")};
   border-bottom: ${(props) => (props.active ? "3px solid #007BFF" : "none")};
 `;
 
 const AddButton = styled.button`
-  background : none;
+  background: none;
   cursor: pointer;
   transition: background-color 0.3s;
-  margin-bottom : -10px;
-  margin-top : 10px;
+  margin-bottom: -15px;
 `;
 
 const AddLogo = styled.img`
-width: 42.797px;
-height: 42.797px;
-flex-shrink: 0;
+  width: 42.797px;
+  height: 42.797px;
+  flex-shrink: 0;
+`;
 
-`
 const Message = styled.div`
-   width: 420px;
+  width: 420px;
   height: 51px;
   flex-shrink: 0;
   color: #000;
@@ -105,7 +105,7 @@ const Message = styled.div`
   font-style: normal;
   font-weight: 500;
   line-height: 150%; 
-  padding : 15px;
+  padding: 15px;
   margin-top: 200px;
   border-radius: 11px;
   background: #FFF;
