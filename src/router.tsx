@@ -10,6 +10,7 @@ import AiPlan from "./pages/aiPlan";
 import SignupForm from "./pages/signupForm";
 import LoginForm from "./pages/loginFom";
 import LogoutModal from "./component/logoutModal";
+import Quiz from "./pages/quiz";
 
 const router = createBrowserRouter([
   {
@@ -33,6 +34,11 @@ const router = createBrowserRouter([
       { path: "upload", element: <TimetableUpload /> }, 
       { path: "view", element: <TimetableView /> }, 
     ],
+  },
+  {
+    path : "/quiz",
+    element:<Layout/>,
+    children:[{path:"",element:<Quiz/>}]
   },
   {
         path: "/",
