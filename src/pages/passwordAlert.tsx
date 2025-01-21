@@ -49,7 +49,7 @@ const PasswordAlert: React.FC = () => {
                     className={styles.lockerIcon}
                 />
                 <p className={styles.messageText}>
-                    {userId}님의 패스워드<br />
+                    {userId}님의 패스워드는는<br />
                     <span className={styles.highlightText}>{userPassword}</span> 입니다.
                 </p>
             </div>
