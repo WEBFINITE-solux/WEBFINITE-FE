@@ -14,8 +14,10 @@ const PasswordRecovery: React.FC = () => {
     };
 
     const handleSubmit = () => {
-        if (id === 'testID' && email === 'test@example.com') {
-            navigate('/passwordAlert');
+        if (id === 'webfinite1003' && email === 'web1004@gmail.com') {
+            navigate('/passwordAlert', {
+                state: { userId: id, userPassword: 'web2025*' },
+            });
         } else {
             setButtonState('error');
             setWarningMessage('입력한 정보를 다시 확인해주세요.');

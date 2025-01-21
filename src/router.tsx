@@ -13,7 +13,7 @@ const router = createBrowserRouter([
     },
     {
         path: "/passwordAlert",
-        element: <PasswordAlert userId={""} userPassword={""} />,
+        element: <PasswordAlert />,
     },
 ]);
 

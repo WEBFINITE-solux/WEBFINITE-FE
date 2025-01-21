@@ -1,9 +1,12 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import styles from '../styles/passwordAlert.module.css';
 
-const PasswordAlert: React.FC<{ userId: string; userPassword: string }> = ({ userId, userPassword }) => {
+const PasswordAlert: React.FC = () => {
     const navigate = useNavigate();
+    const location = useLocation();
+
+    const { userId, userPassword } = location.state || { userId: '', userPassword: '' };
 
     const handleBackButtonClick = () => {
         navigate('/passwordRecovery');
@@ -46,8 +49,8 @@ const PasswordAlert: React.FC<{ userId: string; userPassword: string }> = ({ use
                     className={styles.lockerIcon}
                 />
                 <p className={styles.messageText}>
-                    <span className={styles.boldText}>{userId}</span>
-                    님의 패스워드는 <span className={styles.highlightText}>{userPassword}</span> 입니다.
+                    {userId}님의 패스워드<br />
+                    <span className={styles.highlightText}>{userPassword}</span> 입니다.
                 </p>
             </div>
             <div className={styles.infoBox}>
