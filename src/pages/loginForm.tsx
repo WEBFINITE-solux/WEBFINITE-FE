@@ -10,7 +10,7 @@ const LoginForm: React.FC = () => {
   const isButtonEnabled = id.trim() !== "" && password.trim() !== "";
 
   const handleLogin = () => {
-    if (id === "webfininte1003" && password === "web2025*") {
+    if (id === "webfinite1003" && password === "web2025*") {
       window.location.href = "/home";
     } else {
       setError(true);
