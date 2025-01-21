@@ -30,7 +30,7 @@ const CourseSelectModal: React.FC<CourseSelectModalProps> = ({
   const handleSelectButtonClick = () => {
     if (selectedCourseId !== null) {
       onClose(); 
-      navigate("/quiz/create/choose")
+      navigate("/quiz/create/choose");
     }
   };
 
