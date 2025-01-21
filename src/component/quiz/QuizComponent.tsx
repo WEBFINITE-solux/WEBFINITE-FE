@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 interface QuizData {
@@ -13,12 +14,13 @@ interface QuizComponentProps {
 }
 
 const QuizComponent: React.FC<QuizComponentProps> = ({ quizzes }) => {
+  const navigate = useNavigate();
   const handleRefresh = (quizId: number) => {
     alert(`퀴즈 ${quizId} 새로고침!`);
   };
 
   const handleSolveQuiz = (quizId: number) => {
-    alert(`퀴즈 ${quizId} 풀기 시작!`);
+    navigate("/quiz/solve");
   };
 
   const handleViewAiExplanation = (quizId: number) => {

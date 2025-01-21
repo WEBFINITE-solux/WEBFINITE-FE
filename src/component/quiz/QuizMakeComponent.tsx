@@ -1,4 +1,5 @@
 import  { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 const QuizMakeComponent = () => {
@@ -9,6 +10,7 @@ const QuizMakeComponent = () => {
     shortAnswer: false,
   });
   const [detailedRequirements, setDetailedRequirements] = useState("");
+  const navigate =useNavigate();
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -25,7 +27,7 @@ const QuizMakeComponent = () => {
   };
   
   const handleSubmit = () => {
-    if (!quizCount.min || !quizCount.max || !detailedRequirements) {
+    if (!quizCount.min || !quizCount.max ) {
       alert("모든 필드를 채워주세요.");
       return;
     }
@@ -42,7 +44,9 @@ const QuizMakeComponent = () => {
       detailed_requirements: detailedRequirements,
     };
 
-    console.log("Request data:", requestData);
+    console.log(requestData);
+    navigate("/quiz")
+
   };
 
   return (
