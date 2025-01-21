@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styles from "../styles/LoginForm.module.css";
 
 const LoginForm: React.FC = () => {
@@ -7,11 +8,13 @@ const LoginForm: React.FC = () => {
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
+  const navigate = useNavigate();
+
   const isButtonEnabled = id.trim() !== "" && password.trim() !== "";
 
   const handleLogin = () => {
-    if (id === "test" && password === "1234") {
-      window.location.href = "/home";
+    if (id === "webfinite1003" && password === "web2025*") {
+      navigate("/home");
     } else {
       setError(true);
       setErrorMessage("아이디 또는 비밀번호가 일치하지 않습니다.");
@@ -28,7 +31,7 @@ const LoginForm: React.FC = () => {
   };
 
   const handleBackButtonClick = () => {
-    window.location.href = "/mainPage";
+    navigate("/");
   };
 
   return (
@@ -84,7 +87,14 @@ const LoginForm: React.FC = () => {
       <div className={styles.checkboxContainer}>
         <input type="checkbox" className={styles.checkbox} />
         <label className={styles.checkboxLabel}>Remember me</label>
-        <a href="#" className={styles.forgotPassword}>
+        <a
+          href="#"
+          className={styles.forgotPassword}
+          onClick={(e) => {
+            e.preventDefault();
+            navigate("/passwordRecovery");
+          }}
+        >
           Forgot Password?
         </a>
       </div>
