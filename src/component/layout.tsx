@@ -1,15 +1,25 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { Outlet, useLocation } from "react-router-dom";
+import LogoutModal from "./logoutModal";
 
 const Layout: React.FC = () => {
   const location = useLocation();
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
   const getActiveItem = () => {
-    if (location.pathname.startsWith("/timetable")) return "timetable";
-    if (location.pathname.startsWith("/study")) return "study";
-    if (location.pathname.startsWith("/quiz")) return "quiz";
-    return "home";
+    switch (location.pathname) {
+      case "/home":
+        return "home";
+      case "/study":
+        return "study";
+      case "/timetable":
+        return "timetable";
+      case "/quiz":
+        return "quiz";
+      default:
+        return "home";
+    }
   };
 
   const [activeItem, setActiveItem] = useState<
@@ -63,18 +73,20 @@ const Layout: React.FC = () => {
           </MenuItem>
         </Menu>
       </Sidebar>
-      <UserContainer>
-        <LogoutButton>
-          <LogoutLogo src="/logout.svg" />
-          <LogoutContent>로그아웃</LogoutContent>
-        </LogoutButton>
-        <UserImg src="/user.svg" />
-      </UserContainer>
-      <Outlet />
+        <UserContainer>
+          <LogoutButton onClick={() => setIsLogoutModalOpen(true)}>
+            <LogoutLogo src="/logout.svg" />
+            <LogoutContent>로그아웃</LogoutContent>
+          </LogoutButton>
+          <UserImg src="/user.svg" />
+          </UserContainer>
+          <Outlet />
+          {isLogoutModalOpen && (
+              <LogoutModal onClose={() => setIsLogoutModalOpen(false)} />
+          )}
     </Container>
   );
 };
-
 
 export default Layout;
 
@@ -182,7 +194,6 @@ const MenuItem = styled.a<{ isActive: boolean }>`
   text-decoration: none;
   margin-bottom: 60px;
   height: 60px;
-
   &:hover {
     background-color: #e9ecef;
     border-radius: 8px;
