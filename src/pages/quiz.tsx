@@ -32,7 +32,7 @@ const Quiz: React.FC = () => {
   };
 
   const handleEdit = () => {
-    alert("퀴즈 편집 기능 구현 예정");
+   navigate("/quiz/edit");
   };
 
   return (

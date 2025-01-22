@@ -47,7 +47,7 @@ const quizResult = {
       {
         question_id: 105,
         question_content: "CPU의 역할은?",
-        user_answer: "연산 수행",
+        user_answer: "데이터 저장",
         is_correct: false,
         correct_answer: "연산 수행",
         choices: ["연산 수행", "데이터 저장", "입출력 관리", "모니터 출력"],

@@ -1,5 +1,4 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
 import styled from "styled-components";
 
 interface QuizData {
@@ -9,19 +8,18 @@ interface QuizData {
   correct_rate: string | null;
 }
 
-interface QuizComponentProps {
+interface QuizComponentEditProps {
   quizzes: QuizData[];
 }
 
-const QuizComponent: React.FC<QuizComponentProps> = ({ quizzes }) => {
-  const navigate = useNavigate();
+const QuizComponentEdit: React.FC<QuizComponentEditProps> = ({ quizzes }) => {
+  const [selectedCards, setSelectedCards] = useState<Record<number, boolean>>({});
 
-  const handleSolveQuiz = (quizId: number) => {
-    navigate("/quiz/solve");
-  };
-
-  const handleViewAiExplanation = (quizId: number) => {
-    navigate("/quiz/answer");
+  const handleCheckboxChange = (quizId: number, isChecked: boolean) => {
+    setSelectedCards((prev) => ({
+      ...prev,
+      [quizId]: isChecked,
+    }));
   };
 
   return (
@@ -29,23 +27,37 @@ const QuizComponent: React.FC<QuizComponentProps> = ({ quizzes }) => {
       <Header>수업 1</Header>
       <QuizList>
         {quizzes.map((quiz) => (
-          <QuizCard key={quiz.quiz_id}>
+          <QuizCard
+            key={quiz.quiz_id}
+            isSelected={selectedCards[quiz.quiz_id] || false}
+          >
+            <HorizontalContainer>
             <Title>{quiz.quiz_title}</Title>
+            <CheckboxContainer>
+              <input
+                type="checkbox"
+                checked={selectedCards[quiz.quiz_id] || false}
+                onChange={(e) =>
+                  handleCheckboxChange(quiz.quiz_id, e.target.checked)
+                }
+              />
+            </CheckboxContainer>
+            </ HorizontalContainer>
             <Progress>
               {quiz.correct_rate ? quiz.correct_rate : "?/5"}
             </Progress>
             <Actions>
               {quiz.quiz_status === "COMPLETED" ? (
                 <>
-                  <ActionIcon onClick={() => handleSolveQuiz(quiz.quiz_id)}>
-                    <AgainLogo src="/again.svg"/>
+                  <ActionIcon>
+                    <AgainLogo src="/again.svg" />
                   </ActionIcon>
-                  <ActionButton onClick={() => handleViewAiExplanation(quiz.quiz_id)}>
+                  <ActionButton>
                     AI 해설보기
                   </ActionButton>
                 </>
               ) : (
-                <SolveButton onClick={() => handleSolveQuiz(quiz.quiz_id)}>
+                <SolveButton>
                   퀴즈 풀기
                 </SolveButton>
               )}
@@ -57,7 +69,7 @@ const QuizComponent: React.FC<QuizComponentProps> = ({ quizzes }) => {
   );
 };
 
-export default QuizComponent;
+export default QuizComponentEdit;
 
 const Container = styled.div`
   display: flex;
@@ -96,15 +108,20 @@ const QuizList = styled.div`
   }
 `;
 
-const QuizCard = styled.div`
+const QuizCard = styled.div<{ isSelected: boolean }>`
   flex: 0 0 300px;
-  background: #ffffff;
+  background: ${(props) => (props.isSelected ? "#EAECFF" : "#ffffff")};
   border-radius: 10px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   padding: 20px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: ${(props) => (props.isSelected ? "#dce0ff" : "#f9f9f9")};
+  }
 `;
 
 const Title = styled.div`
@@ -189,4 +206,18 @@ const ActionIcon = styled.div`
   &:hover {
     color: #007bff;
   }
+`;
+
+const CheckboxContainer = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const HorizontalContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
 `;
