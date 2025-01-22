@@ -10,7 +10,7 @@ const LoginForm: React.FC = () => {
   const isButtonEnabled = id.trim() !== "" && password.trim() !== "";
 
   const handleLogin = () => {
-    if (id === "test" && password === "1234") {
+    if (id === "webfinite1003" && password === "web2025*") {
       window.location.href = "/home";
     } else {
       setError(true);
@@ -84,7 +84,14 @@ const LoginForm: React.FC = () => {
       <div className={styles.checkboxContainer}>
         <input type="checkbox" className={styles.checkbox} />
         <label className={styles.checkboxLabel}>Remember me</label>
-        <a href="#" className={styles.forgotPassword}>
+        <a
+          href="#"
+          className={styles.forgotPassword}
+          onClick={(e) => {
+            e.preventDefault();
+            window.location.href = "/passwordRecovery";
+          }}
+        >
           Forgot Password?
         </a>
       </div>
