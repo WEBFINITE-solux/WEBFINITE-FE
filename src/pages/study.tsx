@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import { useNavigate } from "react-router-dom";
 import LearningPlanList from "../component/study/LearningPlanList";
+import WeeklyTodoList from "../component/study/WeeklyTodoList";
 import "./../styles/study.css"
 
 const Study: React.FC = () => {
@@ -43,6 +44,50 @@ const Study: React.FC = () => {
           }
         ]
       };
+
+      const toDoList = [
+        {
+          todo_id: 1,
+          todo_content: "입문 강의 수강",
+          is_completed: false,
+          start_date: "2025-01-17T00:00:00",
+          end_date: "2025-01-17T23:59:59",
+          user_id: 1,
+        },
+        {
+          todo_id: 2,
+          todo_content: "다양한 행렬 크기의 문제 해결",
+          is_completed: true,
+          start_date: "2025-01-17T12:00:00",
+          end_date: "2025-01-17T13:00:00",
+          user_id: 1,
+        },
+        {
+          todo_id: 3,
+          todo_content: "test1",
+          is_completed: true,
+          start_date: "2025-01-17T12:00:00",
+          end_date: "2025-01-17T13:00:00",
+          user_id: 1,
+        },
+        {
+          todo_id: 4,
+          todo_content: "test2",
+          is_completed: true,
+          start_date: "2025-01-18T15:15:00",
+          end_date: "2025-01-18T13:00:00",
+          user_id: 1,
+        },
+        {
+            todo_id: 5,
+            todo_content: "test3",
+            is_completed: true,
+            start_date: "2025-01-20T15:15:00",
+            end_date: "2025-01-20T13:00:00",
+            user_id: 1,
+          }
+
+      ];
     return (
         <div className="study">
             <div className="left-panel">
@@ -74,17 +119,7 @@ const Study: React.FC = () => {
                     </div>
                 </div>
                 <div className="todo-section">
-                    
-                    <div className="todo-list">
-                        <h3>September 27</h3>
-                        <ul>
-                        {Array.from({ length: 10 }).map((_, i) => (
-                            <li key={i} className="todo-item">
-                            <input type="checkbox" />
-                            </li>
-                        ))}
-                        </ul>
-                    </div>
+                    <WeeklyTodoList todos={toDoList} />
                 </div>
             </div>
         </div>
