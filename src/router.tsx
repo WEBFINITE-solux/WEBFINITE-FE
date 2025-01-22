@@ -1,4 +1,4 @@
-import { createBrowserRouter, Navigate } from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
 import Layout from "./component/layout";
 import Timetable from "./pages/timetable";
 import MainPage from "./pages/mainPage";
@@ -10,6 +10,12 @@ import AiPlan from "./pages/aiPlan";
 import SignupForm from "./pages/signupForm";
 import LoginForm from "./pages/loginForm";
 import LogoutModal from "./component/logoutModal";
+import Quiz from "./pages/quiz";
+import QuizCreate from "./pages/quizCreate";
+import QuizMake from "./pages/quizMake";
+import QuizSolve from "./pages/quizSolve";
+import QuizAnswerPage from "./pages/quizAnswerPage";
+import QuizEdit from "./pages/quizEdit";
 import PasswordRecovery from "./pages/passwordRecovery";
 import PasswordAlert from './pages/passwordAlert';
 
@@ -35,6 +41,18 @@ const router = createBrowserRouter([
       { path: "upload", element: <TimetableUpload /> },
       { path: "view", element: <TimetableView /> },
     ],
+  },
+  {
+    path : "/quiz",
+    element:<Layout/>,
+    children:[
+      {path:"",element:<Quiz/>},
+      {path:"create",element:<QuizCreate/>},
+      {path:"create/choose",element:<QuizMake/>},
+      {path:"solve",element:<QuizSolve/>},
+      {path:"answer",element:<QuizAnswerPage/>},
+      {path:"edit",element:<QuizEdit/>},
+    ]
   },
   {
     path: "/",
