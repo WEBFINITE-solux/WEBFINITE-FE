@@ -77,21 +77,41 @@ const AiPlan: React.FC = () => {
           {showPopup && (
             <div className="popup">
               <div className="popup-content">
-                <p>나의 강의 목록</p>
-                <div style={{ overflowY: "auto", height: "400px" }}>
+                <div style={{ borderBottom: "1px solid #9A9A9A"}}>
+                <p style={{fontWeight: "bold", marginLeft:"25px", marginBottom:"10px"}}>나의 강의 목록</p>
+
+                </div>
+                
+                <div style={{ overflowY: "auto", height: "370px" }}>
                   <ul>
                     {materials.map((material) => (
-                      <li
-                        key={material.id}
-                        onClick={() => handleMaterialSelection(material.name)}
-                        className="popup-item"
-                      >
-                        {material.name}
-                      </li>
+                      <div onClick={() => handleMaterialSelection(material.name)}
+                      className="popup-item">
+                        <img src="/lectureListpng.png" style={{height:"40px", marginRight:"15px"}}></img>
+                        <li
+                          key={material.id}
+                          onClick={() => handleMaterialSelection(material.name)}
+                          style={{fontWeight:"bold", fontSize:"14px"}}
+                        >
+                          {material.name}
+                        </li>
+                      </div>
                     ))}
                   </ul>
                 </div>
-                <button onClick={() => setShowPopup(false)}>닫기</button>
+                <div style={{display:"flex", flexDirection: "row-reverse", padding:"20px", alignItems: "center"}}>
+                  <button onClick={() => setShowPopup(false)} 
+                  style={{borderRadius: "28.858px", 
+                  background: "#2D41FF", 
+                  boxShadow: "0px 0px 5px 0px rgba(0, 0, 0, 0.25)", 
+                  color:"white", 
+                  fontSize:"14px",
+                  height:"35px",
+                  width: "110px",
+                  }}>
+                    선택 완료</button>
+                </div>
+                
               </div>
             </div>
           )}

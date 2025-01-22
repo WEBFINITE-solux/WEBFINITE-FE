@@ -3,27 +3,26 @@
   display: flex;
   width: 100vw;
   height: 100vh;
-  padding: 20px;
-  padding-top: 50px;
-  gap: 20px;
+  padding: 80px;
+  gap: 50px;
   background-image: url('/timetableBackground.png');
   background-size: cover;
 }
 
 /* 왼쪽 섹션 */
 .left-panel {
-  width : 600px;
-  padding: 20px;
+  width : 650px;
 }
 .top-group{
   display: flex;
   justify-content: space-between;
-  height: auto;
+  height: 60px;
+
+  padding: 15px
 }
 .ai {
-  font-size: 1.5rem;
+  font-size: 20px;
   font-weight: bold;
-  width: max-content;
 }
 
 .button-group {
@@ -33,17 +32,32 @@
 }
 
 .study-button {
-  padding: 10px 20px;
-  position: relative;
-  border-radius: 28.858px;
-  background: #FFF;
+  display: flex; /* Flexbox 사용 */
+  justify-content: center; /* 수평 가운데 정렬 */
+  align-items: center; /* 수직 가운데 정렬 */
+  padding: 10px 20px; /* 버튼 내부 여백 */
+  border: 1px solid #ccc; /* 테두리 */
+  border-radius: 20px; /* 둥근 모서리 */
+  background-color: white; /* 배경색 */
+  font-size: 16px; /* 글씨 크기 */
+  font-weight: bold; /* 글씨 굵기 */
+  cursor: pointer; /* 마우스 커서 변경 */
   box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.25);
 }
+
+.study-button:hover {
+  background-color: #2D41FF; /* 마우스 오버 시 배경색 변경 */
+  color: white
+}
+
+.study-button:focus {
+  outline: none; /* 포커스 시 기본 외곽선 제거 */
+}
+
 
 .result-section {
   border-radius: 25px;
   background: #FFF;
-  box-shadow: 0px -5px 10px 0px rgba(0, 0, 0, 0.25) inset;
   height: 500px;
   margin-bottom: 10px;
   overflow-y: auto;
@@ -98,7 +112,6 @@
   font-style: normal;
   font-weight: 500;
   line-height: 150%;
-  margin-top: 10px;
   padding: 10px;
   border-radius: 25px;
   background: linear-gradient(90deg, #3246FE 0%, #C0C6F9 100%);
