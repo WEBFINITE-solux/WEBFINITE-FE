@@ -97,7 +97,7 @@ const LearningProgress: React.FC<LearningProgressProps> = ({ data }) => {
                 key={`${day}-${hourIndex}`}
                 style={{
                   width: "100%",
-                  height: "calc(100%)", // 12칸으로 나누기
+                  height: "calc(100%*1.2)", // 12칸으로 나누기
                   backgroundColor: timeMap[day][hourIndex] ? "#2D41FF" : "#E0E0E0",
                   borderRadius: "2px",
                 }}

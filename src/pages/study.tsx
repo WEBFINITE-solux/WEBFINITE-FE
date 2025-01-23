@@ -89,6 +89,7 @@ const Study: React.FC = () => {
 
       ];
     return (
+      <div style={{display: "flex", height: "100vh", backgroundColor: "#ffffff"}}>
         <div className="study">
             <div className="left-panel">
                 <div className='top-group'>
@@ -123,6 +124,7 @@ const Study: React.FC = () => {
                 </div>
             </div>
         </div>
+      </div>
     );
 };
 
