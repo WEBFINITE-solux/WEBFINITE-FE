@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { loginUser } from "../services/userService";
 import styles from "../styles/LoginForm.module.css";
 
 const LoginForm: React.FC = () => {
@@ -7,14 +9,20 @@ const LoginForm: React.FC = () => {
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
+  const navigate = useNavigate();
+
   const isButtonEnabled = id.trim() !== "" && password.trim() !== "";
 
-  const handleLogin = () => {
-    if (id === "webfinite1003" && password === "web2025*") {
-      window.location.href = "/home";
-    } else {
+  const handleLogin = async () => {
+    try {
+      const response = await loginUser({ loginUserId: id, password });
+      localStorage.setItem("accessToken", response.accessToken);
+      localStorage.setItem("refreshToken", response.refreshToken);
+      alert("로그인 성공!");
+      navigate("/home");
+    } catch (error: any) {
       setError(true);
-      setErrorMessage("아이디 또는 비밀번호가 일치하지 않습니다.");
+      setErrorMessage(error.message || "로그인 요청 중 문제가 발생했습니다.");
     }
   };
 
@@ -28,7 +36,7 @@ const LoginForm: React.FC = () => {
   };
 
   const handleBackButtonClick = () => {
-    window.location.href = "/mainPage";
+    navigate("/"); 
   };
 
   return (
@@ -89,7 +97,7 @@ const LoginForm: React.FC = () => {
           className={styles.forgotPassword}
           onClick={(e) => {
             e.preventDefault();
-            window.location.href = "/passwordRecovery";
+            navigate("/passwordRecovery");
           }}
         >
           Forgot Password?
