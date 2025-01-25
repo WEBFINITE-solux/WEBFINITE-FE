@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { loginUser } from "../services/userService";
 import styles from "../styles/LoginForm.module.css";
 
 const LoginForm: React.FC = () => {
@@ -12,12 +13,16 @@ const LoginForm: React.FC = () => {
 
   const isButtonEnabled = id.trim() !== "" && password.trim() !== "";
 
-  const handleLogin = () => {
-    if (id === "webfinite1003" && password === "web2025*") {
+  const handleLogin = async () => {
+    try {
+      const response = await loginUser({ loginUserId: id, password });
+      localStorage.setItem("accessToken", response.accessToken);
+      localStorage.setItem("refreshToken", response.refreshToken);
+      alert("로그인 성공!");
       navigate("/home");
-    } else {
+    } catch (error: any) {
       setError(true);
-      setErrorMessage("아이디 또는 비밀번호가 일치하지 않습니다.");
+      setErrorMessage(error.message || "로그인 요청 중 문제가 발생했습니다.");
     }
   };
 
