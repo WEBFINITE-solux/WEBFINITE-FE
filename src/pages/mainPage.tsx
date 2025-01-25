@@ -6,7 +6,7 @@ const MainPageContainer = styled.div`
   position: relative;
   width: 100vw;
   height: 100vh;
-  background: #f5f6fb;
+  background: #f5f6fb !improtant;
   overflow: hidden;
 `;
 
