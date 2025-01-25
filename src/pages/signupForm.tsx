@@ -174,7 +174,7 @@ const SignupForm: React.FC = () => {
       const response = await signupUser(requestData);
 
       if (response.code === 200) {
-        alert("회원가입이 성공적으로 완료되었습니다!");
+        alert(response.message);
         navigate("/");
       }
     } catch (error: any) {
