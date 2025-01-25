@@ -22,7 +22,7 @@ export const loginUser = async (requestData: { loginUserId: string; password: st
       if (contentType && contentType.includes("application/json")) {
         return await response.json();
       } else {
-        throw new Error("서버에서 예상치 못한 형식의 응답이 도착했습니다.");
+        throw new Error("아이디 또는 비밀번호가 일치하지 않습니다.");
       }
     } catch (error) {
       console.error("로그인 요청 중 오류 발생:", error);
