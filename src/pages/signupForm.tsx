@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { signupUser } from "../services/userService";
 import styles from "../styles/signupForm.module.css";
 
 const SignupForm: React.FC = () => {
@@ -160,16 +161,36 @@ const SignupForm: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-  
-    if (!isButtonDisabled) {
-      console.log("회원가입 데이터", form);
-  
-      try {
-        console.log("회원가입 성공");
+
+    const requestData = {
+      loginUserId: form.id,
+      password: form.password,
+      confirmPassword: form.confirmPassword,
+      nickname: form.nickname,
+      email: form.email,
+    };
+
+    try {
+      const response = await signupUser(requestData);
+
+      if (response.code === 200) {
+        alert("회원가입이 성공적으로 완료되었습니다!");
         navigate("/");
-      } catch (error) {
-        console.error("회원가입 요청 에러:", error);
-        alert("회원가입 요청 중 문제가 발생했습니다. 다시 시도해주세요.");
+      }
+    } catch (error: any) {
+      const errorMapping: { [key: string]: () => void } = {
+        "이미 존재하는 아이디": () => setIdStatus("invalid"),
+        "이미 존재하는 닉네임": () => setNicknameStatus("invalid"),
+        "비밀번호가 일치하지 않습니다": () => setPasswordError("mismatch"),
+        "메일 형식": () => setEmailError("올바른 메일 형식을 입력해주세요."),
+      };
+
+      const errorHandler = Object.entries(errorMapping).find(([key]) => error.message.includes(key));
+
+      if (errorHandler) {
+        errorHandler[1]();
+      } else {
+        alert(error.message || "서버와의 연결에 문제가 발생했습니다. 다시 시도해주세요.");
       }
     }
   };
