@@ -49,14 +49,17 @@ const PasswordAlert: React.FC = () => {
                     className={styles.lockerIcon}
                 />
                 <p className={styles.messageText}>
-                    {userId}님의 패스워드는는<br />
+                    {userId}님의 패스워드는<br />
                     <span className={styles.highlightText}>{userPassword}</span> 입니다.
                 </p>
             </div>
             <div className={styles.infoBox}>
                 <p className={styles.infoText}>로그인 창으로 이동해주세요.</p>
             </div>
-            <button className={styles.loginButton} onClick={handleLogInButtonClick}>
+            <button
+                className={styles.loginButton}
+                onClick={handleLogInButtonClick}
+            >
                 Log in
             </button>
         </div>
