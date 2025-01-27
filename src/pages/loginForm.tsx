@@ -18,6 +18,7 @@ const LoginForm: React.FC = () => {
       const response = await loginUser({ loginUserId: id, password });
       localStorage.setItem("accessToken", response.accessToken);
       localStorage.setItem("refreshToken", response.refreshToken);
+      localStorage.setItem("userId", response.userId);
       alert("로그인 성공!");
       navigate("/home");
     } catch (error: any) {
