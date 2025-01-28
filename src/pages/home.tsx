@@ -42,17 +42,20 @@ const Home: React.FC = () => {
   ];
 
   const [studyPlan, setStudyPlan] = useState<StudyPlan | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetch = async () => {
       try {
-        setStudyPlan(null); // 초기화
+        setLoading(true);
         const response = await axios.get<StudyPlan>('/plan/1'); // API 호출
-        setStudyPlan(response.data); // 데이터 설정
+        setStudyPlan(response.data);
       } catch (e: unknown) {
         if (e instanceof Error) {
           console.error('Error fetching study plan:', e.message);
         }
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -106,7 +109,13 @@ const Home: React.FC = () => {
             className="table"
             style={{ width: '900px', height: '220px', overflowY: 'auto' }}
           >
-            <StudyPlanHome studyPlan={studyPlan || { prompt_text: '', learning_plan: [] }} />
+            {loading ? (
+              <p>Loading...</p>
+            ) : (
+              <StudyPlanHome
+                studyPlan={studyPlan || { prompt_text: '', learning_plan: [] }}
+              />
+            )}
           </div>
         </div>
         <div style={{ display: 'flex', flexDirection: 'row-reverse' }}>

@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 interface StudyPlan {
   prompt_text: string;
@@ -12,60 +12,66 @@ interface StudyPlan {
 
 const StudyPlanHome: React.FC<{ studyPlan: StudyPlan }> = ({ studyPlan }) => {
   return (
-    <div style={{ display: "flex", gap: "20px", padding: "20px", fontFamily: "Arial, sans-serif" }}>
+    <div style={{ display: 'flex', gap: '20px', padding: '20px', fontFamily: 'Arial, sans-serif' }}>
       {/* 왼쪽 Prompt Text */}
       <div
         style={{
-          padding: "20px",
-          borderRadius: "25px",
-          background: "rgba(200, 205, 249, 0.14)",
-          boxShadow: "0px 0px 5px 0px rgba(0, 0, 0, 0.25)",
-          width: "280px",
-          height: "max-content"
+          padding: '20px',
+          borderRadius: '25px',
+          background: 'rgba(200, 205, 249, 0.14)',
+          boxShadow: '0px 0px 5px 0px rgba(0, 0, 0, 0.25)',
+          width: '280px',
+          height: 'max-content',
         }}
       >
-        <p style={{ fontSize: "14px", color: "#374151" }}>{studyPlan.prompt_text}</p>
+        <p style={{ fontSize: '14px', color: '#374151' }}>
+          {studyPlan?.prompt_text || 'No prompt available'}
+        </p>
       </div>
-      <div style={{border: "1px solid #2D41FF", height: ""}}></div>
+      <div style={{ border: '1px solid #2D41FF', height: '' }}></div>
 
       {/* 오른쪽 Learning Plan */}
       <div>
-        {studyPlan.learning_plan.map((plan) => (
-          <div
-            key={plan.plan_id}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              padding: "10px 20px",
-              marginBottom: "15px",
-              width: "520px"
-            }}
-          >
-            {/* Week Number */}
+        {studyPlan?.learning_plan?.length > 0 ? (
+          studyPlan.learning_plan.map((plan) => (
             <div
+              key={plan.plan_id}
               style={{
-                width: "60px",
-                height: "40px",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: "20px",
-                fontWeight: "bold",
-                boxShadow: "0px 0px 3px 0px rgba(0, 0, 0, 0.25)"
+                display: 'flex',
+                alignItems: 'center',
+                padding: '10px 20px',
+                marginBottom: '15px',
+                width: '520px',
               }}
             >
-              {plan.week}주차
-            </div>
+              {/* Week Number */}
+              <div
+                style={{
+                  width: '60px',
+                  height: '40px',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  borderRadius: '20px',
+                  fontWeight: 'bold',
+                  boxShadow: '0px 0px 3px 0px rgba(0, 0, 0, 0.25)',
+                }}
+              >
+                {plan.week}주차
+              </div>
 
-            {/* Plan Details */}
-            <div style={{ marginLeft: "20px", flex: 1 }}>
-              <p style={{ margin: 0, fontSize: "14px", fontWeight: "bold" }}>
-                [{plan.plan_title}]
-              </p>
-              <p style={{ margin: 0, fontSize: "12px",}}>{plan.plan_description}</p>
+              {/* Plan Details */}
+              <div style={{ marginLeft: '20px', flex: 1 }}>
+                <p style={{ margin: 0, fontSize: '14px', fontWeight: 'bold' }}>
+                  [{plan.plan_title}]
+                </p>
+                <p style={{ margin: 0, fontSize: '12px' }}>{plan.plan_description}</p>
+              </div>
             </div>
-          </div>
-        ))}
+          ))
+        ) : (
+          <p style={{ fontSize: '14px', color: '#555' }}>학습 계획이 없습니다.</p>
+        )}
       </div>
     </div>
   );
