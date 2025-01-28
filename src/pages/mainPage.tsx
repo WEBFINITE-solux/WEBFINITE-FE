@@ -6,7 +6,7 @@ const MainPageContainer = styled.div`
   position: relative;
   width: 100vw;
   height: 100vh;
-  background: #f5f6fb;
+  background: #f5f6fb !improtant;
   overflow: hidden;
 `;
 
@@ -81,6 +81,14 @@ const Button = styled.button`
     background: #2d41ff;
     color: #ffffff;
     box-shadow: 0px 0px 10px rgba(45, 65, 255, 0.5);
+
+    .button-text {
+      color: #ffffff;
+    }
+
+    .button-arrow {
+      filter: brightness(0) invert(1);
+    }
   }
 
   &:focus {
@@ -95,20 +103,12 @@ const Button = styled.button`
     text-align: center;
     margin-right: 0.5vw;
     transition: color 0.3s ease;
-
-    &:hover {
-      color: #ffffff;
-    }
   }
 
   .button-arrow {
     width: 1.15vw;
     height: auto;
     transition: filter 0.3s ease;
-
-    &:hover {
-      filter: brightness(0) invert(1);
-    }
   }
 `;
 
