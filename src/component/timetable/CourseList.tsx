@@ -77,8 +77,8 @@ const CourseList: React.FC<CourseListProps> = ({ courses }) => {
       ) : isDeleting ? (
         <CourseDelete
   courses={courseData.map(course => ({
-    id: course.course_id,  // ✅ `course_id` → `id`
-    title: course.course_title,  // ✅ `course_title` → `title`
+    id: course.course_id,  
+    title: course.course_title, 
     period: course.period
   }))}
   onDelete={handleDeleteCourse}
