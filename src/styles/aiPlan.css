@@ -1,8 +1,8 @@
 .ai-plan {
-  height: 100vh;
-  width:100vw;
+  width: 1704px;
+  height: 1079px;
   padding: 90px;
-  background-image: url('/timetableBackground.png');
+  background-image: url('/studyBackground.png');
   background-size: cover;
   background-repeat: no-repeat;
 }

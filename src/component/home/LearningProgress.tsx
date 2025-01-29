@@ -86,6 +86,8 @@ const LearningProgress: React.FC<LearningProgressProps> = ({ data }) => {
                 fontSize: "12px",
                 fontWeight: day === "THU" ? "bold" : "normal",
                 color: day === "THU" ? "#2D41FF" : "#374151",
+                paddingBottom: "0px",
+                marginBottom: "0px"
               }}
             >
               {day}

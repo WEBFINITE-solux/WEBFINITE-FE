@@ -1,14 +1,15 @@
 .home{
-    background-image: url('/timetableBackground.png');
+    background-image: url('/homeBackground.png');
     background-size: cover;
     width: 1704px;
     height: 1079px;
     display: flex;
-    gap: 40px;
-    padding: 80px;
+    gap: 50px;
+    padding-top: 100px;
+    padding-left: 100px;
 }
 .left{
-    width: 900px;
+    width: 1050px;
     height: 600px;
     display: flex;
     flex-direction: column;
@@ -16,13 +17,11 @@
 
 }
 .right{
-    width: 300px;
+    width: 400px;
     height: 600px;
     
 }
 .home-title{
-    height: 80px;
-
     border-radius: 20px;
     background: linear-gradient(90deg, #2D41FF 0%, #7E8AFC 67.5%, #C8CDF9 100%);
 }
@@ -32,9 +31,9 @@
     font-size: 36px;
     font-style: normal;
     font-weight: 500;
-    line-height: 150%;
-    margin-top: 2vh;
-    margin-left: 4vh;
+    margin-top: 20px;
+    margin-left: 50px;
+    margin-bottom: 30px;
 }
 
 .text{
@@ -43,7 +42,6 @@
     font-size: 20px;
     font-style: normal;
     font-weight: 800;
-    line-height: 150%;
 }
 .table{
     flex-shrink: 0;
