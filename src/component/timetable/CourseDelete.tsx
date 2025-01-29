@@ -1,40 +1,32 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
-type Course = {
-  course_id: number;
-  course_title: string;
+type ListCourse = {
+  id: number;
+  title: string;
   period: string;
-  day: string[];
-  start_time: string;
-  end_time: string;
-  location: string;
-  color?: string;
-  term: string;
 };
 
 type CourseDeleteProps = {
-  courses: Course[];
+  courses: ListCourse[];
   onDelete: (courseId: number) => void;
   onBackToList: () => void;
 };
 
 const CourseDelete: React.FC<CourseDeleteProps> = ({ courses, onDelete, onBackToList }) => {
   const [hoveredId, setHoveredId] = useState<number | null>(null);
-  const [isOptionsOpen, setIsOptionsOpen] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
-  const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
-
+  const [selectedCourse, setSelectedCourse] = useState<ListCourse | null>(null);
   const optionsRef = useRef<HTMLDivElement>(null);
 
   const handleDeleteCourse = () => {
     if (selectedCourse !== null) {
-      onDelete(selectedCourse.course_id);
+      onDelete(selectedCourse.id); 
       setShowPopup(false);
     }
   };
 
-  const handleDeleteClick = (course: Course) => {
+  const handleDeleteClick = (course: ListCourse) => {
     setSelectedCourse(course);
     setShowPopup(true);
   };
@@ -43,44 +35,23 @@ const CourseDelete: React.FC<CourseDeleteProps> = ({ courses, onDelete, onBackTo
     setShowPopup(false);
   };
 
-  const toggleOptions = () => {
-    setIsOptionsOpen(!isOptionsOpen);
-  };
-  const handleClickOutside = (event: MouseEvent) => {
-    if (
-      optionsRef.current &&
-      !optionsRef.current.contains(event.target as Node)
-    ) {
-      setIsOptionsOpen(false);
-    }
-  };
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (optionsRef.current && !optionsRef.current.contains(event.target as Node)) {
+        setShowPopup(false);
+      }
+    };
 
-    useEffect(() => {
-      document.addEventListener("mousedown", handleClickOutside);
-      return () => {
-        document.removeEventListener("mousedown", handleClickOutside);
-      };
-    }, []);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <Container>
       <Header>
         <Title onClick={onBackToList}>나의 강의 목록</Title>
-        <OptionsContainer ref={optionsRef}>
-          <OptionsButton onClick={toggleOptions}>⋮</OptionsButton>
-          {isOptionsOpen && (
-            <OptionsMenu>
-              <OptionItem>
-                <OptionLogo src="/add.png" />
-                <OptionContent>추가하기</OptionContent>
-              </OptionItem>
-              <OptionItem>
-                <OptionLogo src="/delete.png" />
-                <OptionContent>삭제하기</OptionContent>
-              </OptionItem>
-            </OptionsMenu>
-          )}
-        </OptionsContainer>
       </Header>
       <Content>
         {courses.length === 0 ? (
@@ -89,19 +60,19 @@ const CourseDelete: React.FC<CourseDeleteProps> = ({ courses, onDelete, onBackTo
           <CourseListContainer>
             {courses.map((course) => (
               <CourseItem
-                key={course.course_id}
-                onMouseEnter={() => setHoveredId(course.course_id)}
+                key={course.id} 
+                onMouseEnter={() => setHoveredId(course.id)}
                 onMouseLeave={() => setHoveredId(null)}
               >
-                <CourseInfo isHovered={hoveredId === course.course_id}>
+                <CourseInfo isHovered={hoveredId === course.id}>
                   <CourseIconContainer
                     src="/courseImg.png"
                     alt="강의 이미지"
                   />
-                  <CourseTitle>{course.course_title}</CourseTitle>
+                  <CourseTitle>{course.title}</CourseTitle>
                   <CoursePeriod>{course.period}</CoursePeriod>
                 </CourseInfo>
-                {hoveredId === course.course_id && (
+                {hoveredId === course.id && (
                   <DeleteButton onClick={() => handleDeleteClick(course)}>
                     <DeleteLogo src="/DeleteLogo.png" alt="삭제" />
                   </DeleteButton>
@@ -115,7 +86,7 @@ const CourseDelete: React.FC<CourseDeleteProps> = ({ courses, onDelete, onBackTo
       {showPopup && (
         <PopupContainer>
           <PopupContent>
-            <PopupText>{selectedCourse?.course_title}를 삭제하시겠습니까?</PopupText>
+            <PopupText>{selectedCourse?.title}를 삭제하시겠습니까?</PopupText> 
             <PopupButtons>
               <CancelButton onClick={closePopup}>취소</CancelButton>
               <ConfirmButton onClick={handleDeleteCourse}>삭제</ConfirmButton>
@@ -128,7 +99,6 @@ const CourseDelete: React.FC<CourseDeleteProps> = ({ courses, onDelete, onBackTo
 };
 
 export default CourseDelete;
-
 const Container = styled.div`
   width: 400px;
   height: 780px;
@@ -155,59 +125,6 @@ const Title = styled.div`
   font-size: 18px;
   font-weight: bold;
   cursor: pointer;
-`;
-
-const OptionsContainer = styled.div`
-  position: relative;
-`;
-
-const OptionsButton = styled.button`
-  background: none;
-  border: none;
-  font-size: 20px;
-  color: #656565;
-  cursor: pointer;
-`;
-
-const OptionsMenu = styled.div`
-  position: absolute;
-  top: 72px;
-  right: -10px;
-  background: #ffffff;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  z-index: 10;
-  display: flex;
-  flex-direction: column;
-  width: 287px;
-  height: 124px;
-  flex-shrink: 0;
-`;
-
-const OptionItem = styled.div`
-  padding: 14px 18px;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  cursor: pointer;
-  white-space: nowrap;
-  &:hover {
-    background-color: #eaecff;
-  }
-`;
-
-const OptionContent = styled.div`
-  color: #1a1a1a;
-  text-align: center;
-  font-family: Pretendard;
-  font-size: 20px;
-  font-weight: 600;
-`;
-
-const OptionLogo = styled.img`
-  width: 35.602px;
-  height: 35.602px;
 `;
 
 const Content = styled.div`
@@ -273,7 +190,7 @@ const CourseTitle = styled.div`
   font-size: 14px;
   font-weight: bold;
   color: #000;
-  width : 80px;
+  width: 80px;
 `;
 
 const CoursePeriod = styled.div`
@@ -341,42 +258,22 @@ const PopupButtons = styled.div`
 `;
 
 const CancelButton = styled.button`
-border-radius: 5px;
-background: #FFF;
-box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.25);
-  padding: 8px 16px;
+  width: 101px;
+  height: 35px;
+  border-radius: 5px;
+  background: #fff;
+  box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.25);
   color: #000;
-text-align: center;
-font-family: Pretendard;
-font-size: 13px;
-font-style: normal;
-font-weight: 700;
-line-height: 150%; /* 19.5px */
-width: 101px;
-height: 35px;
-flex-shrink: 0;
-
-  &:hover {
-    background: #f1f1f1;
-  }
+  font-size: 13px;
+  font-weight: 700;
 `;
 
 const ConfirmButton = styled.button`
-width: 101px;
-height: 35px;
-flex-shrink: 0;
-border-radius: 5px;
-background: #2D41FF;
-box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.25);
-color: #FFF;
-text-align: center;
-font-family: Pretendard;
-font-size: 13px;
-font-style: normal;
-font-weight: 700;
-line-height: 150%; /* 19.5px */
-
-  &:hover {
-    background: #1B31FF;
-  }
+  width: 101px;
+  height: 35px;
+  border-radius: 5px;
+  background: #2d41ff;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
 `;
