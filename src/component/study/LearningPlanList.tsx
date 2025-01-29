@@ -1,5 +1,7 @@
-import React, { useState } from "react";
-import Plan from "./Plan";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import NoDataComponent from "../NoDataComponent";
+import "./../../styles/study.css"
 
 interface LearningPlan {
   plan_id: number;
@@ -8,133 +10,225 @@ interface LearningPlan {
   plan_description: string;
 }
 
-interface LearningPlanListProps {
-  promptText: string;
-  plans: LearningPlan[];
-  isEditing: boolean; // 수정 상태
-}
+const LearningPlanList: React.FC = () => {
+  const userId = 1;
+  const [courseId, setCourseId] = useState(); // courseId 값 설정
+  const [studyPlan, setStudyPlan] = useState<{ prompt_text: string; learning_plan: LearningPlan[] }>({
+    prompt_text: "",
+    learning_plan: [],
+  });
+  const [loading, setLoading] = useState(true);
+  const [editedPlans, setEditedPlans] = useState<LearningPlan[]>([]);
+  const [isEditing, setIsEditing] = useState(false); // 수정 상태 관리
+  const [isNull, setIsNull] = useState(false);
 
-const LearningPlanList: React.FC<LearningPlanListProps> = ({
-  promptText,
-  plans,
-  isEditing,
-}) => {
-  const [editedPlans, setEditedPlans] = useState(plans); // 수정 가능한 계획 상태
+  // 학습 계획 불러오기
+  useEffect(() => {
+    const fetchStudyPlan = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(`https://d291-58-29-179-25.ngrok-free.app/plan/${userId}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "ngrok-skip-browser-warning": "true",
+          },
+        });
 
-  const handleInputChange = (id: number, field: string, value: string) => {
-    const updatedPlans = editedPlans.map((plan) =>
-      plan.plan_id === id ? { ...plan, [field]: value } : plan
+        if (!response.ok) {
+          setIsNull(true);
+          throw new Error(`HTTP 오류 발생: ${response.status}`);
+        }
+
+        const data = await response.json();
+        if (!data.learning_plan || data.learning_plan.length === 0) {
+          setIsNull(true); 
+        } else {
+          setIsNull(false);
+          setStudyPlan(data);
+          setEditedPlans(data.learning_plan);
+          setCourseId(data.course_id);
+        }
+        
+      } catch (error) {
+        console.error("Error fetching study plan:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStudyPlan();
+  }, []);
+
+  // 입력값 변경 핸들러
+  const handleInputChange = (id: number, field: keyof LearningPlan, value: string) => {
+    setEditedPlans((prevPlans) =>
+      prevPlans.map((plan) =>
+        plan.plan_id === id ? { ...plan, [field]: value } : plan
+      )
     );
-    setEditedPlans(updatedPlans); // 수정된 계획 업데이트
   };
 
-  return (
-    <div>
-      <div style={{ padding: "30px" }}>
-        <div
-          style={{
-            borderRadius: "10px",
-            background: "#FFF",
-            boxShadow: "0px 0px 5px 0px rgba(0, 0, 0, 0.25)",
-            marginBottom: "30px",
-          }}
-        >
-          <p
-            style={{
-              padding: "10px",
-              fontSize: "13px",
-              color: "rgba(0, 0, 0, 0.80)",
-            }}
-          >
-            {promptText}
-          </p>
-        </div>
+  // 저장 버튼 클릭 시 API 호출
+  const handleSave = async () => {
+    const updatedData = {
+      prompt_text: studyPlan.prompt_text,
+      learning_plan: editedPlans,
+    };
 
-        {editedPlans.map((plan) => (
-          <div key={plan.plan_id} style={{ marginBottom: "17px" }}>
+    try {
+      const response = await fetch(`https://d291-58-29-179-25.ngrok-free.app/plan/${courseId}/update`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+          "ngrok-skip-browser-warning": "true",
+        },
+        body: JSON.stringify(updatedData),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP 오류 발생: ${response.status}`);
+      }
+
+      console.log("학습 계획이 성공적으로 저장되었습니다!");
+      setStudyPlan(updatedData); // 저장된 데이터로 상태 업데이트
+      setIsEditing(false); // 수정 모드 종료
+    } catch (error) {
+      console.error("Error saving study plan:", error);
+      alert("저장하는 중 오류가 발생했습니다.");
+    }
+  };
+  const navigate = useNavigate();
+  const handlePlanButtonClick = () => {
+    navigate("/study/aiPlan");
+  };
+  return (
+    <>
+      <div>
+      <div className="top-group">
+        <h1 className="ai">Ai 학습계획</h1>
+        <div className="button-group">
+          <button className="study-button" onClick={handlePlanButtonClick}>
+            계획 짜기
+          </button>
+          <button className="study-button" onClick={() => (isEditing ? handleSave() : setIsEditing(true))}>
+            {isEditing ? "저장하기" : "수정하기"}
+          </button>
+        </div>
+      </div>
+      <div className="result-section" >
+        {isNull ? <NoDataComponent/> :
+          <div style={{ padding: "30px" }}>
             <div
               style={{
-                borderRadius: "15px",
-                background: "var(--c-9-ceff-2, #C9CEFF)",
-                width: "80px",
-                height: "30px",
-                display: "flex",
-                justifyContent: "center",
+                borderRadius: "10px",
+                background: "#FFF",
+                boxShadow: "0px 0px 5px 0px rgba(0, 0, 0, 0.25)",
+                marginBottom: "30px",
               }}
             >
               <p
                 style={{
-                  fontSize: "15px",
-                  marginTop: "auto",
-                  marginBottom: "auto",
+                  padding: "10px",
+                  fontSize: "13px",
+                  color: "rgba(0, 0, 0, 0.80)",
                 }}
               >
-                Week {plan.week}
+                {studyPlan.prompt_text}
               </p>
             </div>
-            <div
-              style={{
-                marginTop: "7px",
-                borderRadius: "10px",
-                background: "var(--f-5-f-6-fb, #F5F6FB)",
-                padding: "15px",
-              }}
-            >
-              {isEditing ? (
-                <>
-                  <input
-                    type="text"
-                    value={plan.plan_title}
-                    onChange={(e) =>
-                      handleInputChange(plan.plan_id, "plan_title", e.target.value)
-                    }
+
+            {loading ? (
+              <p>로딩 중...</p>
+            ) : (
+              editedPlans.map((plan) => (
+                <div key={plan.plan_id} style={{ marginBottom: "17px" }}>
+                  <div
                     style={{
-                      fontWeight: "bold",
-                      fontSize: "15px",
-                      width: "100%",
-                      marginBottom: "10px",
-                      border: "0px",
-                      backgroundColor: "transparent",
-                      outline: "#2D41FF",
-                      borderRadius: "10px",
+                      borderRadius: "15px",
+                      background: "var(--c-9-ceff-2, #C9CEFF)",
+                      width: "80px",
+                      height: "30px",
+                      display: "flex",
+                      justifyContent: "center",
                     }}
-                  />
-                  <textarea
-                    value={plan.plan_description}
-                    onChange={(e) =>
-                      handleInputChange(plan.plan_id, "plan_description", e.target.value)
-                    }
+                  >
+                    <p
+                      style={{
+                        fontSize: "15px",
+                        marginTop: "auto",
+                        marginBottom: "auto",
+                      }}
+                    >
+                      Week {plan.week}
+                    </p>
+                  </div>
+                  <div
                     style={{
-                      width: "100%",
-                      color: "#5F5F5F",
-                      border: "0px",
-                      backgroundColor: "transparent",
-                      outline: "#2D41FF",
+                      marginTop: "7px",
                       borderRadius: "10px",
-                      resize: "none", // 크기 조절 비활성화
-                      fontSize: "15px",
-                      lineHeight: "1.5",
-                      minHeight: "80px", // 기본 높이 설정
-                      overflow: "hidden", // 내용에 맞게 동적 높이 조절
+                      background: "var(--f-5-f-6-fb, #F5F6FB)",
+                      padding: "15px",
                     }}
-                    rows={1} // 최소 높이
-                  />
-                </>
-              ) : (
-                <>
-                  <p style={{ fontWeight: "bold", fontSize: "15px" }}>
-                    {plan.plan_title}
-                  </p>
-                  <p style={{ color: "#5F5F5F", marginTop: "10px" }}>
-                    {plan.plan_description}
-                  </p>
-                </>
-              )}
-            </div>
+                  >
+                    {isEditing ? (
+                      <>
+                        <input
+                          type="text"
+                          value={plan.plan_title}
+                          onChange={(e) => handleInputChange(plan.plan_id, "plan_title", e.target.value)}
+                          style={{
+                            fontWeight: "bold",
+                            fontSize: "15px",
+                            width: "100%",
+                            marginBottom: "10px",
+                            border: "0px",
+                            backgroundColor: "transparent",
+                            outline: "#2D41FF",
+                            borderRadius: "10px",
+                          }}
+                        />
+                        <textarea
+                          value={plan.plan_description}
+                          onChange={(e) => handleInputChange(plan.plan_id, "plan_description", e.target.value)}
+                          style={{
+                            width: "100%",
+                            color: "#5F5F5F",
+                            border: "0px",
+                            backgroundColor: "transparent",
+                            outline: "#2D41FF",
+                            borderRadius: "10px",
+                            resize: "none",
+                            fontSize: "15px",
+                            lineHeight: "1.5",
+                            minHeight: "80px",
+                            overflow: "hidden",
+                          }}
+                          rows={1}
+                        />
+                      </>
+                    ) : (
+                      <>
+                        <p style={{ fontWeight: "bold", fontSize: "15px" }}>{plan.plan_title}</p>
+                        <p style={{ color: "#5F5F5F", marginTop: "10px" }}>{plan.plan_description}</p>
+                      </>
+                    )}
+                  </div>
+                </div>
+              ))
+            )}
           </div>
-        ))}
+        }
       </div>
+      
+      
     </div>
+    </>
+    
+    
+
   );
 };
 

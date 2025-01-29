@@ -1,26 +1,82 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { DateRangePicker } from "react-date-range";
 import "react-date-range/dist/styles.css"; // 기본 스타일
 import "react-date-range/dist/theme/default.css"; // 테마 스타일
 import "./../styles/aiPlan.css";
 
 const AiPlan: React.FC = () => {
+  const userId = 1;
   const [selectedMaterial, setSelectedMaterial] = useState("강의 자료 선택하러 가기"); // 선택된 강의 자료
-  const [materials, setMaterials] = useState([
-    { id: 1, name: "강의 1", range: ["1-1", "1-2", "1-3"] },
-    { id: 2, name: "선형대수", range: ["2-1", "2-2", "2-3", "2-4"] },
-    { id: 3, name: "강의 3", range: ["3-1", "3-2"] },
-    { id: 4, name: "강의 4", range: ["4-1", "4-2", "4-3", "4-4", "4-5"] },
-    { id: 5, name: "강의 5", range: ["5-1", "5-2", "5-3"] },
-  ]); // 더미 데이터
+  const [materials, setMaterials] = useState([]); // 서버에서 받아온 데이터
+  const [selectedCourseId, setSelectedCourseId] = useState<number | null>(null); // 선택된 강의의 courseId
+  const [selectedCourseFiles, setSelectedCourseFiles] = useState([]); // 선택된 강의의 파일 데이터
+  const [selectedFileId, setSelectedFileId] = useState(0);
   const [showPopup, setShowPopup] = useState(false); // 팝업창 표시 여부
   const [startUnit, setStartUnit] = useState("");
   const [endUnit, setEndUnit] = useState("");
   const [additionalNotes, setAdditionalNotes] = useState("");
   const [showWarning, setShowWarning] = useState(false);
 
-  const handleMaterialSelection = (material: string) => {
-    setSelectedMaterial(material);
+  useEffect(() => {
+    const fetchMaterials = async () => {
+      try {
+        const response = await fetch(
+          `https://de8b-58-29-179-25.ngrok-free.app/course/${userId}/2024/1`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              "Accept": "application/json",
+              "ngrok-skip-browser-warning": "true",
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`HTTP 오류 발생: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log("받아온 강의 자료:", data);
+        setMaterials(data.courses || []);
+      } catch (error) {
+        console.error("강의 자료를 가져오는 중 오류 발생:", error);
+      }
+    };
+
+    fetchMaterials();
+  }, []);
+
+  const fetchCourseFiles = async (courseId: number) => {
+    try {
+      const response = await fetch(
+        `https://de8b-58-29-179-25.ngrok-free.app/course/file/${courseId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "ngrok-skip-browser-warning": "true",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP 오류 발생: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log("받아온 파일 데이터:", data);
+      setSelectedCourseFiles(data.files || []);
+    } catch (error) {
+      console.error("파일 데이터를 가져오는 중 오류 발생:", error);
+    }
+  };
+
+  const handleMaterialSelection = (material: any) => {
+    setSelectedMaterial(material.title);
+    setSelectedCourseId(material.id); // 선택된 강의의 courseId 저장
+    fetchCourseFiles(material.id); // 파일 데이터 가져오기
   };
 
   const [showCalendar, setShowCalendar] = useState(false);
@@ -42,8 +98,59 @@ const AiPlan: React.FC = () => {
     year: "numeric",
   });
 
-  const selectedMaterialRange =
-    materials.find((m) => m.name === selectedMaterial)?.range || [];
+  const selectedMaterialRange = ["1-1", "1-2", "1-3"]; // 모든 강의의 범위 고정
+
+  const createPlan = async () => {
+    if (!selectedCourseId || !selectedFileId) {
+      alert("강의 자료와 파일을 선택하세요.");
+      return;
+    }
+  
+    // 날짜를 YYYY-MM-DD 형식으로 변환
+    const formatDate = (date: Date) => {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0"); // 월은 0부터 시작하므로 +1
+      const day = String(date.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    };
+  
+    const bodyData = {
+      prompt_text: additionalNotes,
+      start_date: formatDate(dateRange[0].startDate), // 시작 날짜를 YYYY-MM-DD로 변환
+      end_date: formatDate(dateRange[0].endDate), // 종료 날짜를 YYYY-MM-DD로 변환
+      start_unit: startUnit,
+      end_unit: endUnit,
+      file_id: selectedFileId,
+    };
+  
+    console.log("생성된 BodyData:", bodyData);
+  
+    try {
+      const response = await fetch(
+        `https://de8b-58-29-179-25.ngrok-free.app/plan/${selectedCourseId}/new`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+          },
+          body: JSON.stringify(bodyData), // JSON 데이터 설정
+        }
+      );
+  
+      if (!response.ok) {
+        throw new Error(`HTTP 오류 발생: ${response.status}`);
+      }
+  
+      const data = await response.json();
+      console.log("생성된 학습 계획:", data);
+      alert("학습 계획이 성공적으로 생성되었습니다!");
+    } catch (error) {
+      console.error("학습 계획 생성 중 오류 발생:", error);
+      alert("학습 계획 생성 중 오류가 발생했습니다.");
+    }
+  };
+
 
   return (
     <div className="ai-plan">
@@ -77,41 +184,75 @@ const AiPlan: React.FC = () => {
           {showPopup && (
             <div className="popup">
               <div className="popup-content">
-                <div style={{ borderBottom: "1px solid #9A9A9A"}}>
-                <p style={{fontWeight: "bold", marginLeft:"25px", marginBottom:"10px"}}>나의 강의 목록</p>
-
+                <div style={{ borderBottom: "1px solid #9A9A9A" }}>
+                  <p style={{ fontWeight: "bold", marginLeft: "25px", marginBottom: "10px" }}>
+                    나의 강의 목록
+                  </p>
                 </div>
-                
+
                 <div style={{ overflowY: "auto", height: "370px" }}>
                   <ul>
-                    {materials.map((material) => (
-                      <div onClick={() => handleMaterialSelection(material.name)}
-                      className="popup-item">
-                        <img src="/lectureListpng.png" style={{height:"40px", marginRight:"15px"}}></img>
-                        <li
-                          key={material.id}
-                          onClick={() => handleMaterialSelection(material.name)}
-                          style={{fontWeight:"bold", fontSize:"14px"}}
-                        >
-                          {material.name}
+                    {materials.map((material: any) => (
+                      <div
+                        key={material.id}
+                        onClick={() => handleMaterialSelection(material)}
+                        className="popup-item"
+                      >
+                        <img
+                          src="/lectureListpng.png"
+                          style={{ height: "40px", marginRight: "15px" }}
+                          alt="lecture"
+                        />
+                        <li style={{ fontWeight: "bold", fontSize: "14px" }}>
+                          {material.title}
                         </li>
                       </div>
                     ))}
                   </ul>
                 </div>
-                <div style={{display:"flex", flexDirection: "row-reverse", padding:"20px", alignItems: "center"}}>
-                  <button onClick={() => setShowPopup(false)} 
-                  style={{borderRadius: "28.858px", 
-                  background: "#2D41FF", 
-                  boxShadow: "0px 0px 5px 0px rgba(0, 0, 0, 0.25)", 
-                  color:"white", 
-                  fontSize:"14px",
-                  height:"35px",
-                  width: "110px",
-                  }}>
-                    선택 완료</button>
+
+                {/* 선택된 강의의 파일 목록 */}
+                {selectedCourseFiles.length > 0 && (
+                  <div style={{ padding: "20px", marginTop: "10px" }}>
+                    <h3>선택된 강의 자료 파일 목록:</h3>
+                    <ul>
+                      {selectedCourseFiles.map((file: any) => (
+                        <div
+                          key={file.file_id}
+                          className = 'popup-item'
+                          onClick={() => setSelectedFileId(file.file_id)}>
+                          <li style={{ fontWeight: "bold", fontSize: "14px" }}>
+                            {file.original_filename}
+                          </li>
+                        </div>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "row-reverse",
+                    padding: "20px",
+                    alignItems: "center",
+                  }}
+                >
+                  <button
+                    onClick={() => setShowPopup(false)}
+                    style={{
+                      borderRadius: "28.858px",
+                      background: "#2D41FF",
+                      boxShadow: "0px 0px 5px 0px rgba(0, 0, 0, 0.25)",
+                      color: "white",
+                      fontSize: "14px",
+                      height: "35px",
+                      width: "110px",
+                    }}
+                  >
+                    닫기
+                  </button>
                 </div>
-                
               </div>
             </div>
           )}
@@ -128,17 +269,25 @@ const AiPlan: React.FC = () => {
               <label>기간</label>
               <div className="date-selection" onClick={() => setShowCalendar(true)}>
                 {/* 선택된 날짜 표시 */}
-                <div style={{display:"flex"}}>
+                <div style={{ display: "flex" }}>
                   <div className="period-box">
-                    <img src="/calendar.png" style={{ width: "30px" }}/>
+                    <img src="/calendar.png" style={{ width: "30px" }} alt="calendar" />
                     {formatter.format(dateRange[0].startDate)}
                   </div>
-                  <h2 style={{marginLeft:"20px", marginRight:"20px", marginTop:"auto", marginBottom: "auto"}}>~</h2>
+                  <h2
+                    style={{
+                      marginLeft: "20px",
+                      marginRight: "20px",
+                      marginTop: "auto",
+                      marginBottom: "auto",
+                    }}
+                  >
+                    ~
+                  </h2>
                   <div className="period-box">
-                    <img src="/calendar.png" style={{ width: "30px" }}/>
+                    <img src="/calendar.png" style={{ width: "30px" }} alt="calendar" />
                     {formatter.format(dateRange[0].endDate)}
                   </div>
-                  
                 </div>
               </div>
 
@@ -165,8 +314,11 @@ const AiPlan: React.FC = () => {
 
             {/* 범위 선택 */}
             <div className="section">
-            <label>범위</label>
-              <div className="range-selection" style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+              <label>범위</label>
+              <div
+                className="range-selection"
+                style={{ display: "flex", alignItems: "center", gap: "10px" }}
+              >
                 {/* 시작 범위 */}
                 <div className="custom-dropdown">
                   <div className="contents-box">
@@ -194,7 +346,7 @@ const AiPlan: React.FC = () => {
                   <div className="contents-box">
                     <img src="/file.png" alt="folder" style={{ width: "30px" }} />
                     <span>{endUnit}</span>
-                    단원 
+                    단원
                   </div>
                   <select
                     value={endUnit}
@@ -222,7 +374,6 @@ const AiPlan: React.FC = () => {
             background: "#F2F2F2",
             paddingBottom: "10px",
             borderBottom: "1px solid #9A9A9A",
-            
           }}
         >
           <div className="section">
@@ -239,9 +390,19 @@ ex) oo 부분을 위주로 계획을 세워라."
 
         {/* 생성 버튼 */}
         <div className="ai-plan-footer">
-          <button className="ai-plan-create-but" onClick={() => setShowWarning(true)}>생성하기</button>
+          <button
+            className="ai-plan-create-but"
+            onClick={() => {
+              setShowWarning(true); // 경고 팝업 표시
+              createPlan(); // 학습 계획 생성 함수 호출
+            }}
+          >
+            생성하기
+          </button>
+
         </div>
       </div>
+      
     </div>
   );
 };

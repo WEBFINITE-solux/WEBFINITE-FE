@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import './../styles/home.css';
 import StudyPlanHome from '../component/home/StudyPlanHome';
-import WeeklyTodoList from '../component/study/WeeklyTodoList';
 import LearningProgress from '../component/home/LearningProgress';
-import axios from 'axios';
+import TodoListHome from '../component/home/TodoListHome';
+import NoDataComponent from '../component/NoDataComponent';
 
 interface StudyPlan {
   prompt_text: string;
@@ -16,50 +16,70 @@ interface StudyPlan {
 }
 
 const Home: React.FC = () => {
+  const userId = 1; // 실제 로그인된 유저 ID 적용 필요
+  const [name, setName] = useState('testName');
+  const [introduction, setIntroduction] = useState("testIntroduction");
+  const [img, setImg] = useState("img1");
+  const [profileId, setProfileId] = useState();
+
+  const [studyPlan, setStudyPlan] = useState<StudyPlan | null>(null);
+  const [loadingStudyPlan, setLoadingStudyPlan] = useState(true);
+  const [showImg, setShowImg] = useState(false);
   const openChatGPT = () => {
     window.open('https://chatgpt.com/');
   };
-
-  const name = 'Webfinite';
-  const oneLiner = '오늘도 힘차게!';
-  const toDoList = [
-    {
-      todo_id: 1,
-      todo_content: '입문 강의 수강',
-      is_completed: false,
-      start_date: '2025-01-17T00:00:00',
-      end_date: '2025-01-17T23:59:59',
-      user_id: 1,
-    },
-    {
-      todo_id: 2,
-      todo_content: '다양한 행렬 크기의 문제 해결',
-      is_completed: true,
-      start_date: '2025-01-17T12:00:00',
-      end_date: '2025-01-17T13:00:00',
-      user_id: 1,
-    },
-  ];
-
-  const [studyPlan, setStudyPlan] = useState<StudyPlan | null>(null);
-  const [loading, setLoading] = useState(true);
-
   useEffect(() => {
-    const fetch = async () => {
+    const fetchProfile = async () => {
+      try{
+        const response = await fetch(`https://d291-58-29-179-25.ngrok-free.app/profile/${userId}`,{
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "ngrok-skip-browser-warning": "true"
+          },
+        });
+        if (!response.ok) {
+          throw new Error(`HTTP 오류 발생: ${response.status}`);
+        }
+        const data = await response.json();
+        setName(data.nickname);
+        setIntroduction(data.introduction);
+        setImg(data.icon);
+        setProfileId(data.profileId);
+      } catch (e: unknown) {
+        if (e instanceof Error) {
+          console.error('Error fetching study plan:', e.message);
+        }
+      }
+    }
+    const fetchStudyPlan = async () => {
       try {
-        setLoading(true);
-        const response = await axios.get<StudyPlan>('/plan/1'); // API 호출
-        setStudyPlan(response.data);
+        setLoadingStudyPlan(true);
+        const response = await fetch(`https://d291-58-29-179-25.ngrok-free.app/plan/${userId}`,{
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "ngrok-skip-browser-warning": "true"
+          },
+        }); 
+        if (!response.ok) {
+          throw new Error(`HTTP 오류 발생: ${response.status}`);
+        }
+        const data = await response.json();
+        setStudyPlan(data);
       } catch (e: unknown) {
         if (e instanceof Error) {
           console.error('Error fetching study plan:', e.message);
         }
       } finally {
-        setLoading(false);
+        setLoadingStudyPlan(false);
       }
     };
-
-    fetch();
+    
+    fetchProfile();
+    fetchStudyPlan();
   }, []);
 
   const learningProgress = {
@@ -75,6 +95,36 @@ const Home: React.FC = () => {
       },
     ],
   };
+  const handleChangeProfileImage = async (newImg: string) => {
+    setImg(newImg); // 먼저 UI 상태 변경
+  
+    if (!profileId) {
+      console.error("프로필 ID가 없습니다.");
+      return;
+    }
+  
+    try {
+      console.log(`이미지 값 ${newImg}`)
+      const response = await fetch(`https://d291-58-29-179-25.ngrok-free.app/profile/${profileId}/image`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+          "ngrok-skip-browser-warning": "true",
+        },
+        body: JSON.stringify({ icon: newImg }),
+      });
+  
+      if (!response.ok) {
+        throw new Error(`HTTP 오류 발생: ${response.status}`);
+      }
+  
+      console.log("프로필 이미지가 성공적으로 저장되었습니다!");
+
+    } catch (error) {
+      console.error("프로필 이미지 저장 실패:", error);
+    }
+  };
 
   return (
     <div className="home">
@@ -82,21 +132,23 @@ const Home: React.FC = () => {
         <div className="home-title">
           <p className="titletext">Hello, {name}.</p>
         </div>
-
         <div style={{ display: 'flex', gap: '20px' }}>
           <div>
             <p className="text">오늘의 할 일</p>
             <div
               className="table"
-              style={{ height: '200px', width: '650px', overflowY: 'auto' }}
+              style={{ height: '200px', width: '680px' }}
             >
-              <WeeklyTodoList todos={toDoList} />
+              {<TodoListHome />}
             </div>
           </div>
           <div>
             <p className="text">학습 달성률</p>
-            <div className="table" style={{ height: '200px', width: '230px' }}>
-              <LearningProgress data={learningProgress} />
+            <div className="table" style={{ height: '200px', width: '350px' }}>
+              <div style={{ height: '190px', width: '340px' }}>
+                <LearningProgress data={learningProgress} />
+              </div>
+              
             </div>
           </div>
         </div>
@@ -107,14 +159,14 @@ const Home: React.FC = () => {
           </div>
           <div
             className="table"
-            style={{ width: '900px', height: '220px', overflowY: 'auto' }}
+            style={{ width: '1050px', height: '270px', overflowY: 'auto' }}
           >
-            {loading ? (
+            {loadingStudyPlan ? (
               <p>Loading...</p>
+            ) : studyPlan && studyPlan.learning_plan && studyPlan.learning_plan.length > 0 ? (
+              <StudyPlanHome studyPlan={studyPlan} />
             ) : (
-              <StudyPlanHome
-                studyPlan={studyPlan || { prompt_text: '', learning_plan: [] }}
-              />
+              <NoDataComponent />
             )}
           </div>
         </div>
@@ -123,7 +175,7 @@ const Home: React.FC = () => {
             <img
               src="/GotoChatGPT.png"
               alt="Go To ChatGPT"
-              style={{ width: '100px' }}
+              style={{ width: '130px' }}
             />
           </button>
         </div>
@@ -132,15 +184,68 @@ const Home: React.FC = () => {
       <div className="right">
         <div
           className="table"
-          style={{ height: '650px', padding: '15px', fontWeight: 'bold' }}
+          style={{ height: '730px', padding: '15px', fontWeight: 'bold' }}
         >
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <p>마이페이지</p>
           </div>
           <div style={{ textAlign: 'center' }}>
-            <img src="/profile.png" alt="Profile" />
-            <p>{name}</p>
-            <p style={{ fontWeight: 'normal' }}>{oneLiner}</p>
+            <img src={`/${img}.png`} alt="Profile" style={{width: "120px", margin: "10px"}}/>
+            <div style={{display: "flex", justifyContent: "center"}}>
+              <p>{name}</p>
+              <button style={{padding: "0px 7px"}} onClick={() => setShowImg(true)}>
+                <img src='/profileImgChange.png'></img>
+              </button>
+            </div>
+            {showImg && (
+              <div>
+                <div style={{
+                  position: "absolute",
+                  zIndex: "20",
+                  left:"1450px",
+                  backgroundImage: "url('/imgSelectBackground.png')",
+                  backgroundSize: "cover",
+                  width: "450px",
+                  height: "146px",
+                }}>
+                  <p style={{fontWeight: "bold", textAlign: "left", marginTop: "20px", marginLeft: "20px"}}>프로필 사진</p>
+                  <div style={{
+                    display: "flex",
+                    justifyContent: "space-evenly"
+                  }}>
+                    <button onClick={() => {handleChangeProfileImage("img1"), setShowImg(false)}} style={{padding: "0px", backgroundColor : "rgba(0,0,0,0)", border: "none", borderRadius: "100px", height: "80px", width: "80px"}}>
+                      <img src='/img1.png' style={{height: "80px"}}></img>
+                    </button>
+                    <button onClick={() => {handleChangeProfileImage("img2"), setShowImg(false)}} style={{padding: "0px", backgroundColor : "rgba(0,0,0,0)", border: "none", borderRadius: "100px", height: "80px", width: "80px"}}>
+                      <img src='/img2.png' style={{height: "80px"}}></img>
+                    </button>
+                    <button onClick={() => {handleChangeProfileImage("img3"), setShowImg(false)}} style={{padding: "0px", backgroundColor : "rgba(0,0,0,0)", border: "none", borderRadius: "100px", height: "80px", width: "80px"}}>
+                      <img src='/img3.png' style={{height: "80px"}}></img>
+                    </button>
+                    <button onClick={() => {handleChangeProfileImage("img4"), setShowImg(false)}} style={{padding: "0px", backgroundColor : "rgba(0,0,0,0)", border: "none", borderRadius: "100px", height: "80px", width: "80px"}}>
+                      <img src='/img4.png' style={{height: "80px"}}></img>
+                    </button>
+                    <button onClick={() => {handleChangeProfileImage("img5"), setShowImg(false)}} style={{padding: "0px", backgroundColor : "rgba(0,0,0,0)", border: "none", borderRadius: "100px", height: "80px", width: "80px"}}>
+                      <img src='/img5.png' style={{height: "80px"}}></img>
+                    </button>
+                  </div>
+                  
+
+                </div>
+                <div style={{
+                  position: "absolute",
+                  top: "100px",
+                  left: "1470px",
+                  backgroundColor: "rgba(0, 0, 0, 0.50)",
+                  width: "400px",
+                  height: "730px",
+                  borderRadius: "25px",
+                  zIndex: "10"
+                }}>
+                </div>
+              </div>
+            )}
+            <p style={{ fontWeight: 'normal', color: "#747474" }}>{introduction}</p>
           </div>
           <div>
             <p>시간표</p>
