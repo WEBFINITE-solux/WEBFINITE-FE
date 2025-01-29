@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
+import token from "../token"; 
 
 type ListCourse = {
   id: number;
@@ -19,10 +20,21 @@ const CourseDelete: React.FC<CourseDeleteProps> = ({ courses, onDelete, onBackTo
   const [selectedCourse, setSelectedCourse] = useState<ListCourse | null>(null);
   const optionsRef = useRef<HTMLDivElement>(null);
 
-  const handleDeleteCourse = () => {
-    if (selectedCourse !== null) {
-      onDelete(selectedCourse.id); 
-      setShowPopup(false);
+  const handleDeleteCourse = async () => {
+    if (selectedCourse === null) return;
+
+    try {
+      const response = await token.delete(`/course/${selectedCourse.id}/delete`);
+      console.log("강의 삭제 응답:", response.data);
+
+      if (response.status === 200) {
+        alert(`강의 "${selectedCourse.title}"가 삭제되었습니다.`);
+        onDelete(selectedCourse.id);
+        setShowPopup(false);
+      }
+    } catch (error: any) {
+      console.error("강의 삭제 중 오류 발생:", error);
+      alert(error.response?.data?.message || "강의 삭제에 실패했습니다.");
     }
   };
 
@@ -60,15 +72,12 @@ const CourseDelete: React.FC<CourseDeleteProps> = ({ courses, onDelete, onBackTo
           <CourseListContainer>
             {courses.map((course) => (
               <CourseItem
-                key={course.id} 
+                key={course.id}
                 onMouseEnter={() => setHoveredId(course.id)}
                 onMouseLeave={() => setHoveredId(null)}
               >
                 <CourseInfo isHovered={hoveredId === course.id}>
-                  <CourseIconContainer
-                    src="/courseImg.png"
-                    alt="강의 이미지"
-                  />
+                  <CourseIconContainer src="/courseImg.png" alt="강의 이미지" />
                   <CourseTitle>{course.title}</CourseTitle>
                   <CoursePeriod>{course.period}</CoursePeriod>
                 </CourseInfo>
@@ -86,7 +95,7 @@ const CourseDelete: React.FC<CourseDeleteProps> = ({ courses, onDelete, onBackTo
       {showPopup && (
         <PopupContainer>
           <PopupContent>
-            <PopupText>{selectedCourse?.title}를 삭제하시겠습니까?</PopupText> 
+            <PopupText>{selectedCourse?.title}을 삭제하시겠습니까?</PopupText>
             <PopupButtons>
               <CancelButton onClick={closePopup}>취소</CancelButton>
               <ConfirmButton onClick={handleDeleteCourse}>삭제</ConfirmButton>
@@ -99,6 +108,8 @@ const CourseDelete: React.FC<CourseDeleteProps> = ({ courses, onDelete, onBackTo
 };
 
 export default CourseDelete;
+
+
 const Container = styled.div`
   width: 400px;
   height: 780px;
