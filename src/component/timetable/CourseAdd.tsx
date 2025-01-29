@@ -38,7 +38,7 @@ const CourseAdd: React.FC<CourseAddProps> = ({ onBackToList }) => {
       period: `${year}-01-10`,
       year,
       semester,
-      color: "#FFFFFF",
+      color: "#95BAFF",
       day: days.map((day) => koreanToEnglishDays[day]), 
       start_time: startTime,
       end_time: endTime,

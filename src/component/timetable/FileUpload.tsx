@@ -1,25 +1,26 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import token from "../token"; 
 
 type Course = {
-    course_id: number;
-    course_title: string;
-    period: string;
-    day: string[];
-    start_time: string;
-    end_time: string;
-    location: string;
-    color?: string;
-    term: string;
-  };
-  
-  type CourseListProps = {
-    courses: Course[];
-  };
-const FileUpload: React.FC<CourseListProps> = ({ courses }) => {
+  course_id: number;
+  course_title: string;
+  period: string;
+  day: string[];
+  start_time: string;
+  end_time: string;
+  location: string;
+  color?: string;
+  term: string;
+};
+
+type FileUploadProps = {
+  courses: Course[]; 
+};
+
+const FileUpload: React.FC<FileUploadProps> = ({ courses }) => {
   const [files, setFiles] = useState<File[]>([]);
-  const navigate = useNavigate();
+  const selectedCourse = courses.length > 0 ? courses[0] : null; 
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = event.target.files;
@@ -35,6 +36,33 @@ const FileUpload: React.FC<CourseListProps> = ({ courses }) => {
     setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
   };
 
+  const handleFileUpload = async () => {
+    if (!selectedCourse) {
+      alert("강의 정보를 찾을 수 없습니다.");
+      return;
+    }
+    if (files.length === 0) {
+      alert("업로드할 파일을 선택해주세요.");
+      return;
+    }
+
+    const formData = new FormData();
+    files.forEach((file) => formData.append("file", file));
+
+    try {
+      const response = await token.post(`/course/file/${selectedCourse.course_id}/upload`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      console.log("파일 업로드 성공:", response.data);
+      alert(`"${selectedCourse.course_title}" 강의에 파일이 업로드되었습니다.`);
+      setFiles([]); 
+    } catch (error: any) {
+      console.error("파일 업로드 오류:", error);
+      alert(error.response?.data?.message || "파일 업로드에 실패했습니다.");
+    }
+  };
+
   const getFileLogo = (type: string) => {
     if (type === "application/pdf") return "/pdfLogo.svg";
     if (type === "text/plain") return "/txtLogo.svg";
@@ -44,20 +72,20 @@ const FileUpload: React.FC<CourseListProps> = ({ courses }) => {
   return (
     <Container>
       <Header>
-      <BackButton onClick={() => navigate("/timetable")}>{"<"}</BackButton>
         <Title>강의 자료 업로드</Title>
       </Header>
       <UploadBox>
         <UploadArea>
           <CloudIcon src="/cloud.svg" alt="Upload" />
           <UploadText>파일을 업로드해주세요.</UploadText>
-          <UploadSubtitle>TXT,PDF...</UploadSubtitle>
+          <UploadSubtitle>TXT, PDF..</UploadSubtitle>
         </UploadArea>
         <BrowseButton>
           Browse File
           <input type="file" accept="application/pdf,text/plain" multiple onChange={handleFileChange} />
         </BrowseButton>
       </UploadBox>
+
       <FileList>
         {files.map((file, index) => (
           <FileItem key={index}>
@@ -67,16 +95,19 @@ const FileUpload: React.FC<CourseListProps> = ({ courses }) => {
               <FileSize>{(file.size / 1024).toFixed(2)}KB</FileSize>
             </FileInfo>
             <DeleteButton onClick={() => handleFileDelete(index)}>
-                <DeleteLogo src="/deleteLogo.svg"/>
+              <DeleteLogo src="/deleteLogo.svg" />
             </DeleteButton>
           </FileItem>
         ))}
       </FileList>
+
+      <UploadButton onClick={handleFileUpload}>업로드</UploadButton>
     </Container>
   );
 };
 
 export default FileUpload;
+
 
 const Container = styled.div`
   width: 400px;
@@ -153,7 +184,9 @@ const UploadSubtitle = styled.div`
   margin-top: 4px;
   margin-right : 270px;
 `;
-
+const UploadButton = styled.button`
+margin -top : 100px;
+`
 const BrowseButton = styled.label`
   width: 127px;
   height: 32px;
