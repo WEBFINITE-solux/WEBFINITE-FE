@@ -31,7 +31,7 @@ const TimetableUpload: React.FC = () => {
         console.log("시간표 데이터 응답:", response.data);
 
         const formattedCourses = response.data.courses.map((course: any) => ({
-          course_id: course.id,
+          course_id: course.course_id,
           course_title: course.title,
           period: course.period || `${year}.3~7`,
           day: course.schedule?.map((s: any) => s.day) || [],

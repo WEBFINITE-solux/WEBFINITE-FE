@@ -1,10 +1,16 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
-const UploadButton = () => {
-  const [isPopupOpen, setIsPopupOpen] = useState(false);
+type UploadButtonProps = {
+  courseId: number; 
+};
+
+const UploadButton: React.FC<UploadButtonProps> = ({ courseId }) => { 
+  console.log("제발 courseId:", courseId); 
+
   const navigate = useNavigate();
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   const handleOpenPopup = () => {
     setIsPopupOpen(true);
@@ -13,12 +19,15 @@ const UploadButton = () => {
   const handleClosePopup = () => {
     setIsPopupOpen(false);
   };
-  const handleUpload = ()=>{
-    navigate("/timetable/upload");
+
+  const handleUpload = () => {
+    console.log("업로드하는 강의 ID:", courseId);
+    navigate(`/timetable/upload?courseId=${courseId}`);  
   };
 
-  const handleView = ()=>{
-    navigate("/timetable/view");
+  const handleView = () => {
+    console.log("강의 자료 조회 ID:", courseId); 
+    navigate(`/timetable/view?courseId=${courseId}`); 
   };
 
   return (
@@ -50,6 +59,8 @@ const UploadButton = () => {
 };
 
 export default UploadButton;
+
+
 
 const BasicButton = styled.button`
   border: 1px solid #e0e0e0;

@@ -117,7 +117,7 @@ const CourseList: React.FC<CourseListProps> = ({ courses }) => {
                       <CourseTitle>{course.course_title}</CourseTitle>
                       <CoursePeriod>{course.period}</CoursePeriod>
                     </CourseInfo>
-                    <UploadButton />
+                    <UploadButton key={course.course_id} courseId={course.course_id} />
                   </CourseItem>
                 ))}
               </CourseListContainer>
