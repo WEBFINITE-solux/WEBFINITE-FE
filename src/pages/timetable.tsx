@@ -35,7 +35,6 @@ const Timetable: React.FC = () => {
     const fetchCourses = async () => {
       try {
         const response = await token.get(`/course/table/1/${year}/${semester}`);
-        const url = `/course/table/1/${year}/${semester}`;
         const fetchedCourses = response.data.courses.map((course: any) => ({
           course_id: course.course_id,
           course_title: course.title, 
