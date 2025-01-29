@@ -50,7 +50,6 @@ const FileView: React.FC<CourseListProps> = ({ courses }) => {
       )
     );
 
-    // Simulate summary completion
     setTimeout(() => {
       setFiles((prevFiles) =>
         prevFiles.map((state, i) =>
@@ -59,7 +58,7 @@ const FileView: React.FC<CourseListProps> = ({ courses }) => {
             : state
         )
       );
-    }, 2000); // 2초 후에 요약 완료로 변경
+    }, 2000); 
   };
 
   const getFileLogo = (type: string) => {
@@ -222,7 +221,7 @@ const SummaryButton = styled.button<{ isSummarized: boolean }>`
   display: flex;
   align-items: center;
   gap: 8px;
-  background-color: rgba(123, 123, 123, 0.8);
+  background-color: rgba(240, 240, 240, 0.8);
   border-radius: 8px;
 `;
 
