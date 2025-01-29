@@ -1,14 +1,31 @@
 import styled from "styled-components";
-import Quiz from "../component/quiz/QuizMulti";
+import QuizMulti from "../component/quiz/QuizMulti";
+import QuizTF from "../component/quiz/QuizTF";
+import QuizShort from "../component/quiz/QuizShort";
+import { useState } from "react";
 
+type QuizType = "MULTIPLE_CHOICE" | "TRUE_FALSE" | "SUBJECTIVE";
 
 const QuizSolve: React.FC = () => {
+  const [quizType, setQuizType] = useState<QuizType>("MULTIPLE_CHOICE");
+
+  const renderQuizComponent = () => {
+    switch (quizType) {
+      case "MULTIPLE_CHOICE":
+        return <QuizMulti />;
+      case "TRUE_FALSE":
+        return <QuizTF />;
+      case "SUBJECTIVE":
+        return <QuizShort />;
+      default:
+        return null;
+    }
+  };
+
   return (
     <Container>
       <QuizBack src="/quizBackground.png" />
-      <Content>
-        <Quiz/>
-      </Content>
+      <Content>{renderQuizComponent()}</Content>
     </Container>
   );
 };
