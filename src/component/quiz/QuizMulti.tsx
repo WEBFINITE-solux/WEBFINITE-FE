@@ -16,7 +16,7 @@ interface Choice {
 interface Question {
   questionId: number;
   questionContent: string;
-  choices?: Choice[]; // ✅ 옵셔널 변경
+  choices?: Choice[];
 }
 
 interface QuizData {
@@ -366,11 +366,4 @@ const PopupButton = styled.button<{ primary?: boolean }>`
   &:hover {
     background: ${(props) => (props.primary ? "#0056b3" : "#f0f0f0")};
   }
-`;
-
-const Message = styled.div`
-  font-size: 16px;
-  font-weight: bold;
-  color: #777;
-  margin-top: 20px;
 `;

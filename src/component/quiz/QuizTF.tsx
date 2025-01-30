@@ -27,7 +27,7 @@ const QuizTF:React.FC<QuizProps> = ({ quizData }) => {
   const [selectedAnswers, setSelectedAnswers] = useState<string[]>([]);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const navigate = useNavigate();
-
+console.log(quizD);
   useEffect(() => {
     if (!quizId) {
       alert("잘못된 접근입니다. 퀴즈 ID가 없습니다.");
