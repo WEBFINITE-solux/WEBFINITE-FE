@@ -2,63 +2,61 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import CourseSelectModal from "../component/quiz/CourseSelectModal";
+import FileSelectModal from "../component/quiz/FileSelectModal";
 
 const QuizCreate: React.FC = () => {
     const navigate = useNavigate();
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isCourseModalOpen, setIsCourseModalOpen] = useState(false);
+    const [isFileModalOpen, setIsFileModalOpen] = useState(false);
     const [selectedCourse, setSelectedCourse] = useState<any>(null);
-  
-    const courses = [
-      { id: 1, title: "강의 1", description: "강의1 수업자료", date: "2024.09" },
-      { id: 2, title: "선형대수", description: "1-4강 수업자료", date: "2024.10" },
-      { id: 3, title: "선형대수(1)", description: "1-5강 수업자료", date: "2024.10" },
-      { id: 4, title: "강의 2", description: "강의2 수업자료", date: "2024.10" },
-      { id: 5, title: "강의 3", description: "강의3 수업자료", date: "2024.10" },
-    ];
-  
-    const handleList = () => {
-      navigate("/quiz");
-    };
-  
-    const handleAdd = () => {
-      setIsModalOpen(true);
-    };
-  
-    const handleCloseModal = () => {
-      setIsModalOpen(false);
-    };
-  
+    const [setSelectedFile] = useState<any>(null);
+
     const handleSelectCourse = (course: any) => {
-      setSelectedCourse(course);
+        setSelectedCourse(course);
+        setIsCourseModalOpen(false);
+        setIsFileModalOpen(true); 
     };
-  
+    const handleSelectFile = (file: any) => {
+      setSelectedFile(file);
+      setIsFileModalOpen(false);
+      console.log("✅ 선택된 파일:", file);
+    };
+    
+
     return (
-      <Container>
-        <QuizBack src="/quizBackground.png" />
-        <Content>
-          <TabContainer>
-            <TabWrapper>
-              <Tab onClick={handleList}>생성된 퀴즈 목록</Tab>
-              <Tab active>AI기반 퀴즈 만들기</Tab>
-            </TabWrapper>
-            <AddButton onClick={handleAdd}>
-              <AddLogo src="/quizAdd.svg" />
-            </AddButton>
-          </TabContainer>
-          <Message>상단 우측에 +버튼을 이용하여 퀴즈를 생성해주세요.</Message>
-        </Content>
-  
-        {isModalOpen && (
-          <CourseSelectModal
-            courses={courses}
-            onClose={handleCloseModal}
-            onSelect={handleSelectCourse}
-          />
-        )}
-      </Container>
+        <Container>
+            <QuizBack src="/quizBackground.png" />
+            <Content>
+                <TabContainer>
+                    <TabWrapper>
+                        <Tab onClick={() => navigate("/quiz")}>생성된 퀴즈 목록</Tab>
+                        <Tab active>AI기반 퀴즈 만들기</Tab>
+                    </TabWrapper>
+                    <AddButton onClick={() => setIsCourseModalOpen(true)}>
+                        <AddLogo src="/quizAdd.svg" />
+                    </AddButton>
+                </TabContainer>
+                    <Message>상단 우측에 +버튼을 이용하여 퀴즈를 생성해주세요.</Message>
+            </Content>
+
+            {isCourseModalOpen && (
+                <CourseSelectModal
+                    onClose={() => setIsCourseModalOpen(false)}
+                    onSelect={handleSelectCourse}  
+                />
+            )}
+
+            {isFileModalOpen && selectedCourse && (
+            <FileSelectModal
+            courseId={selectedCourse.id} 
+            onClose={() => setIsFileModalOpen(false)}
+            onSelect={handleSelectFile}
+              />
+            )}
+        </Container>
     );
-  };
-  
+};
+
 export default QuizCreate;
 
 const Container = styled.div`
@@ -123,6 +121,7 @@ const AddLogo = styled.img`
   height: 42.797px;
   flex-shrink: 0;
 `;
+
 
 const Message = styled.div`
   width: 420px;
