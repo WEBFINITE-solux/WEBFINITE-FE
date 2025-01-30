@@ -16,6 +16,7 @@ const FileView: React.FC = () => {
   const [files, setFiles] = useState<FileData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [deletingFileId, setDeletingFileId] = useState<number | null>(null);
 
   useEffect(() => {
     if (!courseId) {
@@ -40,6 +41,24 @@ const FileView: React.FC = () => {
     fetchFiles();
   }, [courseId]);
 
+  const handleFileDelete = async (fileId: number) => {
+    if (!window.confirm("정말로 이 파일을 삭제하시겠습니까?")) return;
+
+    setDeletingFileId(fileId);
+
+    try {
+      const response = await token.delete(`/course/file/${fileId}/delete`);
+      console.log(`📌 파일 삭제 완료 [ID: ${fileId}] 응답:`, response.data);
+
+      setFiles((prevFiles) => prevFiles.filter((file) => file.file_id !== fileId));
+    } catch (err: any) {
+      console.error("📌 파일 삭제 오류:", err);
+      alert(err.response?.data?.message || "파일 삭제에 실패했습니다.");
+    } finally {
+      setDeletingFileId(null);
+    }
+  };
+
   const handleSummary = async (fileId: number) => {
     console.log(`파일 ID ${fileId} 요약 요청`);
     setFiles((prevFiles) =>
@@ -47,11 +66,6 @@ const FileView: React.FC = () => {
         file.file_id === fileId ? { ...file, is_summarized: true } : file
       )
     );
-  };
-
-  const handleFileDelete = (fileId: number) => {
-    console.log(`파일 ID ${fileId} 삭제 요청`);
-    setFiles((prevFiles) => prevFiles.filter((file) => file.file_id !== fileId));
   };
 
   const getFileLogo = (filename: string) => {
@@ -81,8 +95,11 @@ const FileView: React.FC = () => {
               <FileInfo>
                 <FileName>{file.original_filename}</FileName>
               </FileInfo>
-              <DeleteButton onClick={() => handleFileDelete(file.file_id)}>
-                <DeleteLogo src="/deleteLogo.svg" />
+              <DeleteButton
+                onClick={() => handleFileDelete(file.file_id)}
+                disabled={deletingFileId === file.file_id}
+              >
+                {deletingFileId === file.file_id ? "삭제 중..." : <DeleteLogo src="/deleteLogo.svg" />}
               </DeleteButton>
               {file.is_summarized ? (
                 <SummaryButton onClick={() => navigate(`/summary/${file.file_id}`)}>
@@ -176,6 +193,13 @@ const DeleteButton = styled.button`
   background: none;
   border: none;
   cursor: pointer;
+  font-size: 14px;
+  color: red;
+
+  &:disabled {
+    color: gray;
+    cursor: default;
+  }
 `;
 
 const DeleteLogo = styled.img`
