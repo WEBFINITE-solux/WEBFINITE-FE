@@ -20,6 +20,11 @@ const QuizComponent: React.FC<QuizComponentProps> = ({ quizzes }) => {
     console.log("퀴즈 풀기:", quizId);
     navigate(`/quiz/solve?quizId=${quizId}`);
   };
+  const handleResolveQuiz = (quizId: number) => {
+    console.log("퀴즈 풀기:", quizId);
+    navigate(`/quiz/Resolve?quizId=${quizId}`);
+  };
+
 
   const handleViewAiExplanation = (quizId: number) => {
     console.log("AI 해설 보기:", quizId);
@@ -28,7 +33,6 @@ const QuizComponent: React.FC<QuizComponentProps> = ({ quizzes }) => {
 
   return (
     <Container>
-      <Header>생성된 퀴즈 목록</Header>
       <QuizList>
         {quizzes.length === 0 ? (
           <Message>퀴즈가 없습니다.</Message>
@@ -40,7 +44,7 @@ const QuizComponent: React.FC<QuizComponentProps> = ({ quizzes }) => {
               <Actions>
                 {quiz.quizState === "COMPLETED" ? (
                   <>
-                    <ActionIcon onClick={() => handleSolveQuiz(quiz.quizId)}>
+                    <ActionIcon onClick={() => handleResolveQuiz(quiz.quizId)}>
                       <AgainLogo src="/again.svg" />
                     </ActionIcon>
                     <ActionButton onClick={() => handleViewAiExplanation(quiz.quizId)}>
@@ -68,16 +72,6 @@ const Container = styled.div`
   flex-direction: column;
   padding: 20px;
   background: none;
-`;
-
-const Header = styled.div`
-  font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 20px;
-  color: #d48b8b;
-  padding: 10px;
-  background-color: #f7e4e4;
-  border-radius: 5px;
 `;
 
 const QuizList = styled.div`

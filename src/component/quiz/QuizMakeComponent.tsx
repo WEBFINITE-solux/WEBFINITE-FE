@@ -1,8 +1,14 @@
-import  { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import token from "../token";
 
-const QuizMakeComponent = () => {
+const QuizMakeComponent: React.FC = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const { courseId, fileId } = location.state || {};
+
   const [quizCount, setQuizCount] = useState({ min: "", max: "" });
   const [quizType, setQuizType] = useState({
     trueFalse: false,
@@ -10,62 +16,61 @@ const QuizMakeComponent = () => {
     shortAnswer: false,
   });
   const [detailedRequirements, setDetailedRequirements] = useState("");
-  const navigate =useNavigate();
+  const [loading, setLoading] = useState(false);
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    type: "min" | "max"
-  ) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, type: "min" | "max") => {
     const value = parseInt(e.target.value, 10);
-  
+
     if (value < 1 || value > 5) {
       alert("퀴즈 개수는 최소 1개에서 최대 5개까지 입력 가능합니다.");
       return;
     }
-  
+
     setQuizCount({ ...quizCount, [type]: value.toString() });
   };
-  
-  const handleSubmit = () => {
-    if (!quizCount.min || !quizCount.max ) {
-      alert("모든 필드를 채워주세요.");
+
+  const handleCreateQuiz = async () => {
+    if (!quizCount.min || !quizCount.max) {
+      alert("퀴즈 개수를 입력해주세요.");
+      return;
+    }
+    if (!courseId || !fileId) {
+      alert("강의와 자료가 선택되지 않았습니다.");
       return;
     }
 
-    const requestData = {
-      user_id: 12345,
-      file_id: 56789,
-      question_type: quizType.multipleChoice
-        ? "MULTIPLE_CHOICE"
-        : quizType.trueFalse
-        ? "TRUE_FALSE"
-        : "SHORT_ANSWER",
-      quiz_count: Number(quizCount.max),
-      detailed_requirements: detailedRequirements,
-    };
+    setLoading(true);
 
-    console.log(requestData);
-    navigate("/quiz")
+    try {
+      const response = await token.post(`/quiz/create/${courseId}/${fileId}`, {
+        userId: 1,
+        quizCountRange: `${quizCount.min}-${quizCount.max}`,
+        questionType: quizType.multipleChoice
+          ? "MULTIPLE_CHOICE"
+          : quizType.trueFalse
+          ? "TRUE_FALSE"
+          : "SUBJECTIVE",
+        detailedRequirements: detailedRequirements,
+      });
 
+      console.log("✅ 퀴즈 생성 완료:", response.data);
+      alert("퀴즈 생성이 완료되었습니다!");
+      navigate("/quiz");
+    } catch (error) {
+      console.error("🚨 퀴즈 생성 중 오류 발생:", error);
+      alert("퀴즈 생성에 실패했습니다.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <Container>
       <Label>퀴즈 개수</Label>
       <InputGroup>
-        <Input
-          type="number"
-          placeholder="최소"
-          value={quizCount.min}
-          onChange={(e) => handleInputChange(e, "min")}
-        />
+        <Input type="number" placeholder="최소" value={quizCount.min} onChange={(e) => handleInputChange(e, "min")} />
         <span>~</span>
-        <Input
-          type="number"
-          placeholder="최대"
-          value={quizCount.max}
-          onChange={(e) => handleInputChange(e, "max")}
-        />
+        <Input type="number" placeholder="최대" value={quizCount.max} onChange={(e) => handleInputChange(e, "max")} />
       </InputGroup>
 
       <Label>퀴즈 형식</Label>
@@ -74,9 +79,7 @@ const QuizMakeComponent = () => {
           <input
             type="checkbox"
             checked={quizType.trueFalse}
-            onChange={(e) =>
-              setQuizType({ ...quizType, trueFalse: e.target.checked })
-            }
+            onChange={(e) => setQuizType({ ...quizType, trueFalse: e.target.checked })}
           />
           참/거짓
         </CheckboxLabel>
@@ -84,9 +87,7 @@ const QuizMakeComponent = () => {
           <input
             type="checkbox"
             checked={quizType.multipleChoice}
-            onChange={(e) =>
-              setQuizType({ ...quizType, multipleChoice: e.target.checked })
-            }
+            onChange={(e) => setQuizType({ ...quizType, multipleChoice: e.target.checked })}
           />
           N지선다 객관식
         </CheckboxLabel>
@@ -94,21 +95,22 @@ const QuizMakeComponent = () => {
           <input
             type="checkbox"
             checked={quizType.shortAnswer}
-            onChange={(e) =>
-              setQuizType({ ...quizType, shortAnswer: e.target.checked })
-            }
+            onChange={(e) => setQuizType({ ...quizType, shortAnswer: e.target.checked })}
           />
           단답형
         </CheckboxLabel>
       </CheckboxGroup>
+
       <Label>상세 요구 사항</Label>
       <Textarea
-        placeholder="퀴즈 갯수, 범위 외의 추가적인 요구사항을 적어주세요.
-ex) oo부분을 위주로 퀴즈를 만들어줘."
+        placeholder="퀴즈 갯수, 범위 외의 추가적인 요구사항을 적어주세요. ex) oo부분을 위주로 퀴즈를 만들어줘."
         value={detailedRequirements}
         onChange={(e) => setDetailedRequirements(e.target.value)}
       />
-      <Button onClick={handleSubmit}>생성하기</Button>
+
+      <CreateButton onClick={handleCreateQuiz} disabled={loading}>
+        {loading ? "퀴즈 생성 중..." : "퀴즈 생성"}
+      </CreateButton>
     </Container>
   );
 };
@@ -122,7 +124,7 @@ const Container = styled.div`
   border-radius: 20px;
   background: #fff;
   padding: 40px 40px;
-  margin-top : 50px;
+  margin-top: 50px;
 `;
 
 const Label = styled.label`
@@ -190,7 +192,7 @@ const CheckboxLabel = styled.label`
   line-height: 150%;
 `;
 
-const Button = styled.button`
+const CreateButton = styled.button`
   background-color: #2563eb;
   color: white;
   padding: 8px 16px;
@@ -201,5 +203,10 @@ const Button = styled.button`
 
   &:hover {
     background-color: #1e40af;
+  }
+
+  &:disabled {
+    background-color: #ccc;
+    cursor: default;
   }
 `;

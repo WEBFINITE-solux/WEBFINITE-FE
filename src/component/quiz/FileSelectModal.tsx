@@ -1,62 +1,67 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 import token from "../token";
 
-interface Course {
-  id: number;
-  title: string;
-  period: string;
+interface FileData {
+  file_id: number;
+  original_filename: string;
+  is_summarized: boolean;
 }
 
-interface CourseSelectModalProps {
+interface FileSelectModalProps {
+  courseId: number;
   onClose: () => void;
-  onSelect: (course: Course) => void;
+  onSelect: (file: FileData) => void;
 }
 
-const CourseSelectModal: React.FC<CourseSelectModalProps> = ({ onClose, onSelect }) => {
-  const [courses, setCourses] = useState<Course[]>([]);
+const FileSelectModal: React.FC<FileSelectModalProps> = ({ courseId, onClose }) => {
+  const [files, setFiles] = useState<FileData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [selectedCourseId, setSelectedCourseId] = useState<number | null>(null);
-  const userId = 1;
-  const year = "2024";
-  const semester = "1";
+  const [selectedFileId, setSelectedFileId] = useState<number | null>(null);
+  const navigate = useNavigate(); 
 
   useEffect(() => {
-    const fetchCourses = async () => {
+    console.log("✅ courseId 값 확인:", courseId);
+    const fetchFiles = async () => {
       try {
-        const response = await token.get(`/course/${userId}/${year}/${semester}`);
-        setCourses(response.data.courses || []);
+        const response = await token.get(`/course/file/${courseId}`);
+        setFiles(response.data.files || []);
       } catch (error) {
-        console.error("강의 목록 불러오기 실패:", error);
+        console.error("🚨 강의 자료 목록 불러오기 실패:", error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchCourses();
-  }, []);
+    if (courseId) fetchFiles();
+  }, [courseId]);
 
-  const handleSelectCourse = (course: Course) => {
-    setSelectedCourseId(course.id);
-    console.log("선택된 courseId:", course.id);
-    onSelect(course);
+  const handleFileClick = (file: FileData) => {
+    setSelectedFileId(file.file_id);
+    console.log("✅ 선택된 파일 ID:", file.file_id);
+    navigate(`/quiz/create/choose`, { state: { courseId, fileId: file.file_id } });
   };
 
   return (
     <Overlay>
       <Modal>
         <Header>
-          강의 선택
+          강의 자료 선택
           <CloseButton onClick={onClose}>×</CloseButton>
         </Header>
         <Content>
           {loading ? (
-            <Message>📂 강의를 불러오는 중...</Message>
+            <Message>📂 강의 자료를 불러오는 중...</Message>
           ) : (
-            courses.map((course) => (
-              <CourseItem key={course.id} onClick={() => handleSelectCourse(course)} selected={course.id === selectedCourseId}>
-                {course.title} ({course.period})
-              </CourseItem>
+            files.map((file) => (
+              <FileItem
+                key={file.file_id}
+                onClick={() => handleFileClick(file)}
+                selected={file.file_id === selectedFileId}
+              >
+                {file.original_filename} {file.is_summarized ? "(요약 완료)" : "(요약 없음)"}
+              </FileItem>
             ))
           )}
         </Content>
@@ -65,7 +70,9 @@ const CourseSelectModal: React.FC<CourseSelectModalProps> = ({ onClose, onSelect
   );
 };
 
-export default CourseSelectModal;
+export default FileSelectModal;
+
+
 
 const Overlay = styled.div`
   position: fixed;
@@ -125,7 +132,7 @@ const Content = styled.div`
   }
 `;
 
-const CourseItem = styled.div<{ selected: boolean }>`
+const FileItem = styled.div<{ selected: boolean }>`
   display: flex;
   align-items: center;
   justify-content: space-between;

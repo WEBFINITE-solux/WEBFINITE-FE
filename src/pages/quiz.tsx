@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import token from "../component/token";
 import QuizComponent from "../component/quiz/QuizComponent";
@@ -19,32 +19,37 @@ interface CourseQuizData {
 
 const Quiz: React.FC = () => {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  // const userId = searchParams.get("userId");
   const userId = 1; 
-  const courseIds = searchParams.getAll("courseId");
+  const year = "2024"; 
+  const semester = "1"; 
   const [courseQuizzes, setCourseQuizzes] = useState<CourseQuizData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!userId || courseIds.length === 0) {
-      setError("유효한 userId 또는 courseId가 없습니다.");
-      setLoading(false);
-      return;
-    }
-
-    const fetchQuizzesForCourses = async () => {
+    const fetchUserCoursesAndQuizzes = async () => {
       try {
+        const courseResponse = await token.get(`/course/${userId}/${year}/${semester}`);
+        const userCourses = courseResponse.data.courses; 
+        console.log("📌 강의 목록:", userCourses);
+
+        if (!userCourses || userCourses.length === 0) {
+          setError("유저에게 등록된 강의가 없습니다.");
+          setLoading(false);
+          return;
+        }
+
         const allCourseQuizzes: CourseQuizData[] = [];
 
-        for (const courseId of courseIds) {
+        for (const course of userCourses) {
+          const courseId = course.id;
           const response = await token.get(`/quiz/${userId}/course/${courseId}`);
           console.log(`📌 [${courseId}] 퀴즈 데이터 응답:`, response.data);
+
           allCourseQuizzes.push({
-            courseId: Number(courseId),
-            courseTitle: response.data.length > 0 ? response.data[0].courseTitle : "알 수 없는 강의",
-            quizzes: response.data,
+            courseId: courseId,
+            courseTitle: course.title || "알 수 없는 강의",
+            quizzes: response.data || [],
           });
         }
 
@@ -57,8 +62,8 @@ const Quiz: React.FC = () => {
       }
     };
 
-    fetchQuizzesForCourses();
-  }, [userId, courseIds]);
+    fetchUserCoursesAndQuizzes();
+  }, [userId, year, semester]);
 
   const handleCreateQuiz = () => {
     navigate("/quiz/create");
@@ -185,7 +190,7 @@ const Message = styled.div`
   font-size: 14px;
   font-weight: 500;
   padding: 15px;
-  margin-top: 200px;
+  margin-top: 50px;
   border-radius: 11px;
   background: #FFF;
   box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.25);
@@ -197,12 +202,14 @@ const CourseSection = styled.div`
 `;
 
 const CourseHeader = styled.div`
-  font-size: 18px;
-  font-weight: bold;
-  color: #1a1a1a;
-  margin-bottom: 10px;
-  border-bottom: 2px solid #007BFF;
-  padding-bottom: 5px;
-  text-align: left;
+  color: #1A1A1A;
+  font-family: Pretendard;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 150%;
+  padding: 10px;
+  background-color: #f7e4e4;
+  border-radius: 5px;
   width: 100%;
 `;

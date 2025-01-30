@@ -1,20 +1,20 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 
 interface QuizData {
-  quiz_id: number;
-  quiz_title: string;
-  quiz_status: "COMPLETED" | "IN_PROGRESS";
-  correct_rate: string | null;
+  quizId: number;
+  quizTitle: string;
+  quizState: "COMPLETED" | "IN_PROGRESS";
+  correctRate: string | null;
 }
 
 interface QuizComponentEditProps {
   quizzes: QuizData[];
+  selectedCards: Record<number, boolean>;
+  setSelectedCards: React.Dispatch<React.SetStateAction<Record<number, boolean>>>;
 }
 
-const QuizComponentEdit: React.FC<QuizComponentEditProps> = ({ quizzes }) => {
-  const [selectedCards, setSelectedCards] = useState<Record<number, boolean>>({});
-
+const QuizComponentEdit: React.FC<QuizComponentEditProps> = ({ quizzes, selectedCards, setSelectedCards }) => {
   const handleCheckboxChange = (quizId: number, isChecked: boolean) => {
     setSelectedCards((prev) => ({
       ...prev,
@@ -24,42 +24,32 @@ const QuizComponentEdit: React.FC<QuizComponentEditProps> = ({ quizzes }) => {
 
   return (
     <Container>
-      <Header>수업 1</Header>
+      
       <QuizList>
         {quizzes.map((quiz) => (
-          <QuizCard
-            key={quiz.quiz_id}
-            isSelected={selectedCards[quiz.quiz_id] || false}
-          >
+          
+          <QuizCard key={quiz.quizId} isSelected={selectedCards[quiz.quizId] || false}>
             <HorizontalContainer>
-            <Title>{quiz.quiz_title}</Title>
-            <CheckboxContainer>
-              <input
-                type="checkbox"
-                checked={selectedCards[quiz.quiz_id] || false}
-                onChange={(e) =>
-                  handleCheckboxChange(quiz.quiz_id, e.target.checked)
-                }
-              />
-            </CheckboxContainer>
-            </ HorizontalContainer>
-            <Progress>
-              {quiz.correct_rate ? quiz.correct_rate : "?/5"}
-            </Progress>
+              <Title>{quiz.quizTitle}</Title>
+              <CheckboxContainer>
+                <input
+                  type="checkbox"
+                  checked={selectedCards[quiz.quizId] || false}
+                  onChange={(e) => handleCheckboxChange(quiz.quizId, e.target.checked)}
+                />
+              </CheckboxContainer>
+            </HorizontalContainer>
+            <Progress>{quiz.correctRate ? quiz.correctRate : "?/5"}</Progress>
             <Actions>
-              {quiz.quiz_status === "COMPLETED" ? (
+              {quiz.quizState === "COMPLETED" ? (
                 <>
                   <ActionIcon>
                     <AgainLogo src="/again.svg" />
                   </ActionIcon>
-                  <ActionButton>
-                    AI 해설보기
-                  </ActionButton>
+                  <ActionButton>AI 해설보기</ActionButton>
                 </>
               ) : (
-                <SolveButton>
-                  퀴즈 풀기
-                </SolveButton>
+                <SolveButton>퀴즈 풀기</SolveButton>
               )}
             </Actions>
           </QuizCard>
@@ -70,6 +60,8 @@ const QuizComponentEdit: React.FC<QuizComponentEditProps> = ({ quizzes }) => {
 };
 
 export default QuizComponentEdit;
+
+
 
 const Container = styled.div`
   display: flex;

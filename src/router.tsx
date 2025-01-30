@@ -18,6 +18,7 @@ import QuizAnswerPage from "./pages/quizAnswerPage";
 import QuizEdit from "./pages/quizEdit";
 import PasswordRecovery from "./pages/passwordRecovery";
 import PasswordAlert from './pages/passwordAlert';
+import QuizResolve from "./pages/quizResolve";
 
 const router = createBrowserRouter([
   {
@@ -50,6 +51,7 @@ const router = createBrowserRouter([
       {path:"create",element:<QuizCreate/>},
       {path:"create/choose",element:<QuizMake/>},
       {path:"solve",element:<QuizSolve/>},
+      {path:"resolve",element:<QuizResolve/>},
       {path:"answer",element:<QuizAnswerPage/>},
       {path:"edit",element:<QuizEdit/>},
     ]
