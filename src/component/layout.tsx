@@ -8,23 +8,14 @@ const Layout: React.FC = () => {
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
   const getActiveItem = () => {
-    switch (location.pathname) {
-      case "/home":
-        return "home";
-      case "/study":
-        return "study";
-      case "/timetable":
-        return "timetable";
-      case "/quiz":
-        return "quiz";
-      default:
-        return "home";
-    }
+    if (location.pathname.includes("quiz")) return "quiz";
+    if (location.pathname.includes("study")) return "study";
+    if (location.pathname.includes("timetable")) return "timetable";
+    if (location.pathname.includes("home")) return "home";
+    return "home";
   };
 
-  const [activeItem, setActiveItem] = useState<
-    "home" | "study" | "timetable" | "quiz"
-  >(getActiveItem());
+  const [activeItem, setActiveItem] = useState<"home" | "study" | "timetable" | "quiz">(getActiveItem());
 
   React.useEffect(() => {
     setActiveItem(getActiveItem());
@@ -40,50 +31,32 @@ const Layout: React.FC = () => {
         <Menu>
           <MenuTitle>메뉴</MenuTitle>
           <MenuItem isActive={activeItem === "home"} href="/home">
-            <MenuImg
-              src={activeItem === "home" ? "/homeON.svg" : "/homeOFF.svg"}
-              alt="Home Icon"
-            />
+            <MenuImg src={activeItem === "home" ? "/homeON.svg" : "/homeOFF.svg"} alt="Home Icon" />
             Home
           </MenuItem>
           <MenuItem isActive={activeItem === "study"} href="/study">
-            <MenuImg
-              src={activeItem === "study" ? "/studyON.svg" : "/studyOFF.svg"}
-              alt="Study Icon"
-            />
+            <MenuImg src={activeItem === "study" ? "/studyON.svg" : "/studyOFF.svg"} alt="Study Icon" />
             Study
           </MenuItem>
           <MenuItem isActive={activeItem === "timetable"} href="/timetable">
-            <MenuImg
-              src={
-                activeItem === "timetable"
-                  ? "/timetableON.svg"
-                  : "/timetableOFF.svg"
-              }
-              alt="Timetable Icon"
-            />
+            <MenuImg src={activeItem === "timetable" ? "/timetableON.svg" : "/timetableOFF.svg"} alt="Timetable Icon" />
             Timetable
           </MenuItem>
           <MenuItem isActive={activeItem === "quiz"} href="/quiz">
-            <MenuImg
-              src={activeItem === "quiz" ? "/quizON.svg" : "/quizOFF.svg"}
-              alt="Quiz Icon"
-            />
+            <MenuImg src={activeItem === "quiz" ? "/quizON.svg" : "/quizOFF.svg"} alt="Quiz Icon" />
             Quiz
           </MenuItem>
         </Menu>
       </Sidebar>
-        <UserContainer>
-          <LogoutButton onClick={() => setIsLogoutModalOpen(true)}>
-            <LogoutLogo src="/logout.svg" />
-            <LogoutContent>로그아웃</LogoutContent>
-          </LogoutButton>
-          <UserImg src="/user.svg" />
-          </UserContainer>
-          <Outlet />
-          {isLogoutModalOpen && (
-              <LogoutModal onClose={() => setIsLogoutModalOpen(false)} />
-          )}
+      <UserContainer>
+        <LogoutButton onClick={() => setIsLogoutModalOpen(true)}>
+          <LogoutLogo src="/logout.svg" />
+          <LogoutContent>로그아웃</LogoutContent>
+        </LogoutButton>
+        <UserImg src="/user.svg" />
+      </UserContainer>
+      <Outlet />
+      {isLogoutModalOpen && <LogoutModal onClose={() => setIsLogoutModalOpen(false)} />}
     </Container>
   );
 };
@@ -95,6 +68,7 @@ const Container = styled.div`
   height: 100vh;
   background-color: #ffffff;
 `;
+
 const UserContainer = styled.div`
   width: 189px;
   height: 47.834px;
@@ -109,26 +83,30 @@ const UserContainer = styled.div`
   align-items: center;
   gap: 10px;
   margin-top: 10px;
-  background : none;
+  background: none;
 `;
+
 const UserImg = styled.img`
   width: 47.834px;
   height: 47.834px;
   flex-shrink: 0;
 `;
+
 const LogoutButton = styled.button`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
   gap: 10px;
-  background : none;
+  background: none;
 `;
+
 const LogoutLogo = styled.img`
   width: 25px;
   height: 25px;
   flex-shrink: 0;
 `;
+
 const LogoutContent = styled.div`
   color: #656565;
   font-family: Pretendard;
@@ -138,6 +116,7 @@ const LogoutContent = styled.div`
   line-height: 150%;
   margin-bottom: 0.5px;
 `;
+
 const Sidebar = styled.div`
   width: 250px;
   background-color: #ffffff;
@@ -147,6 +126,7 @@ const Sidebar = styled.div`
   align-items: center;
   margin-left: 80px;
 `;
+
 const MenuTitle = styled.div`
   color: #1a1a1a;
   font-family: Pretendard;
@@ -157,6 +137,7 @@ const MenuTitle = styled.div`
   margin-top: 80px;
   margin-bottom: 35px;
 `;
+
 const LogoContainer = styled.div`
   width: 190px;
   height: 80px;
