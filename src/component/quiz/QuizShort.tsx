@@ -154,7 +154,7 @@ const TitleContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-left: 400px;
+  margin-left: 100px;
   gap: 250px;
 `;
 
