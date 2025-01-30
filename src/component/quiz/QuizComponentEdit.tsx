@@ -70,16 +70,6 @@ const Container = styled.div`
   background : none;
 `;
 
-const Header = styled.div`
-  font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 20px;
-  color: #d48b8b;
-  padding: 10px;
-  background-color: #f7e4e4;
-  border-radius: 5px;
-`;
-
 const QuizList = styled.div`
   width : 1520px;
   display: flex;
