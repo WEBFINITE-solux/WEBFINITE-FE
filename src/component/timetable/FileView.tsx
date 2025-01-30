@@ -17,6 +17,9 @@ const FileView: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [deletingFileId, setDeletingFileId] = useState<number | null>(null);
+  const [summarizingFileId, setSummarizingFileId] = useState<number | null>(null);
+  const [summary, setSummary] = useState<string | null>(null);
+  const [summaryError, setSummaryError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!courseId) {
@@ -28,10 +31,8 @@ const FileView: React.FC = () => {
     const fetchFiles = async () => {
       try {
         const response = await token.get(`/course/file/${courseId}`);
-        console.log(`[${courseId}] 강의 자료 목록 응답:`, response.data);
         setFiles(response.data.files || []);
       } catch (err: any) {
-        console.error("강의 자료 목록 불러오기 오류:", err);
         setError(err.response?.data?.message || "강의 자료를 불러올 수 없습니다.");
       } finally {
         setLoading(false);
@@ -47,12 +48,9 @@ const FileView: React.FC = () => {
     setDeletingFileId(fileId);
 
     try {
-      const response = await token.delete(`/course/file/${fileId}/delete`);
-      console.log(`📌 파일 삭제 완료 [ID: ${fileId}] 응답:`, response.data);
-
+      await token.delete(`/course/file/${fileId}/delete`);
       setFiles((prevFiles) => prevFiles.filter((file) => file.file_id !== fileId));
     } catch (err: any) {
-      console.error("📌 파일 삭제 오류:", err);
       alert(err.response?.data?.message || "파일 삭제에 실패했습니다.");
     } finally {
       setDeletingFileId(null);
@@ -60,12 +58,32 @@ const FileView: React.FC = () => {
   };
 
   const handleSummary = async (fileId: number) => {
-    console.log(`파일 ID ${fileId} 요약 요청`);
-    setFiles((prevFiles) =>
-      prevFiles.map((file) =>
-        file.file_id === fileId ? { ...file, is_summarized: true } : file
-      )
-    );
+    if (!window.confirm("이 파일의 요약을 생성하시겠습니까?")) return;
+
+    setSummarizingFileId(fileId);
+
+    try {
+      await token.post(`/summary/${fileId}/new`);
+      setFiles((prevFiles) =>
+        prevFiles.map((file) => (file.file_id === fileId ? { ...file, is_summarized: true } : file))
+      );
+    } catch (err: any) {
+      alert(err.response?.data?.message || "요약 생성에 실패했습니다.");
+    } finally {
+      setSummarizingFileId(null);
+    }
+  };
+
+  const handleViewSummary = async (fileId: number) => {
+    setSummary(null);
+    setSummaryError(null);
+
+    try {
+      const response = await token.get(`/summary/${fileId}`);
+      setSummary(response.data.summary_content);
+    } catch (err: any) {
+      setSummaryError(err.response?.data?.message || "요약 내용을 불러올 수 없습니다.");
+    }
   };
 
   const getFileLogo = (filename: string) => {
@@ -80,7 +98,6 @@ const FileView: React.FC = () => {
         <BackButton onClick={() => navigate("/timetable")}>{"<"}</BackButton>
         <Title>강의 자료 열람</Title>
       </Header>
-
       {loading ? (
         <Message>📂 강의 자료를 불러오는 중...</Message>
       ) : error ? (
@@ -95,30 +112,44 @@ const FileView: React.FC = () => {
               <FileInfo>
                 <FileName>{file.original_filename}</FileName>
               </FileInfo>
-              <DeleteButton
-                onClick={() => handleFileDelete(file.file_id)}
-                disabled={deletingFileId === file.file_id}
-              >
+              <DeleteButton onClick={() => handleFileDelete(file.file_id)} disabled={deletingFileId === file.file_id}>
                 {deletingFileId === file.file_id ? "삭제 중..." : <DeleteLogo src="/deleteLogo.svg" />}
               </DeleteButton>
               {file.is_summarized ? (
-                <SummaryButton onClick={() => navigate(`/summary/${file.file_id}`)}>
-                  자료보기
-                </SummaryButton>
+                <SummaryButton onClick={() => handleViewSummary(file.file_id)}>자료보기</SummaryButton>
               ) : (
-                <SummaryButton onClick={() => handleSummary(file.file_id)}>
-                  요약하기 →
+                <SummaryButton onClick={() => handleSummary(file.file_id)} disabled={summarizingFileId === file.file_id}>
+                  {summarizingFileId === file.file_id ? "요약 중..." : "요약하기 →"}
                 </SummaryButton>
               )}
             </FileItem>
           ))}
         </FileList>
       )}
+      {summary && (
+        <Popup>
+          <PopupContent>
+            <CloseButton onClick={() => setSummary(null)}>✖</CloseButton>
+            <SummayTitle>요약 내용</SummayTitle>
+            <SummaryText>{summary}</SummaryText>
+          </PopupContent>
+        </Popup>
+      )}
+      {summaryError && (
+        <Popup>
+          <PopupContent>
+            <CloseButton onClick={() => setSummaryError(null)}>✖</CloseButton>
+            <h3>요약 오류</h3>
+            <SummaryText>{summaryError}</SummaryText>
+          </PopupContent>
+        </Popup>
+      )}
     </Container>
   );
 };
 
 export default FileView;
+
 
 const Container = styled.div`
   width: 400px;
@@ -215,6 +246,12 @@ const SummaryButton = styled.button`
   cursor: pointer;
   font-size: 13px;
   font-weight: 700;
+
+  &:disabled {
+    color: gray;
+    cursor: default;
+  }
+
   &:hover {
     background-color: #007BFF;
     color: white;
@@ -226,4 +263,50 @@ const Message = styled.div`
   color: #656565;
   text-align: center;
   padding: 20px;
+`;
+
+const Popup = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const SummayTitle = styled.h3`
+ color: #000;
+font-family: Pretendard;
+font-size: 20px;
+font-style: normal;
+font-weight: 700;
+line-height: 150%;
+margin-bottom : 10px;
+`
+
+const PopupContent = styled.div`
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 400px;
+  text-align: center;
+`;
+
+const CloseButton = styled.button`
+  position: absolute;
+  right: 20px;
+  top: 10px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+`;
+
+const SummaryText = styled.p`
+  font-size: 14px;
+  text-align: left;
+  white-space: pre-line;
 `;
