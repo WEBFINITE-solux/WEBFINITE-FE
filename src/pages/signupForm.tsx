@@ -79,7 +79,7 @@ const SignupForm: React.FC = () => {
     if (idStatus === "checking") {
       return;
     }
-  
+    console.log(e);
     if (!form.id.trim()) {
       setIdStatus("none");
     } else if (idStatus !== "valid" && idStatus !== "invalid") {
@@ -107,7 +107,7 @@ const SignupForm: React.FC = () => {
     if (nicknameStatus === "checking") {
       return;
     }
-  
+    console.log(e);
     if (!form.nickname.trim()) {
       setNicknameStatus("none");
     } else if (nicknameStatus !== "valid" && nicknameStatus !== "invalid") {

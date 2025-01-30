@@ -28,6 +28,7 @@ const QuizShort:  React.FC<QuizProps> = ({ quizData }) => {
   const [answers, setAnswers] = useState<string[]>([]);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const navigate = useNavigate();
+  console.log(quizD);
 
   useEffect(() => {
     if (!quizId) {
