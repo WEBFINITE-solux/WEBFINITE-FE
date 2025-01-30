@@ -28,7 +28,6 @@ const QuizComponent: React.FC<QuizComponentProps> = ({ quizzes }) => {
 
   return (
     <Container>
-      <Header>생성된 퀴즈 목록</Header>
       <QuizList>
         {quizzes.length === 0 ? (
           <Message>퀴즈가 없습니다.</Message>
@@ -68,16 +67,6 @@ const Container = styled.div`
   flex-direction: column;
   padding: 20px;
   background: none;
-`;
-
-const Header = styled.div`
-  font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 20px;
-  color: #d48b8b;
-  padding: 10px;
-  background-color: #f7e4e4;
-  border-radius: 5px;
 `;
 
 const QuizList = styled.div`
