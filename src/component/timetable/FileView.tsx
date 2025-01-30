@@ -27,10 +27,10 @@ const FileView: React.FC = () => {
     const fetchFiles = async () => {
       try {
         const response = await token.get(`/course/file/${courseId}`);
-        console.log(`📌 [${courseId}] 강의 자료 목록 응답:`, response.data);
+        console.log(`[${courseId}] 강의 자료 목록 응답:`, response.data);
         setFiles(response.data.files || []);
       } catch (err: any) {
-        console.error("📌 강의 자료 목록 불러오기 오류:", err);
+        console.error("강의 자료 목록 불러오기 오류:", err);
         setError(err.response?.data?.message || "강의 자료를 불러올 수 없습니다.");
       } finally {
         setLoading(false);
@@ -41,7 +41,7 @@ const FileView: React.FC = () => {
   }, [courseId]);
 
   const handleSummary = async (fileId: number) => {
-    console.log(`📌 파일 ID ${fileId} 요약 요청`);
+    console.log(`파일 ID ${fileId} 요약 요청`);
     setFiles((prevFiles) =>
       prevFiles.map((file) =>
         file.file_id === fileId ? { ...file, is_summarized: true } : file
@@ -50,7 +50,7 @@ const FileView: React.FC = () => {
   };
 
   const handleFileDelete = (fileId: number) => {
-    console.log(`📌 파일 ID ${fileId} 삭제 요청`);
+    console.log(`파일 ID ${fileId} 삭제 요청`);
     setFiles((prevFiles) => prevFiles.filter((file) => file.file_id !== fileId));
   };
 
