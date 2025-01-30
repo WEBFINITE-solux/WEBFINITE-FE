@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import QuizMulti from "../component/quiz/QuizMulti";
 import QuizTF from "../component/quiz/QuizTF";
@@ -32,7 +32,7 @@ const QuizResolve: React.FC = () => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const quizId = searchParams.get("quizId");
-
+  const navigate = useNavigate();
   const [quizData, setQuizData] = useState<QuizData | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -102,6 +102,7 @@ const QuizResolve: React.FC = () => {
 
       const response = await token.patch("/quiz/submit", payload);
       console.log("✅ 퀴즈 재제출 성공:", response.data);
+      navigate(`/quiz/answer?quizId=${quizData.quizId}`); 
 
       alert("퀴즈가 재제출되었습니다!");
     } catch (error: any) {

@@ -99,7 +99,7 @@ const QuizShort:  React.FC<QuizProps> = ({ quizData }) => {
       console.log("📌 답안 제출 성공:", response.data);
 
       alert("답안이 제출되었습니다!");
-      navigate(`/quiz/result?quizId=${quizData.quizId}`); 
+      navigate(`/quiz/answer?quizId=${quizData.quizId}`); 
     } catch (error: any) {
       console.error("🚨 답안 제출 실패:", error.response?.data || error);
       alert(`답안 제출에 실패했습니다: ${error.response?.data?.message || "오류 발생"}`);
