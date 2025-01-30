@@ -1,70 +1,63 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import styled from "styled-components";
+import token from "../token";
 
-type Course = {
-  course_id: number;
-  course_title: string;
-  period: string;
-  day: string[];
-  start_time: string;
-  end_time: string;
-  location: string;
-  color?: string;
-  term: string;
+type FileData = {
+  file_id: number;
+  original_filename: string;
+  is_summarized: boolean;
 };
 
-type CourseListProps = {
-  courses: Course[];
-};
-
-type FileState = {
-  file: File;
-  isSummarizing: boolean;
-  isSummarized: boolean;
-};
-
-const FileView: React.FC<CourseListProps> = ({ courses }) => {
-  const [files, setFiles] = useState<FileState[]>(
-    [
-      new File(["dummy content"], "선형대수.pdf", { type: "application/pdf" }),
-      new File(["dummy content"], "선형대수(2).pdf", { type: "application/pdf" }),
-      new File(["dummy content"], "선형대수 스크립트.txt", { type: "text/plain" }),
-    ].map((file) => ({
-      file,
-      isSummarizing: false,
-      isSummarized: false,
-    }))
-  );
-
+const FileView: React.FC = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const courseId = searchParams.get("courseId");
+  const [files, setFiles] = useState<FileData[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleFileDelete = (index: number) => {
-    setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
-  };
+  useEffect(() => {
+    if (!courseId) {
+      setError("유효한 강의 ID가 없습니다.");
+      setLoading(false);
+      return;
+    }
 
-  const handleSummary = (index: number) => {
+    const fetchFiles = async () => {
+      try {
+        const response = await token.get(`/course/file/${courseId}`);
+        console.log(`📌 [${courseId}] 강의 자료 목록 응답:`, response.data);
+        setFiles(response.data.files || []);
+      } catch (err: any) {
+        console.error("📌 강의 자료 목록 불러오기 오류:", err);
+        setError(err.response?.data?.message || "강의 자료를 불러올 수 없습니다.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFiles();
+  }, [courseId]);
+
+  const handleSummary = async (fileId: number) => {
+    console.log(`📌 파일 ID ${fileId} 요약 요청`);
     setFiles((prevFiles) =>
-      prevFiles.map((state, i) =>
-        i === index ? { ...state, isSummarizing: true } : state
+      prevFiles.map((file) =>
+        file.file_id === fileId ? { ...file, is_summarized: true } : file
       )
     );
-
-    setTimeout(() => {
-      setFiles((prevFiles) =>
-        prevFiles.map((state, i) =>
-          i === index
-            ? { ...state, isSummarizing: false, isSummarized: true }
-            : state
-        )
-      );
-    }, 2000); 
   };
 
-  const getFileLogo = (type: string) => {
-    if (type === "application/pdf") return "/pdfLogo.svg";
-    if (type === "text/plain") return "/txtLogo.svg";
-    return "";
+  const handleFileDelete = (fileId: number) => {
+    console.log(`📌 파일 ID ${fileId} 삭제 요청`);
+    setFiles((prevFiles) => prevFiles.filter((file) => file.file_id !== fileId));
+  };
+
+  const getFileLogo = (filename: string) => {
+    if (filename.endsWith(".pdf")) return "/pdfLogo.svg";
+    if (filename.endsWith(".txt")) return "/txtLogo.svg";
+    return "/fileDefault.svg";
   };
 
   return (
@@ -73,33 +66,37 @@ const FileView: React.FC<CourseListProps> = ({ courses }) => {
         <BackButton onClick={() => navigate("/timetable")}>{"<"}</BackButton>
         <Title>강의 자료 열람</Title>
       </Header>
-      <FileList>
-        {files.map((state, index) => (
-          <FileItem key={index}>
-            <FileIcon src={getFileLogo(state.file.type)} alt={state.file.type} />
-            <FileInfo>
-              <FileName>{state.file.name}</FileName>
-              <FileSize>{(state.file.size / 1024).toFixed(2)}KB</FileSize>
-            </FileInfo>
-            <DeleteButton onClick={() => handleFileDelete(index)}>
-              <DeleteLogo src="/deleteLogo.svg" />
-            </DeleteButton>
-            {state.isSummarizing ? (
-  <SummaryInProgress>
-    요약 중입니다...
-    <Spinner src="/spinner.svg" alt="Loading" />
-  </SummaryInProgress>
-) : (
-  <SummaryButton
-    onClick={() => handleSummary(index)}
-    isSummarized={state.isSummarized}
-  >
-    {state.isSummarized ? "자료보기" : "요약하기 →"}
-  </SummaryButton>
-)}
-          </FileItem>
-        ))}
-      </FileList>
+
+      {loading ? (
+        <Message>📂 강의 자료를 불러오는 중...</Message>
+      ) : error ? (
+        <Message>⚠️ {error}</Message>
+      ) : files.length === 0 ? (
+        <Message>📌 등록된 강의 자료가 없습니다.</Message>
+      ) : (
+        <FileList>
+          {files.map((file) => (
+            <FileItem key={file.file_id}>
+              <FileIcon src={getFileLogo(file.original_filename)} alt="파일 아이콘" />
+              <FileInfo>
+                <FileName>{file.original_filename}</FileName>
+              </FileInfo>
+              <DeleteButton onClick={() => handleFileDelete(file.file_id)}>
+                <DeleteLogo src="/deleteLogo.svg" />
+              </DeleteButton>
+              {file.is_summarized ? (
+                <SummaryButton onClick={() => navigate(`/summary/${file.file_id}`)}>
+                  자료보기
+                </SummaryButton>
+              ) : (
+                <SummaryButton onClick={() => handleSummary(file.file_id)}>
+                  요약하기 →
+                </SummaryButton>
+              )}
+            </FileItem>
+          ))}
+        </FileList>
+      )}
     </Container>
   );
 };
@@ -172,13 +169,7 @@ const FileInfo = styled.div`
 
 const FileName = styled.div`
   font-size: 14px;
-  color: #1a1a1a;
   font-weight: bold;
-`;
-
-const FileSize = styled.div`
-  font-size: 12px;
-  color: #656565;
 `;
 
 const DeleteButton = styled.button`
@@ -188,55 +179,27 @@ const DeleteButton = styled.button`
 `;
 
 const DeleteLogo = styled.img`
-  width: 14.769px;
+  width: 14px;
   height: 16px;
-  flex-shrink: 0;
 `;
 
-const SummaryButton = styled.button<{ isSummarized: boolean }>`
+const SummaryButton = styled.button`
   background-color: #ffffff;
-  color: #000000;
-  border-radius: 28.858px;
-  box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.25);
-  border: none;
+  border: 1px solid #007BFF;
   border-radius: 8px;
   padding: 8px 12px;
   cursor: pointer;
-  color: #1A1A1A;
-  text-align: center;
-  font-family: Pretendard;
   font-size: 13px;
-  font-style: normal;
   font-weight: 700;
-  line-height: 150%; 
-    &:hover {
-      background-color: rgba(190, 190, 190, 0.5);
-  `;
-
-  const SummaryInProgress = styled.div`
-  font-size: 13px;
-  color: #333;
-  font-weight: bold;
-  padding: 8px 12px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background-color: rgba(240, 240, 240, 0.8);
-  border-radius: 8px;
-`;
-
-const Spinner = styled.img`
-  width: 20px;
-  height: 20px;
-  animation: spin 1s linear infinite;
-
-  @keyframes spin {
-    0% {
-      transform: rotate(0);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
+  &:hover {
+    background-color: #007BFF;
+    color: white;
   }
 `;
 
+const Message = styled.div`
+  font-size: 14px;
+  color: #656565;
+  text-align: center;
+  padding: 20px;
+`;
