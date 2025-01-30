@@ -1,6 +1,12 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import styled from "styled-components";
+import token from "../token";
+
+interface QuizProps {
+  quizData: QuizData;
+}
+
 
 interface Question {
   questionId: number;
@@ -8,26 +14,42 @@ interface Question {
 }
 
 interface QuizData {
+  quizId: number;
   quizTitle: string;
   questions: Question[];
 }
 
-interface QuizShortProps {
-  quizData: QuizData;
-}
+const QuizShort:  React.FC<QuizProps> = ({ quizData }) => {
+  const [searchParams] = useSearchParams(); 
+  const quizId = searchParams.get("quizId"); 
 
-const QuizShort: React.FC<QuizShortProps> = ({ quizData }) => {
+  const [quizD,setQuizData] = useState<QuizData | null>(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [answers, setAnswers] = useState<string[]>(Array(quizData.questions.length).fill(""));
+  const [answers, setAnswers] = useState<string[]>([]);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    setCurrentQuestionIndex(0);
-    setAnswers(Array(quizData.questions.length).fill(""));
-  }, [quizData]);
+    if (!quizId) {
+      alert("잘못된 접근입니다. 퀴즈 ID가 없습니다.");
+      navigate("/quiz");
+      return;
+    }
 
-  const currentQuestion = quizData.questions[currentQuestionIndex];
+    const fetchQuizData = async () => {
+      try {
+        const response = await token.get(`/quiz/${quizId}`);
+        setQuizData(response.data);
+        setAnswers(Array(response.data.questions.length).fill(""));
+      } catch (error) {
+        console.error("🚨 퀴즈 데이터 불러오기 실패:", error);
+        alert("퀴즈 정보를 불러오지 못했습니다.");
+        navigate("/quiz");
+      }
+    };
+
+    fetchQuizData();
+  }, [quizId, navigate]);
 
   const handleAnswerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const updatedAnswers = [...answers];
@@ -36,7 +58,7 @@ const QuizShort: React.FC<QuizShortProps> = ({ quizData }) => {
   };
 
   const handleNext = () => {
-    if (currentQuestionIndex < quizData.questions.length - 1) {
+    if (currentQuestionIndex < (quizData?.questions.length || 0) - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else {
       alert("마지막 질문입니다.");
@@ -57,19 +79,38 @@ const QuizShort: React.FC<QuizShortProps> = ({ quizData }) => {
     setIsPopupVisible(true);
   };
 
-  const handleOutsideClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) {
-      setIsPopupVisible(false);
+  const handleAnswer = async () => {
+    if (!quizData) {
+      alert("퀴즈 정보를 불러올 수 없습니다.");
+      return;
+    }
+
+    const payload = {
+      userId: 1, 
+      quizId: quizData.quizId, 
+      answers: quizData.questions.map((question, index) => ({
+        questionId: question.questionId,
+        userAnswer: answers[index], 
+      })),
+    };
+
+    try {
+      const response = await token.post("/quiz/submit", payload);
+      console.log("📌 답안 제출 성공:", response.data);
+
+      alert("답안이 제출되었습니다!");
+      navigate(`/quiz/result?quizId=${quizData.quizId}`); 
+    } catch (error: any) {
+      console.error("🚨 답안 제출 실패:", error.response?.data || error);
+      alert(`답안 제출에 실패했습니다: ${error.response?.data?.message || "오류 발생"}`);
     }
   };
 
-  const handleGoToQuizList = () => {
-    navigate("/quiz");
-  };
+  if (!quizData) {
+    return <Message>📖 퀴즈를 불러오는 중...</Message>;
+  }
 
-  const handleAnswer = () => {
-    navigate("/quiz/answer");
-  };
+  const currentQuestion = quizData.questions[currentQuestionIndex];
 
   return (
     <ModalContainer>
@@ -79,45 +120,27 @@ const QuizShort: React.FC<QuizShortProps> = ({ quizData }) => {
           <Title>{quizData.quizTitle}</Title>
           <Subtitle>문제 {currentQuestionIndex + 1} / {quizData.questions.length}</Subtitle>
         </TitleContainer>
-        <CloseButton onClick={handleGoToQuizList}>×</CloseButton>
+        <CloseButton onClick={() => navigate("/quiz")}>×</CloseButton>
       </Header>
       <ProgressBarContainer>
-        <ProgressBar
-          style={{
-            width: `${((currentQuestionIndex + 1) / quizData.questions.length) * 100}%`,
-          }}
-        />
+        <ProgressBar style={{ width: `${((currentQuestionIndex + 1) / quizData.questions.length) * 100}%` }} />
       </ProgressBarContainer>
       <Content>
         <QuestionNumber>{currentQuestionIndex + 1}</QuestionNumber>
         <QuestionText>{currentQuestion.questionContent}</QuestionText>
-        <AnswerInput
-          type="text"
-          value={answers[currentQuestionIndex]}
-          onChange={handleAnswerChange}
-          placeholder="정답을 입력하세요"
-        />
+        <AnswerInput type="text" value={answers[currentQuestionIndex]} onChange={handleAnswerChange} placeholder="정답을 입력하세요" />
         <Navigation>
-          <NavButton onClick={handlePrevious} disabled={currentQuestionIndex === 0}>
-            {"<"}
-          </NavButton>
-          <NavButton
-            onClick={handleNext}
-            disabled={currentQuestionIndex === quizData.questions.length - 1}
-          >
-            {">"}
-          </NavButton>
+          <NavButton onClick={handlePrevious} disabled={currentQuestionIndex === 0}>{"<"}</NavButton>
+          <NavButton onClick={handleNext} disabled={currentQuestionIndex === quizData.questions.length - 1}>{">"}</NavButton>
         </Navigation>
         <SubmitButton onClick={handleSubmit}>채점하기</SubmitButton>
       </Content>
       {isPopupVisible && (
-        <Popup onClick={handleOutsideClick}>
+        <Popup onClick={() => setIsPopupVisible(false)}>
           <PopupContent>
             <PopupText>결과를 바로 확인하러 가시겠습니까?</PopupText>
             <PopupButtons>
-              <PopupButton onClick={handleGoToQuizList} primary>
-                퀴즈 목록으로
-              </PopupButton>
+              <PopupButton onClick={() => navigate("/quiz")}>퀴즈 목록으로</PopupButton>
               <PopupButton onClick={handleAnswer}>결과 확인</PopupButton>
             </PopupButtons>
           </PopupContent>
@@ -128,6 +151,7 @@ const QuizShort: React.FC<QuizShortProps> = ({ quizData }) => {
 };
 
 export default QuizShort;
+
 
 
 const ModalContainer = styled.div`
@@ -331,3 +355,11 @@ const PopupButton = styled.button<{ primary?: boolean }>`
     background: ${(props) => (props.primary ? "#0056b3" : "#f0f0f0")};
   }
 `;
+
+const Message = styled.div`
+  font-size: 16px;
+  font-weight: bold;
+  color: #777;
+  margin-top: 20px;
+`;
+

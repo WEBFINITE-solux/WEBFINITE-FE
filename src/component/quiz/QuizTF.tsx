@@ -1,43 +1,64 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import styled from "styled-components";
+import token from "../token";
+
+interface QuizProps {
+  quizData: QuizData;
+}
 
 interface Question {
   questionId: number;
   questionContent: string;
-
 }
 
 interface QuizData {
+  quizId: number;
   quizTitle: string;
   questions: Question[];
 }
 
-interface QuizTFProps {
-  quizData: QuizData;
-}
+const QuizTF:React.FC<QuizProps> = ({ quizData }) => {
+  const [searchParams] = useSearchParams(); 
+  const quizId = searchParams.get("quizId");
 
-const QuizTF: React.FC<QuizTFProps> = ({ quizData }) => {
+  const [quizD, setQuizData] = useState<QuizData | null>(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
+  const [selectedAnswers, setSelectedAnswers] = useState<string[]>([]);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    setCurrentQuestionIndex(0);
-    setSelectedAnswer(null);
-  }, [quizData]);
+    if (!quizId) {
+      alert("잘못된 접근입니다. 퀴즈 ID가 없습니다.");
+      navigate("/quiz");
+      return;
+    }
 
-  const currentQuestion = quizData.questions[currentQuestionIndex];
+    const fetchQuizData = async () => {
+      try {
+        const response = await token.get(`/quiz/${quizId}`);
+        setQuizData(response.data);
+        setSelectedAnswers(Array(response.data.questions.length).fill(""));
+      } catch (error) {
+        console.error("🚨 퀴즈 데이터 불러오기 실패:", error);
+        alert("퀴즈 정보를 불러오지 못했습니다.");
+        navigate("/quiz");
+      }
+    };
+
+    fetchQuizData();
+  }, [quizId, navigate]);
 
   const handleAnswerChange = (answer: string) => {
-    setSelectedAnswer(answer);
+    const updatedAnswers = [...selectedAnswers];
+    updatedAnswers[currentQuestionIndex] = answer;
+    setSelectedAnswers(updatedAnswers);
   };
 
   const handleNext = () => {
-    if (currentQuestionIndex < quizData.questions.length - 1) {
+    if (currentQuestionIndex < (quizData?.questions.length || 0) - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
-      setSelectedAnswer(null);
     } else {
       alert("마지막 질문입니다.");
     }
@@ -46,31 +67,49 @@ const QuizTF: React.FC<QuizTFProps> = ({ quizData }) => {
   const handlePrevious = () => {
     if (currentQuestionIndex > 0) {
       setCurrentQuestionIndex(currentQuestionIndex - 1);
-      setSelectedAnswer(null);
     }
   };
 
-  const handleAnswer = () => {
-    navigate("/quiz/answer");
-  };
-
   const handleSubmit = () => {
-    if (!selectedAnswer) {
+    if (!selectedAnswers[currentQuestionIndex]) {
       alert("정답을 선택해주세요!");
       return;
     }
     setIsPopupVisible(true);
   };
 
-  const handleOutsideClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) {
-      setIsPopupVisible(false);
+  const handleAnswer = async () => {
+    if (!quizData) {
+      alert("퀴즈 정보를 불러올 수 없습니다.");
+      return;
+    }
+
+    const payload = {
+      userId: 1, 
+      quizId: quizData.quizId,
+      answers: quizData.questions.map((question, index) => ({
+        questionId: question.questionId,
+        userAnswer: selectedAnswers[index], 
+      })),
+    };
+
+    try {
+      const response = await token.post("/quiz/submit", payload);
+      console.log("📌 답안 제출 성공:", response.data);
+
+      alert("답안이 제출되었습니다!");
+      navigate(`/quiz/result?quizId=${quizData.quizId}`); 
+    } catch (error: any) {
+      console.error("🚨 답안 제출 실패:", error.response?.data || error);
+      alert(`답안 제출에 실패했습니다: ${error.response?.data?.message || "오류 발생"}`);
     }
   };
 
-  const handleGoToQuizList = () => {
-    navigate("/quiz");
-  };
+  if (!quizData) {
+    return <Message>📖 퀴즈를 불러오는 중...</Message>;
+  }
+
+  const currentQuestion = quizData.questions[currentQuestionIndex];
 
   return (
     <Container>
@@ -80,47 +119,34 @@ const QuizTF: React.FC<QuizTFProps> = ({ quizData }) => {
           <Title>{quizData.quizTitle}</Title>
           <Subtitle>문제 {currentQuestionIndex + 1} / {quizData.questions.length}</Subtitle>
         </TitleContainer>
-        <CloseButton onClick={handleGoToQuizList}>×</CloseButton>
+        <CloseButton onClick={() => navigate("/quiz")}>×</CloseButton>
       </Header>
       <ProgressBarContainer>
-        <ProgressBar
-          style={{
-            width: `${((currentQuestionIndex + 1) / quizData.questions.length) * 100}%`,
-          }}
-        />
+        <ProgressBar style={{ width: `${((currentQuestionIndex + 1) / quizData.questions.length) * 100}%` }} />
       </ProgressBarContainer>
       <Content>
         <QuestionNumber>{currentQuestionIndex + 1}</QuestionNumber>
         <QuestionText>{currentQuestion.questionContent}</QuestionText>
         <Answers>
-          <AnswerButton onClick={() => handleAnswerChange("TRUE")} selected={selectedAnswer === "TRUE"}>
+          <AnswerButton onClick={() => handleAnswerChange("TRUE")} selected={selectedAnswers[currentQuestionIndex] === "TRUE"}>
             참
           </AnswerButton>
-          <AnswerButton onClick={() => handleAnswerChange("FALSE")} selected={selectedAnswer === "FALSE"}>
+          <AnswerButton onClick={() => handleAnswerChange("FALSE")} selected={selectedAnswers[currentQuestionIndex] === "FALSE"}>
             거짓
           </AnswerButton>
         </Answers>
         <Navigation>
-          <NavButton onClick={handlePrevious} disabled={currentQuestionIndex === 0}>
-            {"<"}
-          </NavButton>
-          <NavButton
-            onClick={handleNext}
-            disabled={currentQuestionIndex === quizData.questions.length - 1}
-          >
-            {">"}
-          </NavButton>
+          <NavButton onClick={handlePrevious} disabled={currentQuestionIndex === 0}>{"<"}</NavButton>
+          <NavButton onClick={handleNext} disabled={currentQuestionIndex === quizData.questions.length - 1}>{">"}</NavButton>
         </Navigation>
         <SubmitButton onClick={handleSubmit}>채점하기</SubmitButton>
       </Content>
       {isPopupVisible && (
-        <Popup onClick={handleOutsideClick}>
+        <Popup onClick={() => setIsPopupVisible(false)}>
           <PopupContent>
             <PopupText>결과를 바로 확인하러 가시겠습니까?</PopupText>
             <PopupButtons>
-              <PopupButton onClick={handleGoToQuizList} primary>
-                퀴즈 목록으로
-              </PopupButton>
+              <PopupButton onClick={() => navigate("/quiz")}>퀴즈 목록으로</PopupButton>
               <PopupButton onClick={handleAnswer}>결과 확인</PopupButton>
             </PopupButtons>
           </PopupContent>
@@ -131,6 +157,7 @@ const QuizTF: React.FC<QuizTFProps> = ({ quizData }) => {
 };
 
 export default QuizTF;
+
 
 
 const Container = styled.div`
@@ -346,3 +373,11 @@ const PopupButton = styled.button<{ primary?: boolean }>`
     background: ${(props) => (props.primary ? "#0056b3" : "#f0f0f0")};
   }
 `;
+
+const Message = styled.div`
+  font-size: 16px;
+  font-weight: bold;
+  color: #777;
+  margin-top: 20px;
+`;
+

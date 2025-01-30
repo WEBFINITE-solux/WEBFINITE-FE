@@ -10,14 +10,14 @@ type QuizType = "MULTIPLE_CHOICE" | "TRUE_FALSE" | "SUBJECTIVE";
 
 interface Choice {
   choiceId: number;
+  choiceLabel: string; 
   choiceContent: string;
 }
 
 interface Question {
   questionId: number;
   questionContent: string;
-  choices: Choice[];
-  answer?: string;
+  choices?: Choice[]; 
 }
 
 interface QuizData {
@@ -30,7 +30,6 @@ interface QuizData {
 
 const QuizSolve: React.FC = () => {
   const location = useLocation();
-  
   const searchParams = new URLSearchParams(location.search);
   const quizId = searchParams.get("quizId");
 
@@ -51,7 +50,25 @@ const QuizSolve: React.FC = () => {
       try {
         const response = await token.get(`/quiz/${quizId}`);
         console.log("✅ 응답 데이터:", response.data);
-        setQuizData(response.data);
+
+        const formattedQuizData: QuizData = {
+          quizId: response.data.quizId,
+          quizTitle: response.data.quizTitle || "퀴즈 제목 없음",
+          courseName: response.data.courseName || "강의명 없음",
+          quizType: response.data.quizType as QuizType,
+          questions: (response.data.questions || []).map((q: any) => ({
+            questionId: q.questionId,
+            questionContent: q.questionContent || "질문 내용 없음",
+            choices: q.choices?.map((c: any, index: number) => ({
+              choiceId: c.choiceId,
+              choiceLabel: String.fromCharCode(65 + index), // 🔹 A, B, C, D 자동 생성
+              choiceContent: c.choiceContent || "선택지 없음",
+            })) || [],
+            answer: q.answer || null,
+          })),
+        };
+
+        setQuizData(formattedQuizData);
       } catch (error) {
         console.error("🚨 퀴즈 데이터 불러오기 실패:", error);
       } finally {
@@ -62,34 +79,16 @@ const QuizSolve: React.FC = () => {
     fetchQuizData();
   }, [quizId]);
 
-  const sanitizedQuizData: QuizData | null = quizData
-    ? {
-        quizId: quizData.quizId,
-        quizTitle: quizData.quizTitle || "퀴즈 제목 없음",
-        courseName: quizData.courseName || "강의명 없음",
-        quizType: quizData.quizType || "MULTIPLE_CHOICE",
-        questions: (quizData.questions || []).map((q) => ({
-          questionId: q.questionId,
-          questionContent: q.questionContent || "질문 내용 없음",
-          choices: q.choices?.map((c) => ({
-            choiceId: c.choiceId,
-            choiceContent: c.choiceContent || "선택지 없음",
-          })) || [],
-          answer: q.answer || "",
-        })),
-      }
-    : null;
-
   const renderQuizComponent = () => {
-    if (!sanitizedQuizData) return <Message>퀴즈 데이터를 불러오는 중...</Message>;
+    if (!quizData) return <Message>퀴즈 데이터를 불러오는 중...</Message>;
 
-    switch (sanitizedQuizData.quizType) {
+    switch (quizData.quizType) {
       case "MULTIPLE_CHOICE":
-        return <QuizMulti quizData={sanitizedQuizData} />;
+        return <QuizMulti quizData={quizData} />;
       case "TRUE_FALSE":
-        return <QuizTF quizData={sanitizedQuizData} />;
+        return <QuizTF quizData={quizData} />;
       case "SUBJECTIVE":
-        return <QuizShort quizData={sanitizedQuizData} />;
+        return <QuizShort quizData={quizData} />;
       default:
         return <Message>지원하지 않는 퀴즈 유형입니다.</Message>;
     }
