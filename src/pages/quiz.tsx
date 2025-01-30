@@ -211,5 +211,5 @@ const CourseHeader = styled.div`
   padding: 10px;
   background-color: #f7e4e4;
   border-radius: 5px;
-  width: 27%;
+  width: 100%;
 `;
