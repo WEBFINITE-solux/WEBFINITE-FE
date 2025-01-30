@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 import token from "../token";
 
 interface FileData {
@@ -14,27 +15,33 @@ interface FileSelectModalProps {
   onSelect: (file: FileData) => void;
 }
 
-const FileSelectModal: React.FC<FileSelectModalProps> = ({ courseId, onClose, onSelect }) => {
+const FileSelectModal: React.FC<FileSelectModalProps> = ({ courseId, onClose }) => {
   const [files, setFiles] = useState<FileData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [selectedFileId] = useState<number | null>(null);
+  const [selectedFileId, setSelectedFileId] = useState<number | null>(null);
+  const navigate = useNavigate(); 
 
   useEffect(() => {
-    console.log("courseId 왜 안오니:", courseId);
+    console.log("✅ courseId 값 확인:", courseId);
     const fetchFiles = async () => {
       try {
         const response = await token.get(`/course/file/${courseId}`);
         setFiles(response.data.files || []);
       } catch (error) {
-        console.error("강의 자료 목록 불러오기 실패:", error);
+        console.error("🚨 강의 자료 목록 불러오기 실패:", error);
       } finally {
         setLoading(false);
       }
     };
 
     if (courseId) fetchFiles();
-}, [courseId]);
+  }, [courseId]);
 
+  const handleFileClick = (file: FileData) => {
+    setSelectedFileId(file.file_id);
+    console.log("✅ 선택된 파일 ID:", file.file_id);
+    navigate(`/quiz/create/choose`, { state: { courseId, fileId: file.file_id } });
+  };
 
   return (
     <Overlay>
@@ -48,7 +55,11 @@ const FileSelectModal: React.FC<FileSelectModalProps> = ({ courseId, onClose, on
             <Message>📂 강의 자료를 불러오는 중...</Message>
           ) : (
             files.map((file) => (
-              <FileItem key={file.file_id} onClick={() => onSelect(file)} selected={file.file_id === selectedFileId}>
+              <FileItem
+                key={file.file_id}
+                onClick={() => handleFileClick(file)}
+                selected={file.file_id === selectedFileId}
+              >
                 {file.original_filename} {file.is_summarized ? "(요약 완료)" : "(요약 없음)"}
               </FileItem>
             ))
@@ -60,6 +71,7 @@ const FileSelectModal: React.FC<FileSelectModalProps> = ({ courseId, onClose, on
 };
 
 export default FileSelectModal;
+
 
 
 const Overlay = styled.div`
