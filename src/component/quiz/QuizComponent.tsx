@@ -20,6 +20,11 @@ const QuizComponent: React.FC<QuizComponentProps> = ({ quizzes }) => {
     console.log("퀴즈 풀기:", quizId);
     navigate(`/quiz/solve?quizId=${quizId}`);
   };
+  const handleResolveQuiz = (quizId: number) => {
+    console.log("퀴즈 풀기:", quizId);
+    navigate(`/quiz/Resolve?quizId=${quizId}`);
+  };
+
 
   const handleViewAiExplanation = (quizId: number) => {
     console.log("AI 해설 보기:", quizId);
@@ -39,7 +44,7 @@ const QuizComponent: React.FC<QuizComponentProps> = ({ quizzes }) => {
               <Actions>
                 {quiz.quizState === "COMPLETED" ? (
                   <>
-                    <ActionIcon onClick={() => handleSolveQuiz(quiz.quizId)}>
+                    <ActionIcon onClick={() => handleResolveQuiz(quiz.quizId)}>
                       <AgainLogo src="/again.svg" />
                     </ActionIcon>
                     <ActionButton onClick={() => handleViewAiExplanation(quiz.quizId)}>
