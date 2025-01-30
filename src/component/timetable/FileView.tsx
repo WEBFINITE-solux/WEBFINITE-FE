@@ -86,6 +86,11 @@ const FileView: React.FC = () => {
     }
   };
 
+  const closePopup = () => {
+    setSummary(null);
+    setSummaryError(null);
+  };
+
   const getFileLogo = (filename: string) => {
     if (filename.endsWith(".pdf")) return "/pdfLogo.svg";
     if (filename.endsWith(".txt")) return "/txtLogo.svg";
@@ -126,21 +131,21 @@ const FileView: React.FC = () => {
           ))}
         </FileList>
       )}
-      {summary && (
-        <Popup>
-          <PopupContent>
-            <CloseButton onClick={() => setSummary(null)}>✖</CloseButton>
-            <SummayTitle>요약 내용</SummayTitle>
-            <SummaryText>{summary}</SummaryText>
-          </PopupContent>
-        </Popup>
-      )}
-      {summaryError && (
-        <Popup>
-          <PopupContent>
-            <CloseButton onClick={() => setSummaryError(null)}>✖</CloseButton>
-            <h3>요약 오류</h3>
-            <SummaryText>{summaryError}</SummaryText>
+      {(summary || summaryError) && (
+        <Popup onClick={closePopup}>
+          <PopupContent onClick={(e) => e.stopPropagation()}>
+            <CloseButton onClick={closePopup}>✖</CloseButton>
+            {summary ? (
+              <>
+                <SummayTitle>요약 내용</SummayTitle>
+                <SummaryText>{summary}</SummaryText>
+              </>
+            ) : (
+              <>
+                <SummayTitle>요약 오류</SummayTitle>
+                <SummaryText>{summaryError}</SummaryText>
+              </>
+            )}
           </PopupContent>
         </Popup>
       )}

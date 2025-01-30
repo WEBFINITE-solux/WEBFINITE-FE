@@ -278,7 +278,7 @@ const CourseTitle = styled.div`
   font-style: normal;
   font-weight: 600;
   line-height: 150%;
-  width: 75px;
+  width: 79px;
 `;
 
 const CoursePeriod = styled.div`
