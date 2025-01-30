@@ -1,53 +1,41 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
-const dummyData = {
-  quiz_title: "강의자료_1",
-  questions: [
-    {
-      question_id: 101,
-      question_content: "다음 중 OOP의 특징이 아닌 것은?",
-      answer: "FALSE"
-    },
-    {
-      question_id: 102,
-      question_content: "CPU는 연산 수행을 한다.",
-      answer: "TRUE"
-    },
-    {
-      question_id: 103,
-      question_content: "안녕하세요 다음으로 올 말은 반갑습니다.",
-      answer: "TRUE"
-    },
-    {
-      question_id: 104,
-      question_content: "퀴즈입니다는 질문이 아니다.",
-      answer: "FALSE"
-    },
-    {
-      question_id: 105,
-      question_content: "CPU의 풀네임은 Center Process Unit이다.",
-      answer: "TRUE"
-    },
-  ],
-};
+interface Question {
+  questionId: number;
+  questionContent: string;
 
-const QuizTF = () => {
+}
+
+interface QuizData {
+  quizTitle: string;
+  questions: Question[];
+}
+
+interface QuizTFProps {
+  quizData: QuizData;
+}
+
+const QuizTF: React.FC<QuizTFProps> = ({ quizData }) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
-
   const navigate = useNavigate();
 
-  const currentQuestion = dummyData.questions[currentQuestionIndex];
+  useEffect(() => {
+    setCurrentQuestionIndex(0);
+    setSelectedAnswer(null);
+  }, [quizData]);
+
+  const currentQuestion = quizData.questions[currentQuestionIndex];
 
   const handleAnswerChange = (answer: string) => {
     setSelectedAnswer(answer);
   };
 
   const handleNext = () => {
-    if (currentQuestionIndex < dummyData.questions.length - 1) {
+    if (currentQuestionIndex < quizData.questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
       setSelectedAnswer(null);
     } else {
@@ -61,6 +49,7 @@ const QuizTF = () => {
       setSelectedAnswer(null);
     }
   };
+
   const handleAnswer = () => {
     navigate("/quiz/answer");
   };
@@ -87,22 +76,22 @@ const QuizTF = () => {
     <Container>
       <Header>
         <TitleContainer>
-          <Subtitle>수업1</Subtitle>
-          <Title>{dummyData.quiz_title}</Title>
-          <Subtitle>1주차</Subtitle>
+          <Subtitle>퀴즈</Subtitle>
+          <Title>{quizData.quizTitle}</Title>
+          <Subtitle>문제 {currentQuestionIndex + 1} / {quizData.questions.length}</Subtitle>
         </TitleContainer>
         <CloseButton onClick={handleGoToQuizList}>×</CloseButton>
       </Header>
       <ProgressBarContainer>
         <ProgressBar
           style={{
-            width: `${((currentQuestionIndex + 1) / dummyData.questions.length) * 100}%`,
+            width: `${((currentQuestionIndex + 1) / quizData.questions.length) * 100}%`,
           }}
         />
       </ProgressBarContainer>
       <Content>
         <QuestionNumber>{currentQuestionIndex + 1}</QuestionNumber>
-        <QuestionText>{currentQuestion.question_content}</QuestionText>
+        <QuestionText>{currentQuestion.questionContent}</QuestionText>
         <Answers>
           <AnswerButton onClick={() => handleAnswerChange("TRUE")} selected={selectedAnswer === "TRUE"}>
             참
@@ -117,7 +106,7 @@ const QuizTF = () => {
           </NavButton>
           <NavButton
             onClick={handleNext}
-            disabled={currentQuestionIndex === dummyData.questions.length - 1}
+            disabled={currentQuestionIndex === quizData.questions.length - 1}
           >
             {">"}
           </NavButton>
@@ -142,6 +131,7 @@ const QuizTF = () => {
 };
 
 export default QuizTF;
+
 
 const Container = styled.div`
   width: 1500px;
