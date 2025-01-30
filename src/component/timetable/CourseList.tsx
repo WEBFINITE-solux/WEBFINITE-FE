@@ -4,28 +4,32 @@ import CourseAdd from "./CourseAdd";
 import CourseDelete from "./CourseDelete";
 import UploadButton from "./uploadButton";
 
-type Course = {
+type ListCourse = {
   course_id: number;
   course_title: string;
   period: string;
-  day: string[];
-  start_time: string;
-  end_time: string;
-  location: string;
-  color?: string;
-  term: string;
 };
 
 type CourseListProps = {
-  courses: Course[];
+  courses: { id: number; title: string; period: string }[];
 };
 
 const CourseList: React.FC<CourseListProps> = ({ courses }) => {
   const [isOptionsOpen, setIsOptionsOpen] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [courseData, setCourseData] = useState(courses);
+  const [courseData, setCourseData] = useState<ListCourse[]>([]);
   const optionsRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const formattedCourses: ListCourse[] = courses.map((course) => ({
+      course_id: course.id, 
+      course_title: course.title, 
+      period: course.period,
+    }));
+
+    setCourseData(formattedCourses);
+  }, [courses]);
 
   const toggleOptions = () => {
     setIsOptionsOpen(!isOptionsOpen);
@@ -71,7 +75,16 @@ const CourseList: React.FC<CourseListProps> = ({ courses }) => {
       {isAdding ? (
         <CourseAdd onBackToList={handleBackToList} />
       ) : isDeleting ? (
-        <CourseDelete courses={courseData} onDelete={handleDeleteCourse} onBackToList={handleBackToList} />
+        <CourseDelete
+  courses={courseData.map(course => ({
+    id: course.course_id,  
+    title: course.course_title, 
+    period: course.period
+  }))}
+  onDelete={handleDeleteCourse}
+  onBackToList={handleBackToList}
+/>
+
       ) : (
         <>
           <Header>
@@ -99,15 +112,12 @@ const CourseList: React.FC<CourseListProps> = ({ courses }) => {
               <CourseListContainer>
                 {courseData.map((course) => (
                   <CourseItem key={course.course_id}>
-                    <CourseIconContainer
-                      src="/courseImg.png"
-                      alt="강의 이미지"
-                    />
+                    <CourseIconContainer src="/courseImg.png" alt="강의 이미지" />
                     <CourseInfo>
                       <CourseTitle>{course.course_title}</CourseTitle>
                       <CoursePeriod>{course.period}</CoursePeriod>
                     </CourseInfo>
-                    <UploadButton/>
+                    <UploadButton key={course.course_id} courseId={course.course_id} />
                   </CourseItem>
                 ))}
               </CourseListContainer>
@@ -120,6 +130,8 @@ const CourseList: React.FC<CourseListProps> = ({ courses }) => {
 };
 
 export default CourseList;
+
+
 
 const Container = styled.div`
   width: 400px;
@@ -256,7 +268,7 @@ const CourseInfo = styled.div`
   align-items: center;
   gap: 40px;
   margin-top: 3px;
-  margin-right : 5px;
+  margin-right: 5px;
 `;
 
 const CourseTitle = styled.div`
@@ -266,7 +278,7 @@ const CourseTitle = styled.div`
   font-style: normal;
   font-weight: 600;
   line-height: 150%;
-  width: 85px;
+  width: 79px;
 `;
 
 const CoursePeriod = styled.div`

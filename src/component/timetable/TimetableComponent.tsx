@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
 type Course = {
@@ -9,7 +9,7 @@ type Course = {
   start_time: string;
   end_time: string;
   location: string;
-  color?: string;
+  color: string;
   term: string;
 };
 
@@ -18,18 +18,18 @@ type TimetableProps = {
 };
 
 const TimetableComponent: React.FC<TimetableProps> = ({ courses }) => {
-  const [selectedTerm, setSelectedTerm] = useState(courses[0]?.term || "");
+  const [selectedTerm, setSelectedTerm] = useState("");
+
+  useEffect(() => {
+    if (courses.length > 0) {
+      setSelectedTerm(courses[0].term);
+    }
+  }, [courses]);
+
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  const terms = [
-    "2024년 2학기",
-    "2024년 여름학기",
-    "2024년 1학기",
-    "2023년 겨울학기",
-    "2023년 1학기",
-    "2022년 2학기",
-    "2022년 1학기",
-  ]; 
+  const terms = [...new Set(courses.map((course) => course.term))];
+
   const toggleDropdown = () => setIsDropdownOpen((prev) => !prev);
 
   const selectTerm = (term: string) => {
@@ -57,7 +57,7 @@ const TimetableComponent: React.FC<TimetableProps> = ({ courses }) => {
       <Header>
         <Dropdown>
           <DropdownButton onClick={toggleDropdown}>
-            {selectedTerm} ▼
+            {selectedTerm || "학기 선택"} ▼
           </DropdownButton>
           {isDropdownOpen && (
             <DropdownMenu>
@@ -98,9 +98,7 @@ const TimetableComponent: React.FC<TimetableProps> = ({ courses }) => {
                       (course) =>
                         course.term === selectedTerm &&
                         course.day.includes(
-                          Object.keys(dayMap).find(
-                            (key) => dayMap[key] === day
-                          )!
+                          Object.keys(dayMap).find((key) => dayMap[key] === day)!
                         ) &&
                         timeToNumber(course.start_time) < i + 10 &&
                         timeToNumber(course.end_time) > i + 9
@@ -110,9 +108,7 @@ const TimetableComponent: React.FC<TimetableProps> = ({ courses }) => {
                         key={course.course_id}
                         style={{
                           height: `${
-                            (timeToNumber(course.end_time) -
-                              timeToNumber(course.start_time)) *
-                            100
+                            (timeToNumber(course.end_time) - timeToNumber(course.start_time)) * 100
                           }%`,
                           top: `${
                             (timeToNumber(course.start_time) - (i + 9)) * 100
@@ -137,7 +133,8 @@ const TimetableComponent: React.FC<TimetableProps> = ({ courses }) => {
 
 export default TimetableComponent;
 
-// Styled Components
+
+
 const Container = styled.div`
   position: absolute;
   top: -8px;

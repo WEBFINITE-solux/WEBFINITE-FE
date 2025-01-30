@@ -3,10 +3,10 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 interface QuizData {
-  quiz_id: number;
-  quiz_title: string;
-  quiz_status: "COMPLETED" | "IN_PROGRESS";
-  correct_rate: string | null;
+  quizId: number;
+  quizTitle: string;
+  quizState: "COMPLETED" | "IN_PROGRESS";
+  correctRate: string | null;
 }
 
 interface QuizComponentProps {
@@ -17,41 +17,45 @@ const QuizComponent: React.FC<QuizComponentProps> = ({ quizzes }) => {
   const navigate = useNavigate();
 
   const handleSolveQuiz = (quizId: number) => {
-    navigate("/quiz/solve");
+    console.log("퀴즈 풀기:", quizId);
+    navigate(`/quiz/solve?quizId=${quizId}`);
   };
 
   const handleViewAiExplanation = (quizId: number) => {
-    navigate("/quiz/answer");
+    console.log("AI 해설 보기:", quizId);
+    navigate(`/quiz/answer?quizId=${quizId}`);
   };
 
   return (
     <Container>
-      <Header>수업 1</Header>
+      <Header>생성된 퀴즈 목록</Header>
       <QuizList>
-        {quizzes.map((quiz) => (
-          <QuizCard key={quiz.quiz_id}>
-            <Title>{quiz.quiz_title}</Title>
-            <Progress>
-              {quiz.correct_rate ? quiz.correct_rate : "?/5"}
-            </Progress>
-            <Actions>
-              {quiz.quiz_status === "COMPLETED" ? (
-                <>
-                  <ActionIcon onClick={() => handleSolveQuiz(quiz.quiz_id)}>
-                    <AgainLogo src="/again.svg"/>
-                  </ActionIcon>
-                  <ActionButton onClick={() => handleViewAiExplanation(quiz.quiz_id)}>
-                    AI 해설보기
-                  </ActionButton>
-                </>
-              ) : (
-                <SolveButton onClick={() => handleSolveQuiz(quiz.quiz_id)}>
-                  퀴즈 풀기
-                </SolveButton>
-              )}
-            </Actions>
-          </QuizCard>
-        ))}
+        {quizzes.length === 0 ? (
+          <Message>퀴즈가 없습니다.</Message>
+        ) : (
+          quizzes.map((quiz) => (
+            <QuizCard key={quiz.quizId}>
+              <Title>{quiz.quizTitle}</Title>
+              <Progress>{quiz.correctRate ? quiz.correctRate : "?/5"}</Progress>
+              <Actions>
+                {quiz.quizState === "COMPLETED" ? (
+                  <>
+                    <ActionIcon onClick={() => handleSolveQuiz(quiz.quizId)}>
+                      <AgainLogo src="/again.svg" />
+                    </ActionIcon>
+                    <ActionButton onClick={() => handleViewAiExplanation(quiz.quizId)}>
+                      AI 해설보기
+                    </ActionButton>
+                  </>
+                ) : (
+                  <SolveButton onClick={() => handleSolveQuiz(quiz.quizId)}>
+                    퀴즈 풀기
+                  </SolveButton>
+                )}
+              </Actions>
+            </QuizCard>
+          ))
+        )}
       </QuizList>
     </Container>
   );
@@ -63,7 +67,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   padding: 20px;
-  background : none;
+  background: none;
 `;
 
 const Header = styled.div`
@@ -77,20 +81,19 @@ const Header = styled.div`
 `;
 
 const QuizList = styled.div`
-  width : 1520px;
+  width: 1520px;
   display: flex;
   overflow-x: auto;
   gap: 20px;
   padding-bottom: 10px;
+
   &::-webkit-scrollbar {
     height: 8px;
   }
-
   &::-webkit-scrollbar-thumb {
     background: #ccc;
     border-radius: 10px;
   }
-
   &::-webkit-scrollbar-track {
     background-color: #f0f0f0;
   }
@@ -129,23 +132,20 @@ const SolveButton = styled.button`
   width: 74px;
   height: 20px;
   border-radius: 16px;
-  background: #FFF;
-  box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.30);
+  background: #fff;
+  box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.3);
   border: none;
-  border-radius: 5px;
-  padding: 2px 2px;
+  padding: 2px;
   cursor: pointer;
-  color: #1A1A1A;
+  color: #1a1a1a;
   text-align: center;
   font-family: Pretendard;
   font-size: 10px;
-  font-style: normal;
   font-weight: 600;
-  line-height: 150%;
-  margin-left : 180px;
+  margin-left: 180px;
 
   &:hover {
-    background-color:rgb(225, 225, 225);
+    background-color: rgb(225, 225, 225);
   }
 `;
 
@@ -153,40 +153,45 @@ const ActionButton = styled.button`
   width: 74px;
   height: 20px;
   border-radius: 16px;
-  background: #FFF;
-  box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.30);
+  background: #fff;
+  box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.3);
   border: none;
-  border-radius: 5px;
-  padding: 2px 2px;
+  padding: 2px;
   cursor: pointer;
-  color: #1A1A1A;
+  color: #1a1a1a;
   text-align: center;
   font-family: Pretendard;
   font-size: 10px;
-  font-style: normal;
   font-weight: 600;
-  line-height: 150%;
-  margin-left : 150px;
-  margin-top : 13px;
+  margin-left: 150px;
+  margin-top: 13px;
 
   &:hover {
-    background-color:rgb(225, 225, 225);
+    background-color: rgb(225, 225, 225);
   }
 `;
+
 const AgainLogo = styled.img`
-width: 16.947px;
-height: 14px;
-flex-shrink: 0;
-`
+  width: 16.947px;
+  height: 14px;
+  flex-shrink: 0;
+`;
 
 const ActionIcon = styled.div`
   font-size: 16px;
   cursor: pointer;
   margin-right: 10px;
   color: #555;
-  margin-top : 10px;
+  margin-top: 10px;
 
   &:hover {
     color: #007bff;
   }
+`;
+
+const Message = styled.div`
+  font-size: 16px;
+  font-weight: bold;
+  color: #777;
+  margin-top: 20px;
 `;

@@ -1,4 +1,6 @@
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import token from "../component/token"; 
 import TimetableComponent from "../component/timetable/TimetableComponent";
 import FileUpload from "../component/timetable/FileUpload";
 
@@ -10,58 +12,55 @@ type Course = {
   start_time: string;
   end_time: string;
   location: string;
-  color?: string;
+  color: string;
   term: string;
 };
 
 const TimetableUpload: React.FC = () => {
   const colors = ["#FFD3A9", "#C2B1FF", "#FF9E9E", "#95BAFF", "#9EFFEA"];
-  const courses: Course[] = [
-    {
-      course_id: 1,
-      course_title: "선형대수학",
-      period: "2024.3~7",
-      day: ["MON", "WED"],
-      start_time: "10:30",
-      end_time: "11:45",
-      location: "명신관 221호",
-      color: colors[Math.floor(Math.random() * colors.length)],
-      term: "2025년1학기",
-    },
-    {
-      course_id: 2,
-      course_title: "컴퓨터구조",
-      period: "2024.3~7",
-      day: ["MON", "WED"],
-      start_time: "12:00",
-      end_time: "13:15",
-      location: "명신관 702호",
-      color: colors[Math.floor(Math.random() * colors.length)],
-      term: "2025년1학기",
-    },
-    {
-      course_id: 3,
-      course_title: "알고리즘입문",
-      period: "2024.3~7",
-      day: ["TUE"],
-      start_time: "13:00",
-      end_time: "15:50",
-      location: "프라임관 201호",
-      color: colors[Math.floor(Math.random() * colors.length)],
-      term: "2025년1학기",
-    },
-  ];
+  const [courses, setCourses] = useState<Course[]>([]);
+
+  const userId = 1; 
+  const year = "2024";
+  const semester = "1";
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const response = await token.get(`/course/table/${userId}/${year}/${semester}`);
+        console.log("시간표 데이터 응답:", response.data);
+
+        const formattedCourses = response.data.courses.map((course: any) => ({
+          course_id: course.course_id,
+          course_title: course.title,
+          period: course.period || `${year}.3~7`,
+          day: course.schedule?.map((s: any) => s.day) || [],
+          start_time: course.schedule?.[0]?.start_time || "00:00",
+          end_time: course.schedule?.[0]?.end_time || "00:00",
+          location: course.schedule?.[0]?.location || "Unknown",
+          color: colors[Math.floor(Math.random() * colors.length)], 
+          term: `${year}년${semester}학기`,
+        }));
+
+        setCourses(formattedCourses);
+      } catch (error) {
+        console.error("강의 정보를 불러오는 중 오류 발생:", error);
+      }
+    };
+
+    fetchCourses();
+  }, [userId, year, semester]);
 
   return (
     <Container>
       <TimetableBack src="/timetableBackground.png" />
       <HorizontalContainer>
-      <TimetableContainer>
-        <TimetableComponent courses={courses} />
-        <FileUploadContainer>
-         <FileUpload courses={courses} />
-         </FileUploadContainer>
-      </TimetableContainer>
+        <TimetableContainer>
+          <TimetableComponent courses={courses} />
+          <FileUploadContainer>
+            <FileUpload courses={courses} />
+          </FileUploadContainer>
+        </TimetableContainer>
       </HorizontalContainer>
     </Container>
   );
@@ -96,7 +95,8 @@ const HorizontalContainer = styled.div`
   gap: 10px;
   margin-top: 10px;
 `;
-const FileUploadContainer =styled.div`
- margin-top : 90px;
- margin-right : 100px;
-`
+
+const FileUploadContainer = styled.div`
+  margin-top: 90px;
+  margin-right: 100px;
+`;
