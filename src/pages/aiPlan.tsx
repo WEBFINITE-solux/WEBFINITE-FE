@@ -3,6 +3,7 @@ import { DateRangePicker } from "react-date-range";
 import "react-date-range/dist/styles.css"; // 기본 스타일
 import "react-date-range/dist/theme/default.css"; // 테마 스타일
 import "./../styles/aiPlan.css";
+import "./../styles/study.css";
 
 const AiPlan: React.FC = () => {
   const userId = 1;
@@ -21,7 +22,7 @@ const AiPlan: React.FC = () => {
     const fetchMaterials = async () => {
       try {
         const response = await fetch(
-          `https://de8b-58-29-179-25.ngrok-free.app/course/${userId}/2024/1`,
+          `https://d291-58-29-179-25.ngrok-free.app/course/${userId}/2024/1`,
           {
             method: "GET",
             headers: {
@@ -50,7 +51,7 @@ const AiPlan: React.FC = () => {
   const fetchCourseFiles = async (courseId: number) => {
     try {
       const response = await fetch(
-        `https://de8b-58-29-179-25.ngrok-free.app/course/file/${courseId}`,
+        `https://d291-58-29-179-25.ngrok-free.app/course/file/${courseId}`,
         {
           method: "GET",
           headers: {
@@ -98,7 +99,7 @@ const AiPlan: React.FC = () => {
     year: "numeric",
   });
 
-  const selectedMaterialRange = ["1-1", "1-2", "1-3"]; // 모든 강의의 범위 고정
+  const selectedMaterialRange = ["1-1", "1-2", "1-3", "1-4", "1-5"]; // 모든 강의의 범위 고정
 
   const createPlan = async () => {
     if (!selectedCourseId || !selectedFileId) {
@@ -127,7 +128,7 @@ const AiPlan: React.FC = () => {
   
     try {
       const response = await fetch(
-        `https://de8b-58-29-179-25.ngrok-free.app/plan/${selectedCourseId}/new`,
+        `https://d291-58-29-179-25.ngrok-free.app/plan/${selectedCourseId}/new`,
         {
           method: "POST",
           headers: {
@@ -147,7 +148,6 @@ const AiPlan: React.FC = () => {
       alert("학습 계획이 성공적으로 생성되었습니다!");
     } catch (error) {
       console.error("학습 계획 생성 중 오류 발생:", error);
-      alert("학습 계획 생성 중 오류가 발생했습니다.");
     }
   };
 
@@ -172,7 +172,7 @@ const AiPlan: React.FC = () => {
             <label>강의 자료</label>
             <div
               className="lecture-box"
-              style={{ width: "550px", height: "60px", paddingLeft: "25px" }}
+              style={{ width: "655px", height: "60px", paddingLeft: "25px" }}
               onClick={() => setShowPopup(true)}
             >
               <p style={{ fontSize: "14px" }}>{selectedMaterial}</p>
@@ -189,8 +189,7 @@ const AiPlan: React.FC = () => {
                     나의 강의 목록
                   </p>
                 </div>
-
-                <div style={{ overflowY: "auto", height: "370px" }}>
+                <div style={{ overflowY: "auto", height: selectedCourseFiles.length > 0 ? "200px" : "370px" }}>
                   <ul>
                     {materials.map((material: any) => (
                       <div
@@ -213,14 +212,23 @@ const AiPlan: React.FC = () => {
 
                 {/* 선택된 강의의 파일 목록 */}
                 {selectedCourseFiles.length > 0 && (
-                  <div style={{ padding: "20px", marginTop: "10px" }}>
-                    <h3>선택된 강의 자료 파일 목록:</h3>
+                  <div style={{ overflowY: "auto",height: "170px" }}>
+                    <div style={{ borderBottom: "1px solid #9A9A9A", borderTop: "1px solid #9A9A9A" }}>
+                      <p style={{ fontWeight: "bold", marginLeft: "25px", marginBottom: "10px", marginTop: "10px" }}>
+                        선택된 강의 자료 파일 목록 
+                      </p>
+                    </div>
                     <ul>
                       {selectedCourseFiles.map((file: any) => (
                         <div
                           key={file.file_id}
                           className = 'popup-item'
                           onClick={() => setSelectedFileId(file.file_id)}>
+                          <img
+                            src="/lectureListpng.png"
+                            style={{ height: "40px", marginRight: "15px" }}
+                            alt="lecture"
+                          />  
                           <li style={{ fontWeight: "bold", fontSize: "14px" }}>
                             {file.original_filename}
                           </li>
@@ -254,12 +262,27 @@ const AiPlan: React.FC = () => {
                   </button>
                 </div>
               </div>
+              
             </div>
           )}
 
           {showWarning && (
             <div className="popup">
-              <button onClick={() => setShowWarning(false)}>닫기</button>
+              <div className="warging-popup">
+                <div style={{display:"flex", flexDirection: "row-reverse"}}>
+                  <button onClick={() => setShowWarning(false)} style={{padding: "0px", backgroundColor: "transparent"}}>
+                    <img src="/x.png"></img>
+                  </button>
+                </div>
+                
+                <div style={{display: "flex"}}>
+                  <input type="checkbox">
+                  </input>
+                  <p style={{marginLeft:"5px"}}>오늘 하루 보지 않기 </p>
+                </div>
+                
+              </div>
+              
             </div>
           )}
 
@@ -300,14 +323,24 @@ const AiPlan: React.FC = () => {
                     months={2} // 두 개의 달력 표시
                     direction="horizontal" // 가로로 정렬
                     showDateDisplay={false} // 상단 날짜 표시 숨김
-                    color="#2D41FF"
                   />
-                  <button
-                    className="calendar-close"
-                    onClick={() => setShowCalendar(false)}
-                  >
-                    선택 완료
-                  </button>
+                  <div className="top-group" style={{paddingRight: "10px"}}>
+                    <div/>
+                    <div className="button-group">
+                      <button
+                        className="study-button"
+                        onClick={() => setShowCalendar(false)}
+                      >
+                        취소
+                      </button>
+                      <button
+                        className="study-button"
+                        onClick={() => setShowCalendar(false)}
+                      >
+                        선택완료
+                      </button>
+                    </div>
+                  </div>
                 </div>
               )}
             </div>
@@ -383,7 +416,7 @@ const AiPlan: React.FC = () => {
 ex) oo 부분을 위주로 계획을 세워라."
               value={additionalNotes}
               onChange={(e) => setAdditionalNotes(e.target.value)}
-              style={{ width: "800px", height: "150px", fontSize: "14px" }}
+              style={{ width: "800px", height: "200px", fontSize: "17px" }}
             />
           </div>
         </div>
@@ -391,7 +424,7 @@ ex) oo 부분을 위주로 계획을 세워라."
         {/* 생성 버튼 */}
         <div className="ai-plan-footer">
           <button
-            className="ai-plan-create-but"
+            className="study-button"
             onClick={() => {
               setShowWarning(true); // 경고 팝업 표시
               createPlan(); // 학습 계획 생성 함수 호출

@@ -4,6 +4,8 @@ import StudyPlanHome from '../component/home/StudyPlanHome';
 import LearningProgress from '../component/home/LearningProgress';
 import TodoListHome from '../component/home/TodoListHome';
 import NoDataComponent from '../component/NoDataComponent';
+import QuizList from '../component/home/QuizList';
+import TimeTableHomeTest from '../component/home/TimeTableHomeTest';
 
 interface StudyPlan {
   prompt_text: string;
@@ -82,19 +84,6 @@ const Home: React.FC = () => {
     fetchStudyPlan();
   }, []);
 
-  const learningProgress = {
-    message: 'success',
-    code: 200,
-    rate: [
-      {
-        user_id: 1,
-        attend_id: 1,
-        login_id: 1,
-        login_time: '2025-01-02T13:54:22',
-        logout_time: '2025-01-02T15:01:33',
-      },
-    ],
-  };
   const handleChangeProfileImage = async (newImg: string) => {
     setImg(newImg); // 먼저 UI 상태 변경
   
@@ -145,8 +134,12 @@ const Home: React.FC = () => {
           <div>
             <p className="text">학습 달성률</p>
             <div className="table" style={{ height: '200px', width: '350px' }}>
-              <div style={{ height: '190px', width: '340px' }}>
-                <LearningProgress data={learningProgress} />
+              <div style={{ height: '200px', width: '350px'}}>
+                <div style={{display: "flex", justifyContent: "space-between", padding: "5px 20px"}}>
+                  <p style={{fontWeight: "bold", fontSize: "10px"}}>Per week</p>
+                  <p style={{color: "#6A6A6A", fontSize: "10px"}}>7days</p>
+                </div>
+                <LearningProgress userId={userId} />
               </div>
               
             </div>
@@ -249,9 +242,20 @@ const Home: React.FC = () => {
           </div>
           <div>
             <p>시간표</p>
-            <div></div>
+            <div style={{
+              width: "370px", height: "200px", overflowY: "auto", marginBottom: "15px"
+            }}><TimeTableHomeTest/></div>
             <p>퀴즈</p>
-            <div></div>
+            <div style={{
+              backgroundColor: "#F5F6FB",
+              borderRadius: "25px",
+              padding: "5px",
+              height: "200px",
+              overflowY: "auto"
+            }}>
+              <QuizList userId = {userId}/>
+            </div>
+
           </div>
         </div>
       </div>
