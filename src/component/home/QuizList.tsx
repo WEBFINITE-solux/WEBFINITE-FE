@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { getCurrentSemester } from "../../util/getCurrentSemester";
 
 interface Quiz {
   quizId: number;
@@ -19,73 +20,84 @@ const QuizList: React.FC<{ userId: number }> = ({ userId }) => {
     navigate("/quiz");
   };
   const quizCreate = () => {
-    navigate("/quiz/create")
-  }
+    navigate("/quiz/create");
+  };
   useEffect(() => {
     const fetchQuizzes = async () => {
+      const { year, semester } = getCurrentSemester();
       try {
-        const coursesResponse = await fetch(`https://d291-58-29-179-25.ngrok-free.app/course/${userId}/2024/1`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json",
-            "ngrok-skip-browser-warning": "true"
-          },
-        });
-  
-        const coursesData = await coursesResponse.json();
-  
-        let allQuizzes: Quiz[] = [];
-  
-        for (const course of coursesData.courses) {
-  
-          const quizResponse = await fetch(`https://d291-58-29-179-25.ngrok-free.app/quiz/${userId}/course/${course.id}`, {
+        const coursesResponse = await fetch(
+          `https://d291-58-29-179-25.ngrok-free.app/course/${userId}/${year}/${semester}`,
+          {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-              "Accept": "application/json",
-              "ngrok-skip-browser-warning": "true"
+              Accept: "application/json",
+              "ngrok-skip-browser-warning": "true",
             },
-          });
-  
+          }
+        );
+
+        const coursesData = await coursesResponse.json();
+
+        let allQuizzes: Quiz[] = [];
+
+        for (const course of coursesData.courses) {
+          const quizResponse = await fetch(
+            `https://d291-58-29-179-25.ngrok-free.app/quiz/${userId}/course/${course.id}`,
+            {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+                "ngrok-skip-browser-warning": "true",
+              },
+            }
+          );
+
           const quizData = await quizResponse.json();
-  
-          allQuizzes = [...allQuizzes, ...quizData.map((q: any) => {
-            return {
-              quizId: q.quizId || `unknown-${Math.random()}`,
-              quizTitle: q.quizTitle
-            };
-          })];
+
+          allQuizzes = [
+            ...allQuizzes,
+            ...quizData.map((q: any) => {
+              return {
+                quizId: q.quizId || `unknown-${Math.random()}`,
+                quizTitle: q.quizTitle,
+              };
+            }),
+          ];
         }
-  
+
         setQuizzes(allQuizzes);
       } catch (error) {
         console.error("퀴즈 데이터를 불러오는 중 오류 발생:", error);
       }
     };
-  
-    fetchQuizzes();
-    }, [userId]);
-    
 
-    return (
-      <div>
+    fetchQuizzes();
+  }, [userId]);
+
+  return (
+    <div>
       {quizzes.map((quiz, index) => (
         <>
-        <div key={quiz.quizId || index} className="quiz-item">
-          <span className="quiz-title">{quiz.quizTitle}</span>
-          <button className="quiz-button" onClick={quizSolve}>퀴즈 풀기</button>
-        </div>
-        <div style={{paddingRight: "10px", paddingLeft: "10px"}}>
-          <div style={{borderBottom: "1px solid #B3B3B3"}}></div>
-        </div>
+          <div key={quiz.quizId || index} className="quiz-item">
+            <span className="quiz-title">{quiz.quizTitle}</span>
+            <button className="quiz-button" onClick={quizSolve}>
+              퀴즈 풀기
+            </button>
+          </div>
+          <div style={{ paddingRight: "10px", paddingLeft: "10px" }}>
+            <div style={{ borderBottom: "1px solid #B3B3B3" }}></div>
+          </div>
         </>
-        
       ))}
-      <div style={{display:"flex", justifyContent:"center"}}>
-        <button className='b' onClick={quizCreate}>새로운 퀴즈 생성</button>
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <button className="b" onClick={quizCreate}>
+          새로운 퀴즈 생성
+        </button>
       </div>
-      
+
       <style>{`
         .quiz-container {
           padding: 16px;
@@ -124,10 +136,8 @@ const QuizList: React.FC<{ userId: number }> = ({ userId }) => {
         }
 
       `}</style>
-
     </div>
   );
 };
-
 
 export default QuizList;

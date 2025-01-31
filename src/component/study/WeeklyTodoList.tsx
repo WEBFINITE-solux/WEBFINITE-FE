@@ -11,7 +11,7 @@ interface Todo {
 }
 
 const WeeklyTodoList: React.FC = () => {
-  const userId = 1;
+  const userId = localStorage.getItem("userId");
   const [todoList, setTodoList] = useState<Todo[]>([]);
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -34,7 +34,7 @@ const WeeklyTodoList: React.FC = () => {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            "Accept": "application/json",
+            Accept: "application/json",
             "ngrok-skip-browser-warning": "true",
           },
         }
@@ -62,12 +62,12 @@ const WeeklyTodoList: React.FC = () => {
 
     try {
       const response = await fetch(
-        `https://de8b-58-29-179-25.ngrok-free.app/todo/${todoToDelete}`,
+        `https://d291-58-29-179-25.ngrok-free.app/todo/${todoToDelete}`,
         {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
-            "Accept": "application/json",
+            Accept: "application/json",
             "ngrok-skip-browser-warning": "true",
           },
         }
@@ -78,6 +78,9 @@ const WeeklyTodoList: React.FC = () => {
       }
 
       fetchToDoList();
+
+      setTodoList(todoList.filter((todo) => todo.todo_id !== todoToDelete));
+
       setTodoToDelete(null); // 모달 닫기
     } catch (error) {
       console.error("할 일 삭제 실패:", error);
@@ -104,7 +107,7 @@ const WeeklyTodoList: React.FC = () => {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
-            "Accept": "application/json",
+            Accept: "application/json",
             "ngrok-skip-browser-warning": "true",
           },
         }
@@ -129,10 +132,10 @@ const WeeklyTodoList: React.FC = () => {
       alert("날짜와 시간을 선택해주세요!");
       return;
     }
-  
+
     // 날짜와 시간을 조합하여 ISO 포맷 생성
     const formattedDateTime = `${selectedDate}T${selectedTime}:00`;
-  
+
     const todoData = {
       user_id: userId,
       todo_content: newTodo,
@@ -140,22 +143,25 @@ const WeeklyTodoList: React.FC = () => {
       start_date: formattedDateTime,
       end_date: formattedDateTime, // 시작과 끝이 같음
     };
-  
+
     try {
-      const response = await fetch(`https://d291-58-29-179-25.ngrok-free.app/todo`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json",
-          "ngrok-skip-browser-warning": "true",
-        },
-        body: JSON.stringify(todoData),
-      });
-  
+      const response = await fetch(
+        `https://d291-58-29-179-25.ngrok-free.app/todo`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            "ngrok-skip-browser-warning": "true",
+          },
+          body: JSON.stringify(todoData),
+        }
+      );
+
       if (!response.ok) {
         throw new Error(`HTTP 오류 발생: ${response.status}`);
       }
-  
+
       console.log("✅ 할 일 추가 성공!");
       fetchToDoList(); // ✅ 최신 투두 리스트 불러오기
       setShowAddForm(false); // ✅ 추가 폼 닫기
@@ -166,7 +172,6 @@ const WeeklyTodoList: React.FC = () => {
       console.error("❌ 할 일 추가 실패:", error);
     }
   };
-  
 
   return (
     <div>
@@ -207,6 +212,7 @@ const WeeklyTodoList: React.FC = () => {
                         padding: "12px",
                         position: "relative",
                         transition: "transform 0.3s",
+                        fontFamily: "pretendardR",
                         ...(isEditing && hoveredTodo === todo.todo_id
                           ? { transform: "translateX(-50px)" }
                           : {}),
@@ -229,7 +235,12 @@ const WeeklyTodoList: React.FC = () => {
                           <input
                             type="checkbox"
                             checked={todo.is_completed}
-                            onChange={() => toggleTodoCompletion(todo.todo_id, todo.is_completed)}
+                            onChange={() =>
+                              toggleTodoCompletion(
+                                todo.todo_id,
+                                todo.is_completed
+                              )
+                            }
                             style={{ cursor: "pointer" }}
                           />
                           <span style={{ fontSize: "14px" }}>
@@ -273,84 +284,108 @@ const WeeklyTodoList: React.FC = () => {
       </div>
       {showAddForm && (
         <>
-        <div style={{
-          position: "absolute",
-          zIndex: "20",
-          top : "675px",
-          height: "150px",
-          width: "700px",
-          backgroundColor: "white",
-          borderRadius: "25px",
-          filter: "drop-shadow(0px -5px 5px rgba(0, 0, 0, 0.05))"
-        }}>
-          <div style={{display: "flex", justifyContent: "space-between", padding: "10px", borderBottom: "1px solid black"}}>
-            <div style={{display: "flex", gap: "20px",}} >
-              <button 
-              onClick={() => setShowDatePicker(!showDatePicker)}
-              style={{padding:"0px", display: "flex", alignItems: "center"}}>
-                <img src="/calendar.png" style={{width: "30px"}}></img>
-                <p style={{fontSize: "15px", fontWeight:"bold"}}>날짜</p>
-              </button>
-              <button 
-              onClick={() => setShowTimePicker(!showTimePicker)}
-              style={{padding:"0px", display: "flex", alignItems: "center"}}>
-                <img src="/clock.png" style={{width: "30px"}}></img>
-                <p style={{fontSize: "15px", fontWeight:"bold"}}>시간</p>
+          <div
+            style={{
+              position: "absolute",
+              zIndex: "20",
+              top: "675px",
+              height: "150px",
+              width: "700px",
+              backgroundColor: "white",
+              borderRadius: "25px",
+              filter: "drop-shadow(0px -5px 5px rgba(0, 0, 0, 0.05))",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                padding: "10px",
+                borderBottom: "1px solid black",
+              }}
+            >
+              <div style={{ display: "flex", gap: "20px" }}>
+                <button
+                  onClick={() => setShowDatePicker(!showDatePicker)}
+                  style={{
+                    padding: "0px",
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  <img src="/calendar.png" style={{ width: "30px" }}></img>
+                  <p style={{ fontSize: "15px", fontWeight: "bold" }}>날짜</p>
+                </button>
+                <button
+                  onClick={() => setShowTimePicker(!showTimePicker)}
+                  style={{
+                    padding: "0px",
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  <img src="/clock.png" style={{ width: "30px" }}></img>
+                  <p style={{ fontSize: "15px", fontWeight: "bold" }}>시간</p>
+                </button>
+              </div>
+              <button className="study-button" onClick={handleSaveTodo}>
+                저장하기
               </button>
             </div>
-            <button className="study-button" onClick={handleSaveTodo}>
-            저장하기
-            </button>
+            {/* ✅ 날짜 선택창 */}
+            {showDatePicker && (
+              <input
+                type="date"
+                value={selectedDate}
+                onChange={(e) => {
+                  setSelectedDate(e.target.value);
+                  setShowDatePicker(false); // 선택 후 창 닫기
+                }}
+                style={{
+                  position: "absolute",
+                  top: "50px",
+                  left: "20px",
+                  zIndex: "100",
+                  padding: "5px",
+                }}
+              />
+            )}
+
+            {/* ✅ 시간 선택창 */}
+            {showTimePicker && (
+              <input
+                type="time"
+                value={selectedTime}
+                onChange={(e) => {
+                  setSelectedTime(e.target.value);
+                  setShowTimePicker(false); // 선택 후 창 닫기
+                }}
+                style={{
+                  position: "absolute",
+                  top: "50px",
+                  left: "150px",
+                  zIndex: "100",
+                  padding: "5px",
+                }}
+              />
+            )}
+
+            <textarea
+              placeholder="투두 리스트를 추가해보세요."
+              value={newTodo}
+              onChange={(e) => setNewTodo(e.target.value)}
+              style={{
+                width: "700px",
+                border: "none",
+                outline: "none",
+                backgroundColor: "transparent",
+                fontSize: "20px",
+                fontFamily: "pretendardM",
+              }}
+            ></textarea>
           </div>
-          {/* ✅ 날짜 선택창 */}
-          {showDatePicker && (
-            <input
-              type="date"
-              value={selectedDate}
-              onChange={(e) => {
-                setSelectedDate(e.target.value);
-                setShowDatePicker(false); // 선택 후 창 닫기
-              }}
-              style={{
-                position: "absolute",
-                top: "50px",
-                left: "20px",
-                zIndex: "100",
-                padding: "5px",
-              }}
-            />
-          )}
-
-          {/* ✅ 시간 선택창 */}
-          {showTimePicker && (
-            <input
-              type="time"
-              value={selectedTime}
-              onChange={(e) => {
-                setSelectedTime(e.target.value);
-                setShowTimePicker(false); // 선택 후 창 닫기
-              }}
-              style={{
-                position: "absolute",
-                top: "50px",
-                left: "150px",
-                zIndex: "100",
-                padding: "5px",
-              }}
-            />
-          )}
-
-          <textarea 
-          placeholder= "투두 리스트를 추가해보세요." 
-          value={newTodo}
-          onChange={(e) => setNewTodo(e.target.value)}
-          style={{width: "700px", border: "none", outline: "none", backgroundColor: "transparent", fontSize:"20px"}}>
-          </textarea>
-        </div>
         </>
-      )
-        
-      }
+      )}
       {/* 삭제 확인 모달 */}
       {todoToDelete !== null && (
         <div

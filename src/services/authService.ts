@@ -1,12 +1,15 @@
 export const logoutUser = async (accessToken: string) => {
   try {
-    const response = await fetch("http://localhost:8080/user/logout", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
+    const response = await fetch(
+      "https://d291-58-29-179-25.ngrok-free.app/user/logout",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
 
     console.log("Request to /logout");
     console.log("Headers:", {
@@ -33,7 +36,10 @@ export const logoutUser = async (accessToken: string) => {
     if (contentType?.includes("application/json")) {
       return JSON.parse(rawResponse);
     } else {
-      return { message: "로그아웃이 성공적으로 처리되었습니다.", code: response.status };
+      return {
+        message: "로그아웃이 성공적으로 처리되었습니다.",
+        code: response.status,
+      };
     }
   } catch (error: any) {
     console.error("로그아웃 요청 중 오류 발생:", error.message);
