@@ -1,7 +1,7 @@
 export const recoverPassword = async (loginUserId: string, email: string) => {
     try {
       const response = await fetch(
-        `http://localhost:8080/user/password?loginUserId=${loginUserId}&email=${email}`,
+        `https://d291-58-29-179-25.ngrok-free.app/user/password?loginUserId=${loginUserId}&email=${email}`,
         {
           method: "GET",
           headers: {
