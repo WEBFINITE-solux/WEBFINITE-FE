@@ -5,7 +5,7 @@ export const signupUser = async (requestData: {
   nickname: string;
   email: string;
 }) => {
-  const response = await fetch("http://localhost:8080/user/signup", {
+  const response = await fetch("https://d291-58-29-179-25.ngrok-free.app/user/signup", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -23,7 +23,7 @@ export const signupUser = async (requestData: {
 
 export const loginUser = async (requestData: { loginUserId: string; password: string }) => {
     try {
-      const response = await fetch("http://localhost:8080/user/signin", {
+      const response = await fetch("https://d291-58-29-179-25.ngrok-free.app/user/signin", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
