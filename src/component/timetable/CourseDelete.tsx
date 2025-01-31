@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import token from "../token"; 
+import token from "../token";
 
 type ListCourse = {
   id: number;
@@ -14,7 +14,11 @@ type CourseDeleteProps = {
   onBackToList: () => void;
 };
 
-const CourseDelete: React.FC<CourseDeleteProps> = ({ courses, onDelete, onBackToList }) => {
+const CourseDelete: React.FC<CourseDeleteProps> = ({
+  courses,
+  onDelete,
+  onBackToList,
+}) => {
   const [hoveredId, setHoveredId] = useState<number | null>(null);
   const [showPopup, setShowPopup] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState<ListCourse | null>(null);
@@ -24,7 +28,9 @@ const CourseDelete: React.FC<CourseDeleteProps> = ({ courses, onDelete, onBackTo
     if (selectedCourse === null) return;
 
     try {
-      const response = await token.delete(`/course/${selectedCourse.id}/delete`);
+      const response = await token.delete(
+        `/course/${selectedCourse.id}/delete`
+      );
       console.log("강의 삭제 응답:", response.data);
 
       if (response.status === 200) {
@@ -49,7 +55,10 @@ const CourseDelete: React.FC<CourseDeleteProps> = ({ courses, onDelete, onBackTo
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (optionsRef.current && !optionsRef.current.contains(event.target as Node)) {
+      if (
+        optionsRef.current &&
+        !optionsRef.current.contains(event.target as Node)
+      ) {
         setShowPopup(false);
       }
     };
@@ -109,7 +118,6 @@ const CourseDelete: React.FC<CourseDeleteProps> = ({ courses, onDelete, onBackTo
 
 export default CourseDelete;
 
-
 const Container = styled.div`
   width: 400px;
   height: 780px;
@@ -132,7 +140,7 @@ const Header = styled.div`
 `;
 
 const Title = styled.div`
-  font-family: Pretendard;
+  font-family: pretendardB;
   font-size: 18px;
   font-weight: bold;
   cursor: pointer;
@@ -151,7 +159,7 @@ const Content = styled.div`
 
 const EmptyMessage = styled.div`
   text-align: center;
-  font-family: Pretendard;
+  font-family: pretendardM;
   font-size: 16px;
   color: #656565;
 `;
@@ -193,11 +201,12 @@ const CourseInfo = styled.div<{ isHovered: boolean }>`
   gap: 2px;
   margin-top: 3px;
   transition: transform 0.3s ease;
-  transform: ${({ isHovered }) => (isHovered ? "translateX(-20px)" : "translateX(0)")};
+  transform: ${({ isHovered }) =>
+    isHovered ? "translateX(-20px)" : "translateX(0)"};
 `;
 
 const CourseTitle = styled.div`
-  font-family: Pretendard;
+  font-family: pretendardB;
   font-size: 14px;
   font-weight: bold;
   color: #000;
@@ -205,7 +214,7 @@ const CourseTitle = styled.div`
 `;
 
 const CoursePeriod = styled.div`
-  font-family: Pretendard;
+  font-family: pretendardM;
   font-size: 13px;
   color: #b3b3b3;
   margin-left: 17px;
@@ -256,7 +265,7 @@ const PopupContent = styled.div`
 `;
 
 const PopupText = styled.div`
-  font-family: Pretendard;
+  font-family: pretendardB;
   font-size: 18px;
   font-weight: bold;
   margin-bottom: 16px;

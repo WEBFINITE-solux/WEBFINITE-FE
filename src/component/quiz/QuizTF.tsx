@@ -18,8 +18,8 @@ interface QuizData {
   questions: Question[];
 }
 
-const QuizTF:React.FC<QuizProps> = ({ quizData }) => {
-  const [searchParams] = useSearchParams(); 
+const QuizTF: React.FC<QuizProps> = ({ quizData }) => {
+  const [searchParams] = useSearchParams();
   const quizId = searchParams.get("quizId");
 
   const [quizD, setQuizData] = useState<QuizData | null>(null);
@@ -27,7 +27,7 @@ const QuizTF:React.FC<QuizProps> = ({ quizData }) => {
   const [selectedAnswers, setSelectedAnswers] = useState<string[]>([]);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const navigate = useNavigate();
-console.log(quizD);
+  console.log(quizD);
   useEffect(() => {
     if (!quizId) {
       alert("잘못된 접근입니다. 퀴즈 ID가 없습니다.");
@@ -85,11 +85,11 @@ console.log(quizD);
     }
 
     const payload = {
-      userId: 1, 
+      userId: 1,
       quizId: quizData.quizId,
       answers: quizData.questions.map((question, index) => ({
         questionId: question.questionId,
-        userAnswer: selectedAnswers[index], 
+        userAnswer: selectedAnswers[index],
       })),
     };
 
@@ -98,10 +98,14 @@ console.log(quizD);
       console.log("📌 답안 제출 성공:", response.data);
 
       alert("답안이 제출되었습니다!");
-      navigate(`/quiz/answer?quizId=${quizData.quizId}`); 
+      navigate(`/quiz/answer?quizId=${quizData.quizId}`);
     } catch (error: any) {
       console.error("🚨 답안 제출 실패:", error.response?.data || error);
-      alert(`답안 제출에 실패했습니다: ${error.response?.data?.message || "오류 발생"}`);
+      alert(
+        `답안 제출에 실패했습니다: ${
+          error.response?.data?.message || "오류 발생"
+        }`
+      );
     }
   };
 
@@ -117,27 +121,51 @@ console.log(quizD);
         <TitleContainer>
           <Subtitle>퀴즈</Subtitle>
           <Title>{quizData.quizTitle}</Title>
-          <Subtitle>문제 {currentQuestionIndex + 1} / {quizData.questions.length}</Subtitle>
+          <Subtitle>
+            문제 {currentQuestionIndex + 1} / {quizData.questions.length}
+          </Subtitle>
         </TitleContainer>
         <CloseButton onClick={() => navigate("/quiz")}>×</CloseButton>
       </Header>
       <ProgressBarContainer>
-        <ProgressBar style={{ width: `${((currentQuestionIndex + 1) / quizData.questions.length) * 100}%` }} />
+        <ProgressBar
+          style={{
+            width: `${
+              ((currentQuestionIndex + 1) / quizData.questions.length) * 100
+            }%`,
+          }}
+        />
       </ProgressBarContainer>
       <Content>
         <QuestionNumber>{currentQuestionIndex + 1}</QuestionNumber>
         <QuestionText>{currentQuestion.questionContent}</QuestionText>
         <Answers>
-          <AnswerButton onClick={() => handleAnswerChange("True")} selected={selectedAnswers[currentQuestionIndex] === "TRUE"}>
+          <AnswerButton
+            onClick={() => handleAnswerChange("True")}
+            selected={selectedAnswers[currentQuestionIndex] === "TRUE"}
+          >
             참
           </AnswerButton>
-          <AnswerButton onClick={() => handleAnswerChange("False")} selected={selectedAnswers[currentQuestionIndex] === "FALSE"}>
+          <AnswerButton
+            onClick={() => handleAnswerChange("False")}
+            selected={selectedAnswers[currentQuestionIndex] === "FALSE"}
+          >
             거짓
           </AnswerButton>
         </Answers>
         <Navigation>
-          <NavButton onClick={handlePrevious} disabled={currentQuestionIndex === 0}>{"<"}</NavButton>
-          <NavButton onClick={handleNext} disabled={currentQuestionIndex === quizData.questions.length - 1}>{">"}</NavButton>
+          <NavButton
+            onClick={handlePrevious}
+            disabled={currentQuestionIndex === 0}
+          >
+            {"<"}
+          </NavButton>
+          <NavButton
+            onClick={handleNext}
+            disabled={currentQuestionIndex === quizData.questions.length - 1}
+          >
+            {">"}
+          </NavButton>
         </Navigation>
         <SubmitButton onClick={handleSubmit}>채점하기</SubmitButton>
       </Content>
@@ -146,7 +174,9 @@ console.log(quizD);
           <PopupContent>
             <PopupText>결과를 바로 확인하러 가시겠습니까?</PopupText>
             <PopupButtons>
-              <PopupButton onClick={() => navigate("/quiz")}>퀴즈 목록으로</PopupButton>
+              <PopupButton onClick={() => navigate("/quiz")}>
+                퀴즈 목록으로
+              </PopupButton>
               <PopupButton onClick={handleAnswer}>결과 확인</PopupButton>
             </PopupButtons>
           </PopupContent>
@@ -157,8 +187,6 @@ console.log(quizD);
 };
 
 export default QuizTF;
-
-
 
 const Container = styled.div`
   width: 1500px;
@@ -193,7 +221,7 @@ const Title = styled.h2`
 const Subtitle = styled.div`
   color: #7c7c7c;
   text-align: center;
-  font-family: Pretendard;
+  font-family: pretendardM;
   font-size: 15px;
   font-style: normal;
   font-weight: 500;
@@ -229,7 +257,7 @@ const Content = styled.div`
 const QuestionNumber = styled.div`
   color: #1a1a1a;
   text-align: center;
-  font-family: Pretendard;
+  font-family: pretendardB;
   font-size: 40px;
   font-style: normal;
   font-weight: 700;
@@ -239,7 +267,7 @@ const QuestionNumber = styled.div`
 const QuestionText = styled.div`
   color: #000;
   text-align: center;
-  font-family: Pretendard;
+  font-family: pretendardR;
   font-size: 20px;
   font-style: normal;
   font-weight: 400;
@@ -247,7 +275,7 @@ const QuestionText = styled.div`
 `;
 
 const Answers = styled.div`
-    display: flex;
+  display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
@@ -256,7 +284,7 @@ const Answers = styled.div`
 `;
 
 const AnswerButton = styled.button<{ selected: boolean }>`
-  width : 300px;
+  width: 300px;
   padding: 10px 20px;
   font-size: 16px;
   border-radius: 8px;
@@ -269,7 +297,6 @@ const AnswerButton = styled.button<{ selected: boolean }>`
     color: #fff;
   }
 `;
-
 
 const Navigation = styled.div`
   display: flex;
@@ -299,7 +326,7 @@ const SubmitButton = styled.button`
   margin-top: 10px;
   color: var(--ffffff, #fff);
   text-align: center;
-  font-family: Pretendard;
+  font-family: pretendardB;
   font-size: 16px;
   font-style: normal;
   font-weight: 700;
@@ -337,7 +364,7 @@ const PopupContent = styled.div`
 const PopupText = styled.p`
   color: #000;
   text-align: center;
-  font-family: Pretendard;
+  font-family: pretendardR;
   font-size: 17px;
   font-style: normal;
   font-weight: 400;
@@ -359,7 +386,7 @@ const PopupButton = styled.button<{ primary?: boolean }>`
   box-shadow: ${(props) =>
     props.primary ? "none" : "0px 0px 3px 0px rgba(0, 0, 0, 0.25);"};
   text-align: center;
-  font-family: Pretendard;
+  font-family: pretendardB;
   font-size: 15px;
   font-style: normal;
   font-weight: 700;
@@ -380,4 +407,3 @@ const Message = styled.div`
   color: #777;
   margin-top: 20px;
 `;
-

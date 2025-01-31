@@ -6,15 +6,15 @@
   padding-top: 100px;
   padding-left: 100px;
   gap: 70px;
-  background-image: url('/studyBackground.png');
+  background-image: url("/studyBackground.png");
   background-size: cover;
 }
 
 /* 왼쪽 섹션 */
 .left-panel {
-  width : 720px;
+  width: 720px;
 }
-.top-group{
+.top-group {
   display: flex;
   justify-content: space-between;
   height: 70px;
@@ -30,7 +30,7 @@
 .button-group {
   display: flex;
   gap: 10px;
-  width:310px;
+  width: 310px;
 }
 
 .study-button {
@@ -49,18 +49,17 @@
 }
 
 .study-button:hover {
-  background-color: #2D41FF; /* 마우스 오버 시 배경색 변경 */
-  color: white
+  background-color: #2d41ff; /* 마우스 오버 시 배경색 변경 */
+  color: white;
 }
 
 .study-button:focus {
   outline: none; /* 포커스 시 기본 외곽선 제거 */
 }
 
-
 .result-section {
   border-radius: 25px;
-  background: #FFF;
+  background: #fff;
   height: 650px;
   margin-bottom: 10px;
   overflow-y: auto;
@@ -104,21 +103,20 @@
   padding: 20px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   text-align: center;
-  
 }
 
 .progress-bar {
   display: flex;
   gap: 20px;
   color: white;
-  font-family: Pretendard;
+  font-family: pretendardM;
   font-size: 30px;
   font-style: normal;
   font-weight: 500;
   line-height: 150%;
   padding: 10px;
   border-radius: 25px;
-  background: linear-gradient(90deg, #3246FE 0%, #C0C6F9 100%);
+  background: linear-gradient(90deg, #3246fe 0%, #c0c6f9 100%);
 }
 
 .todo-section {
@@ -128,14 +126,13 @@
   height: 530px;
   overflow-y: auto;
 }
-.todo-section-home{
+.todo-section-home {
   border-radius: 20px;
   background: rgba(255, 255, 255, 0.76);
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.05);
   height: 200px;
   overflow-y: auto;
 }
-
 
 .todo-item {
   display: flex;

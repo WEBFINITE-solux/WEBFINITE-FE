@@ -1,13 +1,13 @@
-import {  useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 type UploadButtonProps = {
-  courseId: number; 
+  courseId: number;
 };
 
-const UploadButton: React.FC<UploadButtonProps> = ({ courseId }) => { 
-  console.log("제발 courseId:", courseId); 
+const UploadButton: React.FC<UploadButtonProps> = ({ courseId }) => {
+  console.log("제발 courseId:", courseId);
 
   const navigate = useNavigate();
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -22,12 +22,12 @@ const UploadButton: React.FC<UploadButtonProps> = ({ courseId }) => {
 
   const handleUpload = () => {
     console.log("업로드하는 강의 ID:", courseId);
-    navigate(`/timetable/upload?courseId=${courseId}`);  
+    navigate(`/timetable/upload?courseId=${courseId}`);
   };
 
   const handleView = () => {
-    console.log("강의 자료 조회 ID:", courseId); 
-    navigate(`/timetable/view?courseId=${courseId}`); 
+    console.log("강의 자료 조회 ID:", courseId);
+    navigate(`/timetable/view?courseId=${courseId}`);
   };
 
   return (
@@ -60,14 +60,12 @@ const UploadButton: React.FC<UploadButtonProps> = ({ courseId }) => {
 
 export default UploadButton;
 
-
-
 const BasicButton = styled.button`
   border: 1px solid #e0e0e0;
   border-radius: 28.858px;
   background: #fff;
   padding: 8px 16px;
-  font-family: Pretendard;
+  font-family: pretendardB;
   font-size: 14px;
   font-weight: bold;
   color: #1a1a1a;
@@ -171,33 +169,32 @@ const OptionIcon = styled.img`
   padding: 10px;
   margin-bottom: 12px;
   display: flex;
-  margin-right : 100px;
+  margin-right: 100px;
 `;
 
 const OptionText1 = styled.div`
-  font-family: Pretendard;
+  font-family: pretendardB;
   font-size: 14px;
   font-weight: bold;
   color: #1a1a1a;
-  margin-right : 5px;
+  margin-right: 5px;
 `;
 
 const OptionText2 = styled.div`
-  font-family: Pretendard;
+  font-family: pretendardB;
   font-size: 14px;
   font-weight: bold;
   color: #1a1a1a;
-  margin-right : 80px;
+  margin-right: 80px;
 `;
 
 const SemiText = styled.div`
   color: #2d41ff;
   text-align: right;
-  font-family: Pretendard;
+  font-family: pretendardB;
   font-size: 12px;
   font-weight: 700;
   line-height: 150%;
-  margin-left : 90px;
-  margin-top : 5px;
+  margin-left: 90px;
+  margin-top: 5px;
 `;
-

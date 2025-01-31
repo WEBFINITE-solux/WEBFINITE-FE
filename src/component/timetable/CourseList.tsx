@@ -23,8 +23,8 @@ const CourseList: React.FC<CourseListProps> = ({ courses }) => {
 
   useEffect(() => {
     const formattedCourses: ListCourse[] = courses.map((course) => ({
-      course_id: course.id, 
-      course_title: course.title, 
+      course_id: course.id,
+      course_title: course.title,
       period: course.period,
     }));
 
@@ -58,7 +58,9 @@ const CourseList: React.FC<CourseListProps> = ({ courses }) => {
   };
 
   const handleDeleteCourse = (courseId: number) => {
-    const updatedCourses = courseData.filter((course) => course.course_id !== courseId);
+    const updatedCourses = courseData.filter(
+      (course) => course.course_id !== courseId
+    );
     setCourseData(updatedCourses);
     setIsDeleting(false);
   };
@@ -76,15 +78,14 @@ const CourseList: React.FC<CourseListProps> = ({ courses }) => {
         <CourseAdd onBackToList={handleBackToList} />
       ) : isDeleting ? (
         <CourseDelete
-  courses={courseData.map(course => ({
-    id: course.course_id,  
-    title: course.course_title, 
-    period: course.period
-  }))}
-  onDelete={handleDeleteCourse}
-  onBackToList={handleBackToList}
-/>
-
+          courses={courseData.map((course) => ({
+            id: course.course_id,
+            title: course.course_title,
+            period: course.period,
+          }))}
+          onDelete={handleDeleteCourse}
+          onBackToList={handleBackToList}
+        />
       ) : (
         <>
           <Header>
@@ -112,12 +113,18 @@ const CourseList: React.FC<CourseListProps> = ({ courses }) => {
               <CourseListContainer>
                 {courseData.map((course) => (
                   <CourseItem key={course.course_id}>
-                    <CourseIconContainer src="/courseImg.png" alt="강의 이미지" />
+                    <CourseIconContainer
+                      src="/courseImg.png"
+                      alt="강의 이미지"
+                    />
                     <CourseInfo>
                       <CourseTitle>{course.course_title}</CourseTitle>
                       <CoursePeriod>{course.period}</CoursePeriod>
                     </CourseInfo>
-                    <UploadButton key={course.course_id} courseId={course.course_id} />
+                    <UploadButton
+                      key={course.course_id}
+                      courseId={course.course_id}
+                    />
                   </CourseItem>
                 ))}
               </CourseListContainer>
@@ -130,8 +137,6 @@ const CourseList: React.FC<CourseListProps> = ({ courses }) => {
 };
 
 export default CourseList;
-
-
 
 const Container = styled.div`
   width: 400px;
@@ -155,7 +160,7 @@ const Header = styled.div`
 `;
 
 const Title = styled.div`
-  font-family: Pretendard;
+  font-family: pretendardB;
   font-size: 18px;
   font-weight: bold;
 `;
@@ -203,7 +208,7 @@ const OptionItem = styled.div`
 const OptionContent = styled.div`
   color: #1a1a1a;
   text-align: center;
-  font-family: Pretendard;
+  font-family: pretendardB;
   font-size: 20px;
   font-style: normal;
   font-weight: 600;
@@ -229,7 +234,7 @@ const Content = styled.div`
 
 const EmptyMessage = styled.div`
   color: #656565;
-  font-family: Pretendard;
+  font-family: pretendardM;
   font-size: 16px;
   text-align: center;
 `;
@@ -273,7 +278,7 @@ const CourseInfo = styled.div`
 
 const CourseTitle = styled.div`
   color: #000;
-  font-family: Pretendard;
+  font-family: pretendardB;
   font-size: 15px;
   font-style: normal;
   font-weight: 600;
@@ -283,7 +288,7 @@ const CourseTitle = styled.div`
 
 const CoursePeriod = styled.div`
   color: #b3b3b3;
-  font-family: Pretendard;
+  font-family: pretendardR;
   font-size: 13px;
   font-style: normal;
   font-weight: 400;

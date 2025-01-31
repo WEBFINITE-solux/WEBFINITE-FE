@@ -15,7 +15,9 @@ const Layout: React.FC = () => {
     return "home";
   };
 
-  const [activeItem, setActiveItem] = useState<"home" | "study" | "timetable" | "quiz">(getActiveItem());
+  const [activeItem, setActiveItem] = useState<
+    "home" | "study" | "timetable" | "quiz"
+  >(getActiveItem());
 
   React.useEffect(() => {
     setActiveItem(getActiveItem());
@@ -31,19 +33,35 @@ const Layout: React.FC = () => {
         <Menu>
           <MenuTitle>메뉴</MenuTitle>
           <MenuItem isActive={activeItem === "home"} href="/home">
-            <MenuImg src={activeItem === "home" ? "/homeON.svg" : "/homeOFF.svg"} alt="Home Icon" />
+            <MenuImg
+              src={activeItem === "home" ? "/homeON.svg" : "/homeOFF.svg"}
+              alt="Home Icon"
+            />
             Home
           </MenuItem>
           <MenuItem isActive={activeItem === "study"} href="/study">
-            <MenuImg src={activeItem === "study" ? "/studyON.svg" : "/studyOFF.svg"} alt="Study Icon" />
+            <MenuImg
+              src={activeItem === "study" ? "/studyON.svg" : "/studyOFF.svg"}
+              alt="Study Icon"
+            />
             Study
           </MenuItem>
           <MenuItem isActive={activeItem === "timetable"} href="/timetable">
-            <MenuImg src={activeItem === "timetable" ? "/timetableON.svg" : "/timetableOFF.svg"} alt="Timetable Icon" />
+            <MenuImg
+              src={
+                activeItem === "timetable"
+                  ? "/timetableON.svg"
+                  : "/timetableOFF.svg"
+              }
+              alt="Timetable Icon"
+            />
             Timetable
           </MenuItem>
           <MenuItem isActive={activeItem === "quiz"} href="/quiz">
-            <MenuImg src={activeItem === "quiz" ? "/quizON.svg" : "/quizOFF.svg"} alt="Quiz Icon" />
+            <MenuImg
+              src={activeItem === "quiz" ? "/quizON.svg" : "/quizOFF.svg"}
+              alt="Quiz Icon"
+            />
             Quiz
           </MenuItem>
         </Menu>
@@ -56,7 +74,9 @@ const Layout: React.FC = () => {
         <UserImg src="/user.svg" />
       </UserContainer>
       <Outlet />
-      {isLogoutModalOpen && <LogoutModal onClose={() => setIsLogoutModalOpen(false)} />}
+      {isLogoutModalOpen && (
+        <LogoutModal onClose={() => setIsLogoutModalOpen(false)} />
+      )}
     </Container>
   );
 };
@@ -109,7 +129,7 @@ const LogoutLogo = styled.img`
 
 const LogoutContent = styled.div`
   color: #656565;
-  font-family: Pretendard;
+  font-family: pretendardB;
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
@@ -129,7 +149,7 @@ const Sidebar = styled.div`
 
 const MenuTitle = styled.div`
   color: #1a1a1a;
-  font-family: Pretendard;
+  font-family: pretendardB;
   font-size: 28px;
   font-style: normal;
   font-weight: 700;
@@ -167,7 +187,7 @@ const MenuItem = styled.a<{ isActive: boolean }>`
   display: flex;
   align-items: center;
   color: #1a1a1a;
-  font-family: Pretendard;
+  font-family: pretendardB;
   font-size: 16px;
   font-style: normal;
   font-weight: 700;

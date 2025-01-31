@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import token from "../token"; 
+import token from "../token";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 type Course = {
@@ -16,17 +16,19 @@ type Course = {
 };
 
 type FileUploadProps = {
-  courses: Course[]; 
+  courses: Course[];
 };
 
 const FileUpload: React.FC<FileUploadProps> = ({ courses }) => {
   const [files, setFiles] = useState<File[]>([]);
   const [searchParams] = useSearchParams();
-const courseIdFromURL = searchParams.get("courseId");
-const selectedCourse = courses.find(course => String(course.course_id) === courseIdFromURL);
+  const courseIdFromURL = searchParams.get("courseId");
+  const selectedCourse = courses.find(
+    (course) => String(course.course_id) === courseIdFromURL
+  );
   const navigate = useNavigate();
-  console.log("FileUpload에서 받은 courses:", courses); 
-  console.log("현재 선택된 강의:", selectedCourse); 
+  console.log("FileUpload에서 받은 courses:", courses);
+  console.log("현재 선택된 강의:", selectedCourse);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = event.target.files;
@@ -43,32 +45,36 @@ const selectedCourse = courses.find(course => String(course.course_id) === cours
   };
 
   const handleFileUpload = async () => {
-    console.log("현재 선택된 강의:", selectedCourse); 
+    console.log("현재 선택된 강의:", selectedCourse);
     if (!selectedCourse || !selectedCourse.course_id) {
       alert("선택된 강의가 없습니다.");
       return;
     }
-  
+
     const courseId = Number(selectedCourse.course_id);
     if (isNaN(courseId)) {
       alert("잘못된 강의 ID입니다.");
       return;
     }
-  
+
     if (files.length === 0) {
       alert("업로드할 파일을 선택해주세요.");
       return;
     }
-  
+
     const formData = new FormData();
     files.forEach((file) => formData.append("file", file));
-  
+
     try {
-      console.log(`업로드 요청: /course/file/${courseId}/upload`); 
-      const response = await token.post(`/course/file/${courseId}/upload`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-  
+      console.log(`업로드 요청: /course/file/${courseId}/upload`);
+      const response = await token.post(
+        `/course/file/${courseId}/upload`,
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+
       console.log("파일 업로드 성공:", response.data);
       alert(`"${selectedCourse.course_title}" 강의에 파일이 업로드되었습니다.`);
       setFiles([]);
@@ -77,7 +83,7 @@ const selectedCourse = courses.find(course => String(course.course_id) === cours
       alert(error.response?.data?.message || "파일 업로드에 실패했습니다.");
     }
   };
-  
+
   const getFileLogo = (type: string) => {
     if (type === "application/pdf") return "/pdfLogo.svg";
     if (type === "text/plain") return "/txtLogo.svg";
@@ -87,7 +93,7 @@ const selectedCourse = courses.find(course => String(course.course_id) === cours
   return (
     <Container>
       <Header>
-      <BackButton onClick={() => navigate("/timetable")}>{"<"}</BackButton>
+        <BackButton onClick={() => navigate("/timetable")}>{"<"}</BackButton>
         <Title>강의 자료 업로드</Title>
       </Header>
       <UploadBox>
@@ -98,7 +104,12 @@ const selectedCourse = courses.find(course => String(course.course_id) === cours
         </UploadArea>
         <BrowseButton>
           Browse File
-          <input type="file" accept="application/pdf,text/plain" multiple onChange={handleFileChange} />
+          <input
+            type="file"
+            accept="application/pdf,text/plain"
+            multiple
+            onChange={handleFileChange}
+          />
         </BrowseButton>
       </UploadBox>
 
@@ -124,15 +135,14 @@ const selectedCourse = courses.find(course => String(course.course_id) === cours
 
 export default FileUpload;
 
-
 const Container = styled.div`
   width: 400px;
-  height : 692px;
+  height: 692px;
   background: #fff;
   border-radius: 8px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   padding: 16px;
-  font-family: Pretendard, sans-serif;
+  font-family: pretendardR, sans-serif;
 `;
 
 const Header = styled.div`
@@ -146,8 +156,8 @@ const Title = styled.h2`
   font-size: 16px;
   font-weight: bold;
   color: #1a1a1a;
-  margin-left : 80px;
-  margin-right :120px;
+  margin-left: 80px;
+  margin-right: 120px;
 `;
 
 const BackButton = styled.button`
@@ -158,7 +168,7 @@ const BackButton = styled.button`
   color: #333;
   cursor: pointer;
   &:hover {
-    color: #2D41FF;
+    color: #2d41ff;
   }
 `;
 
@@ -171,7 +181,7 @@ const UploadBox = styled.div`
   padding: 16px;
   text-align: center;
   margin-bottom: 16px;
-  height : 126px;
+  height: 126px;
 `;
 
 const UploadArea = styled.div`
@@ -184,36 +194,36 @@ const CloudIcon = styled.img`
   width: 48px;
   height: 48px;
   margin-bottom: 8px;
-  margin-right : 270px;
+  margin-right: 270px;
 `;
 
 const UploadText = styled.div`
   font-size: 14px;
   font-weight: bold;
   color: #1a1a1a;
-  margin-right : 200px;
+  margin-right: 200px;
 `;
 
 const UploadSubtitle = styled.div`
   font-size: 12px;
   color: #656565;
   margin-top: 4px;
-  margin-right : 270px;
+  margin-right: 270px;
 `;
 const UploadButton = styled.button`
- position : absolute;
- top : 730px;
-`
+  position: absolute;
+  top: 730px;
+`;
 const BrowseButton = styled.label`
   width: 127px;
   height: 32px;
   flex-shrink: 0;
-  padding : 4px;
+  padding: 4px;
   display: inline-block;
   border-radius: 10px;
-  border: 1.5px solid var(--C6C6C6, #C6C6C6);
+  border: 1.5px solid var(--C6C6C6, #c6c6c6);
   box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.15);
-  xcolor: var(--6A6A6A, #6A6A6A);
+  xcolor: var(--6A6A6A, #6a6a6a);
   font-family: Pretendard;
   font-size: 15px;
   font-style: normal;
@@ -221,15 +231,15 @@ const BrowseButton = styled.label`
   line-height: 150%;
   letter-spacing: -0.304px;
   cursor: pointer;
-  margin-left : 210px;
-  margin-top : -35px;
+  margin-left: 210px;
+  margin-top: -35px;
 
   input {
     display: none;
   }
 
   &:hover {
-    background:rgb(234, 234, 234);
+    background: rgb(234, 234, 234);
   }
 `;
 
@@ -278,7 +288,7 @@ const DeleteButton = styled.button`
 `;
 
 const DeleteLogo = styled.img`
-width: 14.769px;
-height: 16px;
-flex-shrink: 0;
-`
+  width: 14.769px;
+  height: 16px;
+  flex-shrink: 0;
+`;

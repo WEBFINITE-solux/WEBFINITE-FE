@@ -13,6 +13,21 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+@font-face {
+  font-family: "pretendardR";
+  src: url("../public/Pretendard-Regular.woff");
+}
+
+@font-face {
+  font-family: "pretendardM";
+  src: url("../public/Pretendard-Medium.woff");
+}
+
+@font-face {
+  font-family: "pretendardB";
+  src: url("../public/Pretendard-SemiBold.woff");
+}
+
 a {
   font-weight: 500;
   color: #646cff;

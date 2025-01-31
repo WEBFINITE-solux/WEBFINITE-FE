@@ -25,7 +25,6 @@ const QuizComponent: React.FC<QuizComponentProps> = ({ quizzes }) => {
     navigate(`/quiz/Resolve?quizId=${quizId}`);
   };
 
-
   const handleViewAiExplanation = (quizId: number) => {
     console.log("AI 해설 보기:", quizId);
     navigate(`/quiz/answer?quizId=${quizId}`);
@@ -47,7 +46,9 @@ const QuizComponent: React.FC<QuizComponentProps> = ({ quizzes }) => {
                     <ActionIcon onClick={() => handleResolveQuiz(quiz.quizId)}>
                       <AgainLogo src="/again.svg" />
                     </ActionIcon>
-                    <ActionButton onClick={() => handleViewAiExplanation(quiz.quizId)}>
+                    <ActionButton
+                      onClick={() => handleViewAiExplanation(quiz.quizId)}
+                    >
                       AI 해설보기
                     </ActionButton>
                   </>
@@ -133,7 +134,7 @@ const SolveButton = styled.button`
   cursor: pointer;
   color: #1a1a1a;
   text-align: center;
-  font-family: Pretendard;
+  font-family: pretendardB;
   font-size: 10px;
   font-weight: 600;
   margin-left: 180px;
@@ -154,7 +155,7 @@ const ActionButton = styled.button`
   cursor: pointer;
   color: #1a1a1a;
   text-align: center;
-  font-family: Pretendard;
+  font-family: pretendardB;
   font-size: 10px;
   font-weight: 600;
   margin-left: 150px;

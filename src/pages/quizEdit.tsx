@@ -19,10 +19,12 @@ interface CourseQuizData {
 
 const QuizEdit: React.FC = () => {
   const navigate = useNavigate();
-  const [selectedCards, setSelectedCards] = useState<Record<number, boolean>>({});
-  const userId = 1; 
-  const year = "2024"; 
-  const semester = "1"; 
+  const [selectedCards, setSelectedCards] = useState<Record<number, boolean>>(
+    {}
+  );
+  const userId = 1;
+  const year = "2024";
+  const semester = "1";
   const [courseQuizzes, setCourseQuizzes] = useState<CourseQuizData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -30,47 +32,52 @@ const QuizEdit: React.FC = () => {
   useEffect(() => {
     const fetchUserCoursesAndQuizzes = async () => {
       try {
-        const courseResponse = await token.get(`/course/${userId}/${year}/${semester}`);
-        const userCourses = courseResponse.data.courses; 
+        const courseResponse = await token.get(
+          `/course/${userId}/${year}/${semester}`
+        );
+        const userCourses = courseResponse.data.courses;
         console.log("📌 강의 목록:", userCourses);
-  
+
         if (!userCourses || userCourses.length === 0) {
           setError("유저에게 등록된 강의가 없습니다.");
           setLoading(false);
           return;
         }
-  
+
         const allCourseQuizzes: CourseQuizData[] = [];
-  
+
         for (const course of userCourses) {
-          const courseId = course.id; 
-          const response = await token.get(`/quiz/${userId}/course/${courseId}`);
+          const courseId = course.id;
+          const response = await token.get(
+            `/quiz/${userId}/course/${courseId}`
+          );
           console.log(`📌 [${courseId}] 퀴즈 데이터 응답:`, response.data);
-  
+
           if (Array.isArray(response.data)) {
             allCourseQuizzes.push({
               courseId: courseId,
               courseTitle: course.title || "알 수 없는 강의",
-              quizzes: response.data, 
+              quizzes: response.data,
             });
           } else {
             console.warn(`🚨 예상과 다른 데이터 형식:`, response.data);
           }
         }
-  
+
         console.log("📌 최종 courseQuizzes 데이터:", allCourseQuizzes);
         setCourseQuizzes(allCourseQuizzes);
       } catch (err: any) {
         console.error("퀴즈 데이터 불러오기 오류:", err);
-        setError(err.response?.data?.message || "퀴즈 데이터를 불러올 수 없습니다.");
+        setError(
+          err.response?.data?.message || "퀴즈 데이터를 불러올 수 없습니다."
+        );
       } finally {
         setLoading(false);
       }
     };
-  
+
     fetchUserCoursesAndQuizzes();
   }, [userId, year, semester]);
-  
 
   const handleCreateQuiz = () => {
     navigate("/quiz/create");
@@ -102,7 +109,9 @@ const QuizEdit: React.FC = () => {
       setCourseQuizzes((prev) =>
         prev.map((course) => ({
           ...course,
-          quizzes: course.quizzes.filter((quiz) => !selectedQuizIds.includes(quiz.quizId)),
+          quizzes: course.quizzes.filter(
+            (quiz) => !selectedQuizIds.includes(quiz.quizId)
+          ),
         }))
       );
 
@@ -135,7 +144,11 @@ const QuizEdit: React.FC = () => {
             {courseQuizzes.map((course) => (
               <div key={course.courseId}>
                 <CourseHeader>{course.courseTitle}</CourseHeader>
-                <QuizComponentEdit quizzes={course.quizzes} selectedCards={selectedCards} setSelectedCards={setSelectedCards} />
+                <QuizComponentEdit
+                  quizzes={course.quizzes}
+                  selectedCards={selectedCards}
+                  setSelectedCards={setSelectedCards}
+                />
               </div>
             ))}
             <DeleteButton onClick={handleDelete}>
@@ -184,7 +197,7 @@ const TabContainer = styled.div`
   border-bottom: 2px solid #ccc;
   margin-bottom: 20px;
   width: 100%;
-  padding-left: 20px; 
+  padding-left: 20px;
 `;
 
 const TabWrapper = styled.div`
@@ -206,15 +219,15 @@ const EditButton = styled.button`
   height: 33px;
   flex-shrink: 0;
   padding: 3px 16px;
-  color: var(--1A1A1A, #1A1A1A);
+  color: var(--1A1A1A, #1a1a1a);
   text-align: center;
-  font-family: Pretendard;
+  font-family: pretendardB;
   font-size: 16px;
   font-style: normal;
   font-weight: 700;
-  line-height: 150%; 
+  line-height: 150%;
   border-radius: 28.858px;
-  background: #FFF;
+  background: #fff;
   box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.25);
   cursor: pointer;
   transition: background-color 0.3s;
@@ -230,53 +243,49 @@ const Message = styled.div`
   height: 51px;
   flex-shrink: 0;
   color: #000;
-  text-align: center;
+  text-align: pretendardM;
   font-family: Pretendard;
   font-size: 14px;
   font-style: normal;
   font-weight: 500;
-  line-height: 150%; 
+  line-height: 150%;
   padding: 15px;
   margin-top: 200px;
   border-radius: 11px;
-  background: #FFF;
+  background: #fff;
   box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.25);
 `;
 
 const DeleteButton = styled.button`
-border-radius: 28.858px;
-background: var(--FF5C5C, #FF5C5C);
-box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.25);
-color: #FFF;
-text-align: center;
-font-family: Pretendard;
-font-size: 20px;
-font-style: normal;
-font-weight: 700;
-line-height: 150%; 
-display: flex;
+  border-radius: 28.858px;
+  background: var(--FF5C5C, #ff5c5c);
+  box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.25);
+  color: #fff;
+  text-align: center;
+  font-family: pretendardB;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 150%;
+  display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
   gap: 5px;
-  position : absolute ;
-  top : 880px;
-  left : 1390px;
-
-
-`
-const QuizO = styled.div`
-
-`
+  position: absolute;
+  top: 880px;
+  left: 1390px;
+`;
+const QuizO = styled.div``;
 const DeleteLogo = styled.img`
-width: 25px;
-height: 25px;
-flex-shrink: 0;
-`
+  width: 25px;
+  height: 25px;
+  flex-shrink: 0;
+`;
 
 const CourseHeader = styled.div`
-  color: #1A1A1A;
-  font-family: Pretendard;
+  color: #1a1a1a;
+  font-family: pretendardM;
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
