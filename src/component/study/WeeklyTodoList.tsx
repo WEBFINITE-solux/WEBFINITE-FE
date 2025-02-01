@@ -12,6 +12,7 @@ interface Todo {
 
 const WeeklyTodoList: React.FC = () => {
   const userId = localStorage.getItem("userId");
+  const [progress, setProgress] = useState("0");
   const [todoList, setTodoList] = useState<Todo[]>([]);
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -54,8 +55,20 @@ const WeeklyTodoList: React.FC = () => {
   };
 
   useEffect(() => {
+
     fetchToDoList();
   }, []);
+  useEffect(() => {
+    if (todoList.length === 0) {
+      setProgress("0");
+      return;
+    }
+  
+    const completedTodos = todoList.filter((todo) => todo.is_completed).length;
+    const progressPercentage = ((completedTodos / todoList.length) * 100).toFixed(0); // 소수점 제거
+  
+    setProgress(progressPercentage);
+  }, [todoList]);
 
   const handleDeleteTodo = async () => {
     if (todoToDelete === null) return;
@@ -174,7 +187,22 @@ const WeeklyTodoList: React.FC = () => {
   };
 
   return (
-    <div>
+    <>
+      <p
+          className="ai"
+          style={{
+            paddingLeft: "15px",
+            height: "60px",
+            paddingTop: "15px",
+          }}
+        >
+          달성률
+        </p>
+        <div className="progress-bar">
+          <p style={{ marginLeft: "10px" }}>{progress}%</p>
+          <p>학습 중이에요 :)</p>
+        </div>
+        <div>
       <div className="top-group">
         <p className="ai">투두 리스트</p>
         <div className="button-group">
@@ -193,7 +221,7 @@ const WeeklyTodoList: React.FC = () => {
       {/* 투두 리스트 */}
       <div className="todo-section">
         {loading ? (
-          <p>로딩 중...</p>
+          <></>
         ) : (
           Object.entries(groupedTodos).map(([startDate, todos]) => (
             <div key={startDate}>
@@ -446,6 +474,8 @@ const WeeklyTodoList: React.FC = () => {
         </div>
       )}
     </div>
+    </>
+    
   );
 };
 
