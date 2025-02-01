@@ -12,20 +12,7 @@ const Study: React.FC = () => {
       </div>
 
       <div className="right-panel">
-        <p
-          className="ai"
-          style={{
-            paddingLeft: "15px",
-            height: "60px",
-            paddingTop: "15px",
-          }}
-        >
-          달성률
-        </p>
-        <div className="progress-bar">
-          <p style={{ marginLeft: "10px" }}>0%</p>
-          <p>학습 중이에요 :)</p>
-        </div>
+        
         <WeeklyTodoList />
       </div>
     </div>
