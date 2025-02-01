@@ -4,6 +4,21 @@ import styled from "styled-components";
 import token from "../component/token";
 import QuizComponent from "../component/quiz/QuizComponent";
 
+// 현재 학기를 계산하는 함수
+export const getCurrentSemester = () => {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth() + 1; // getMonth()는 0부터 시작하므로 +1
+
+  // 1~2월이면 직전 연도, 나머지는 그대로 유지
+  const adjustedYear = month === 1 || month === 2 ? year - 1 : year;
+
+  // 학기 결정
+  const semester = month >= 3 && month <= 8 ? 1 : 2;
+
+  return { year: adjustedYear, semester };
+};
+
 interface QuizData {
   quizId: number;
   quizTitle: string;
@@ -19,9 +34,11 @@ interface CourseQuizData {
 
 const Quiz: React.FC = () => {
   const navigate = useNavigate();
-  const userId = 1; 
-  const year = "2024"; 
-  const semester = "1"; 
+  
+  // localStorage에서 userId 가져오기
+  const userId = localStorage.getItem("userId") || "1"; // 기본값 1
+  const { year, semester } = getCurrentSemester(); // 현재 학기 가져오기
+
   const [courseQuizzes, setCourseQuizzes] = useState<CourseQuizData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -30,7 +47,7 @@ const Quiz: React.FC = () => {
     const fetchUserCoursesAndQuizzes = async () => {
       try {
         const courseResponse = await token.get(`/course/${userId}/${year}/${semester}`);
-        const userCourses = courseResponse.data.courses; 
+        const userCourses = courseResponse.data.courses;
         console.log("📌 강의 목록:", userCourses);
 
         if (!userCourses || userCourses.length === 0) {
@@ -205,7 +222,6 @@ const CourseHeader = styled.div`
   color: #1A1A1A;
   font-family: Pretendard;
   font-size: 16px;
-  font-style: normal;
   font-weight: 500;
   line-height: 150%;
   padding: 10px;

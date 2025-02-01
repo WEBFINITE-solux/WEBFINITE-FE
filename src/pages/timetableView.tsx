@@ -4,6 +4,21 @@ import token from "../component/token";
 import TimetableComponent from "../component/timetable/TimetableComponent";
 import FileView from "../component/timetable/FileView";
 
+// 현재 학기를 계산하는 함수
+export const getCurrentSemester = () => {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth() + 1; // getMonth()는 0부터 시작하므로 +1
+
+  // 1~2월이면 직전 연도, 나머지는 그대로 유지
+  const adjustedYear = month === 1 || month === 2 ? year - 1 : year;
+
+  // 학기 결정
+  const semester = month >= 3 && month <= 8 ? 1 : 2;
+
+  return { year: adjustedYear, semester };
+};
+
 type Course = {
   course_id: number;
   course_title: string;
@@ -21,10 +36,8 @@ const TimetableView: React.FC = () => {
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  const userId = 1; 
-  const year = "2024";
-  const semester = "1";
+  const userId = localStorage.getItem("userId");
+  const { year, semester } = getCurrentSemester(); 
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -71,7 +84,7 @@ const TimetableView: React.FC = () => {
             <>
               <TimetableComponent courses={courses} />
               <FileUploadContainer>
-                <FileView/>
+                <FileView />
               </FileUploadContainer>
             </>
           )}
