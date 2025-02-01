@@ -65,6 +65,7 @@ const CourseAdd: React.FC<CourseAddProps> = ({ onBackToList }) => {
       if (response.status === 200) {
         alert(`강의 "${courseName}"가 추가되었습니다!`);
         onBackToList();
+        window.location.reload();
       }
     } catch (error: any) {
       console.error("강의 추가 중 오류 발생:", error);
