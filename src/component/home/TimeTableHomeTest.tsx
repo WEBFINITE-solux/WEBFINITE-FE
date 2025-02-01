@@ -140,7 +140,7 @@ const TimetableHomeTest: React.FC = () => {
                     )
                   ) : (
                     <span style={{ color: "#aaa", fontSize: "12px" }}>
-                      No Data
+                      
                     </span>
                   )}
                 </td>
