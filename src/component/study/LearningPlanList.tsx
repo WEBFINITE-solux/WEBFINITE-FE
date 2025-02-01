@@ -156,28 +156,27 @@ const LearningPlanList: React.FC = () => {
           {isNull ? (
             <NoDataComponent />
           ) : (
-            <div style={{ padding: "30px" }}>
-              <div
-                style={{
-                  borderRadius: "10px",
-                  background: "#FFF",
-                  boxShadow: "0px 0px 5px 0px rgba(0, 0, 0, 0.25)",
-                  marginBottom: "30px",
-                }}
-              >
-                <p
-                  style={{
-                    padding: "10px",
-                    fontSize: "15px",
-                    color: "rgba(0, 0, 0, 0.80)",
-                    fontFamily: "pretendardM",
-                  }}
-                >
-                  {studyPlan.prompt_text
-                    ? studyPlan.prompt_text
-                    : "생성된 학습계획을 참고하면 좋은 결과를 얻을 수 있을 거예요."}
-                </p>
-              </div>
+              <div style={{ padding: "30px" }}>
+                {studyPlan.prompt_text ?
+                  <div
+                    style={{
+                      borderRadius: "10px",
+                      background: "#FFF",
+                      boxShadow: "0px 0px 5px 0px rgba(0, 0, 0, 0.25)",
+                      marginBottom: "30px",
+                    }}
+                  >
+                    <p
+                      style={{
+                        padding: "10px",
+                        fontSize: "15px",
+                        color: "rgba(0, 0, 0, 0.80)",
+                        fontFamily: "pretendardM",
+                      }}
+                    >
+                      {studyPlan.prompt_text}
+                    </p>
+                  </div> :<div></div>}
 
               {loading ? (
                 <p>로딩 중...</p>
