@@ -34,15 +34,14 @@ interface CourseQuizData {
 
 const Quiz: React.FC = () => {
   const navigate = useNavigate();
-  
-  // localStorage에서 userId 가져오기
-  const userId = localStorage.getItem("userId") || "1"; // 기본값 1
-  const { year, semester } = getCurrentSemester(); // 현재 학기 가져오기
+  const userId = localStorage.getItem("userId");
+  const { year, semester } = getCurrentSemester();
 
   const [courseQuizzes, setCourseQuizzes] = useState<CourseQuizData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
+  
+  console.log("사용자 ID:", userId);
   useEffect(() => {
     const fetchUserCoursesAndQuizzes = async () => {
       try {
@@ -62,6 +61,7 @@ const Quiz: React.FC = () => {
           const courseId = course.id;
           const response = await token.get(`/quiz/${userId}/course/${courseId}`);
           console.log(`📌 [${courseId}] 퀴즈 데이터 응답:`, response.data);
+          console.log(`요청 URL: /quiz/${userId}/course/${courseId}`);
 
           allCourseQuizzes.push({
             courseId: courseId,
