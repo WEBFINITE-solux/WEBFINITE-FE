@@ -16,13 +16,26 @@ type Course = {
   term: string;
 };
 
+// 현재 학기를 계산하는 함수
+export const getCurrentSemester = () => {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth() + 1; // getMonth()는 0부터 시작하므로 +1
+
+  // 1~2월이면 직전 연도, 나머지는 그대로 유지
+  const adjustedYear = month === 1 || month === 2 ? year - 1 : year;
+
+  // 학기 결정
+  const semester = month >= 3 && month <= 8 ? 1 : 2;
+
+  return { year: adjustedYear, semester };
+};
+
 const TimetableUpload: React.FC = () => {
   const colors = ["#FFD3A9", "#C2B1FF", "#FF9E9E", "#95BAFF", "#9EFFEA"];
   const [courses, setCourses] = useState<Course[]>([]);
-
-  const userId = 1; 
-  const year = "2024";
-  const semester = "1";
+  const userId = localStorage.getItem("userId");
+  const { year, semester } = getCurrentSemester(); 
 
   useEffect(() => {
     const fetchCourses = async () => {
