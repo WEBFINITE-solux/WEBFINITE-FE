@@ -6,6 +6,7 @@ import token from "../token";
 const QuizMakeComponent: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const userId = Number(localStorage.getItem("userId"));
 
   const { courseId, fileId } = location.state || {};
 
@@ -43,7 +44,7 @@ const QuizMakeComponent: React.FC = () => {
 
     try {
       const response = await token.post(`/quiz/create/${courseId}/${fileId}`, {
-        userId: 1,
+        userId: `${userId}`,
         quizCountRange: `${quizCount.min}-${quizCount.max}`,
         questionType: quizType.multipleChoice
           ? "MULTIPLE_CHOICE"
