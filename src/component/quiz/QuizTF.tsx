@@ -83,9 +83,15 @@ const QuizTF: React.FC<QuizProps> = ({ quizData }) => {
       alert("퀴즈 정보를 불러올 수 없습니다.");
       return;
     }
+    const userId = localStorage.getItem("userId"); 
+    if (!userId) {
+      alert("로그인이 필요합니다.");
+      navigate("/login");
+      return;
+    }
 
     const payload = {
-      userId: 1,
+      userId,
       quizId: quizData.quizId,
       answers: quizData.questions.map((question, index) => ({
         questionId: question.questionId,
@@ -141,13 +147,13 @@ const QuizTF: React.FC<QuizProps> = ({ quizData }) => {
         <QuestionText>{currentQuestion.questionContent}</QuestionText>
         <Answers>
           <AnswerButton
-            onClick={() => handleAnswerChange("True")}
+            onClick={() => handleAnswerChange("참")}
             selected={selectedAnswers[currentQuestionIndex] === "TRUE"}
           >
             참
           </AnswerButton>
           <AnswerButton
-            onClick={() => handleAnswerChange("False")}
+            onClick={() => handleAnswerChange("거짓")}
             selected={selectedAnswers[currentQuestionIndex] === "FALSE"}
           >
             거짓
