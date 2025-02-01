@@ -4,6 +4,21 @@ import { useNavigate } from "react-router-dom";
 import token from "../component/token";
 import { useState, useEffect } from "react";
 
+// 현재 학기를 계산하는 함수
+export const getCurrentSemester = () => {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth() + 1; // getMonth()는 0부터 시작하므로 +1
+
+  // 1~2월이면 직전 연도, 나머지는 그대로 유지
+  const adjustedYear = month === 1 || month === 2 ? year - 1 : year;
+
+  // 학기 결정
+  const semester = month >= 3 && month <= 8 ? 1 : 2;
+
+  return { year: adjustedYear, semester };
+};
+
 interface QuizData {
   quizId: number;
   quizTitle: string;
@@ -20,9 +35,9 @@ interface CourseQuizData {
 const QuizEdit: React.FC = () => {
   const navigate = useNavigate();
   const [selectedCards, setSelectedCards] = useState<Record<number, boolean>>({});
-  const userId = 1; 
-  const year = "2024"; 
-  const semester = "1"; 
+  const userId = localStorage.getItem("userId");
+  const { year, semester } = getCurrentSemester();
+
   const [courseQuizzes, setCourseQuizzes] = useState<CourseQuizData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -31,33 +46,33 @@ const QuizEdit: React.FC = () => {
     const fetchUserCoursesAndQuizzes = async () => {
       try {
         const courseResponse = await token.get(`/course/${userId}/${year}/${semester}`);
-        const userCourses = courseResponse.data.courses; 
+        const userCourses = courseResponse.data.courses;
         console.log("📌 강의 목록:", userCourses);
-  
+
         if (!userCourses || userCourses.length === 0) {
           setError("유저에게 등록된 강의가 없습니다.");
           setLoading(false);
           return;
         }
-  
+
         const allCourseQuizzes: CourseQuizData[] = [];
-  
+
         for (const course of userCourses) {
-          const courseId = course.id; 
+          const courseId = course.id;
           const response = await token.get(`/quiz/${userId}/course/${courseId}`);
           console.log(`📌 [${courseId}] 퀴즈 데이터 응답:`, response.data);
-  
+
           if (Array.isArray(response.data)) {
             allCourseQuizzes.push({
               courseId: courseId,
               courseTitle: course.title || "알 수 없는 강의",
-              quizzes: response.data, 
+              quizzes: response.data,
             });
           } else {
             console.warn(`🚨 예상과 다른 데이터 형식:`, response.data);
           }
         }
-  
+
         console.log("📌 최종 courseQuizzes 데이터:", allCourseQuizzes);
         setCourseQuizzes(allCourseQuizzes);
       } catch (err: any) {
@@ -67,10 +82,9 @@ const QuizEdit: React.FC = () => {
         setLoading(false);
       }
     };
-  
+
     fetchUserCoursesAndQuizzes();
   }, [userId, year, semester]);
-  
 
   const handleCreateQuiz = () => {
     navigate("/quiz/create");
@@ -112,6 +126,7 @@ const QuizEdit: React.FC = () => {
       alert("퀴즈 삭제에 실패했습니다.");
     }
   };
+
   console.log("📌 전체 퀴즈 데이터:", courseQuizzes);
 
   return (

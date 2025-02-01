@@ -2,6 +2,21 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import token from "../token";
 
+// 현재 학기를 계산하는 함수
+export const getCurrentSemester = () => {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth() + 1; // getMonth()는 0부터 시작하므로 +1
+
+  // 1~2월이면 직전 연도, 나머지는 그대로 유지
+  const adjustedYear = month === 1 || month === 2 ? year - 1 : year;
+
+  // 학기 결정
+  const semester = month >= 3 && month <= 8 ? 1 : 2;
+
+  return { year: adjustedYear, semester };
+};
+
 interface Course {
   id: number;
   title: string;
@@ -17,9 +32,8 @@ const CourseSelectModal: React.FC<CourseSelectModalProps> = ({ onClose, onSelect
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [selectedCourseId, setSelectedCourseId] = useState<number | null>(null);
-  const userId = 1;
-  const year = "2024";
-  const semester = "1";
+  const userId = localStorage.getItem("userId");
+  const { year, semester } = getCurrentSemester();
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -34,7 +48,7 @@ const CourseSelectModal: React.FC<CourseSelectModalProps> = ({ onClose, onSelect
     };
 
     fetchCourses();
-  }, []);
+  }, [userId, year, semester]);
 
   const handleSelectCourse = (course: Course) => {
     setSelectedCourseId(course.id);
@@ -52,12 +66,14 @@ const CourseSelectModal: React.FC<CourseSelectModalProps> = ({ onClose, onSelect
         <Content>
           {loading ? (
             <Message>📂 강의를 불러오는 중...</Message>
-          ) : (
+          ) : courses.length > 0 ? (
             courses.map((course) => (
               <CourseItem key={course.id} onClick={() => handleSelectCourse(course)} selected={course.id === selectedCourseId}>
                 {course.title} ({course.period})
               </CourseItem>
             ))
+          ) : (
+            <Message>등록된 강의가 없습니다.</Message>
           )}
         </Content>
       </Modal>
@@ -141,7 +157,9 @@ const CourseItem = styled.div<{ selected: boolean }>`
   }
 `;
 
-const Message= styled.div`
+const Message = styled.div`
   font-size: 14px;
   color: #666;
+  text-align: center;
+  padding: 20px;
 `;
