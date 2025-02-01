@@ -6,13 +6,6 @@ interface Quiz {
   quizId: number;
   quizTitle: string;
 }
-
-interface Course {
-  course_id: number;
-  title: string;
-  period: string;
-}
-
 const QuizList: React.FC<{ userId: number }> = ({ userId }) => {
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
   const navigate = useNavigate();
