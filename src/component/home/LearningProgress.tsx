@@ -13,6 +13,7 @@ interface DayAttendance {
 
 const LearningProgress: React.FC<{ userId: number }> = ({ userId }) => {
   const [attendance, setAttendance] = useState<AttendanceData[]>([]);
+  console.log(attendance);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
