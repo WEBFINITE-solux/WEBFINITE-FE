@@ -11,34 +11,51 @@ const QuizAnswer: React.FC<QuizAnswerProps> = ({ quizResult }) => {
     navigate("/quiz");
   };
 
+  console.log("quizResult:", quizResult);
+
   return (
     <Container>
       <Header>
         <Title>AI 해설</Title>
       </Header>
       <Content>
-        {quizResult.detailedResults.map((result: any, index: number) => (
-          <QuestionBox key={result.questionId}>
-            <QuestionHeader>
-              {index + 1}. {result.questionContent}
-            </QuestionHeader>
-            <Choices>
-              {result.choices.map((choice: string, i: number) => (
-                <Choice
-                  key={i}
-                  isCorrect={choice === result.correctAnswer}
-                  isUserAnswer={choice === result.userAnswer}
-                >
-                  {String.fromCharCode(97 + i)}. {choice}
-                </Choice>
-              ))}
-            </Choices>
-            <Explanation isCorrect={result.correct}>
-              <Answer isCorrect={result.correct}>정답:</Answer> {result.correctAnswer} <br />
-              <Script>→ {result.explanation}</Script>
-            </Explanation>
-          </QuestionBox>
-        ))}
+        {quizResult.detailedResults.map((result: any, index: number) => {
+          const cleanCorrectAnswer = result.correctAnswer.trim().replace(/\s+/g, '').normalize('NFKC');
+          const cleanUserAnswer = result.userAnswer.trim().replace(/\s+/g, '').normalize('NFKC');
+
+          console.log(`문제 ${index + 1}:`, result.questionContent);
+          console.log("정답 (클린):", cleanCorrectAnswer);
+          console.log("사용자 답변 (클린):", cleanUserAnswer);
+          console.log("원본 선택지:", result.choices);
+
+          return (
+            <QuestionBox key={result.questionId}>
+              <QuestionHeader>
+                {index + 1}. {result.questionContent}
+              </QuestionHeader>
+              <Choices>
+                {result.choices.map((choice: string, i: number) => {
+                  const cleanChoice = choice.trim().replace(/\s+/g, '').normalize('NFKC');
+                  const isCorrect = cleanChoice === cleanCorrectAnswer;
+                  const isUserAnswer = cleanChoice === cleanUserAnswer;
+
+                  console.log(`Choice: ${choice} (클린: ${cleanChoice}), isCorrect: ${isCorrect}, isUserAnswer: ${isUserAnswer}`);
+
+                  return (
+                    <Choice key={i} isCorrect={isCorrect} isUserAnswer={isUserAnswer}>
+                      {String.fromCharCode(97 + i)}. {choice}
+                    </Choice>
+                  );
+                })}
+              </Choices>
+              <Explanation isCorrect={result.correct}>
+                <Answer isCorrect={result.correct}>정답:</Answer> {result.correctAnswer} <br />
+              <Answer isCorrect={result.correct}>내가 선택한 정답 : </Answer>{result.userAnswer}<br/>
+                <Script>→ {result.explanation}</Script>
+              </Explanation>
+            </QuestionBox>
+          );
+        })}
         <ExitButton onClick={handleList}>나가기</ExitButton>
       </Content>
     </Container>
@@ -100,7 +117,19 @@ const Choice = styled.div<{ isCorrect: boolean; isUserAnswer: boolean }>`
   font-size: 16px;
   font-weight: ${(props) => (props.isUserAnswer ? "bold" : "normal")};
   color: ${(props) =>
-    props.isUserAnswer ? (props.isCorrect ? "#2D41FF" : "#FF5C5C") : "#555"};
+    props.isUserAnswer
+      ? props.isCorrect
+        ? "#2D41FF"
+        : "#FF5C5C"
+      : "#555"};
+  background: ${(props) =>
+    props.isUserAnswer
+      ? props.isCorrect
+        ? "#EAECFF"
+        : "#fde7e7"
+      : "transparent"};
+  padding: 5px;
+  border-radius: 4px;
 `;
 
 const Explanation = styled.div<{ isCorrect: boolean }>`
