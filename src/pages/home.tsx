@@ -19,7 +19,7 @@ interface StudyPlan {
 }
 
 const Home: React.FC = () => {
-  const userId = localStorage.getItem("userId"); // 실제 로그인된 유저 ID 적용 필요
+  const userId = Number(localStorage.getItem("userId")); // 실제 로그인된 유저 ID 적용 필요
   const [name, setName] = useState(" ");
   const [introduction, setIntroduction] = useState(" ");
   const [img, setImg] = useState("img1");
