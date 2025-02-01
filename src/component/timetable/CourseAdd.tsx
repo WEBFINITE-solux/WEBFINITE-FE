@@ -33,13 +33,13 @@ const CourseAdd: React.FC<CourseAddProps> = ({ onBackToList }) => {
   const { year, semester } = getCurrentSemester(); 
 
   const koreanToEnglishDays: Record<string, string> = {
-    "월": "MON",
-    "화": "TUE",
-    "수": "WED",
-    "목": "THU",
-    "금": "FRI",
-    "토": "SAT",
-    "일": "SUN"
+    월: "MON",
+    화: "TUE",
+    수: "WED",
+    목: "THU",
+    금: "FRI",
+    토: "SAT",
+    일: "SUN",
   };
 
   const handleSubmit = async () => {
@@ -52,7 +52,7 @@ const CourseAdd: React.FC<CourseAddProps> = ({ onBackToList }) => {
       year,
       semester,
       color: "#95BAFF",
-      day: days.map((day) => koreanToEnglishDays[day]), 
+      day: days.map((day) => koreanToEnglishDays[day]),
       start_time: startTime,
       end_time: endTime,
       location,
@@ -73,7 +73,9 @@ const CourseAdd: React.FC<CourseAddProps> = ({ onBackToList }) => {
   };
 
   const handleDayChange = (day: string) => {
-    setDays(days.includes(day) ? days.filter((d) => d !== day) : [...days, day]);
+    setDays(
+      days.includes(day) ? days.filter((d) => d !== day) : [...days, day]
+    );
   };
 
   return (
@@ -87,19 +89,31 @@ const CourseAdd: React.FC<CourseAddProps> = ({ onBackToList }) => {
         </ContainerHeader>
         <Form>
           <FormTitle>강의명</FormTitle>
-          <Input value={courseName} onChange={(e) => setCourseName(e.target.value)} placeholder="강의명을 입력하세요." />
+          <Input
+            value={courseName}
+            onChange={(e) => setCourseName(e.target.value)}
+            placeholder="강의명을 입력하세요."
+          />
 
           <FormTitle>시간</FormTitle>
           <TimePickerContainer>
-            <TimeSelect value={startHour} onChange={(e) => setStartHour(e.target.value)}>
-              {Array.from({ length: 24 }, (_, i) => i.toString().padStart(2, "0")).map((hour) => (
+            <TimeSelect
+              value={startHour}
+              onChange={(e) => setStartHour(e.target.value)}
+            >
+              {Array.from({ length: 24 }, (_, i) =>
+                i.toString().padStart(2, "0")
+              ).map((hour) => (
                 <option key={hour} value={hour}>
                   {hour}
                 </option>
               ))}
             </TimeSelect>
             :
-            <TimeSelect value={startMinute} onChange={(e) => setStartMinute(e.target.value)}>
+            <TimeSelect
+              value={startMinute}
+              onChange={(e) => setStartMinute(e.target.value)}
+            >
               {["00", "15", "30", "45"].map((minute) => (
                 <option key={minute} value={minute}>
                   {minute}
@@ -107,15 +121,23 @@ const CourseAdd: React.FC<CourseAddProps> = ({ onBackToList }) => {
               ))}
             </TimeSelect>
             ~
-            <TimeSelect value={endHour} onChange={(e) => setEndHour(e.target.value)}>
-              {Array.from({ length: 24 }, (_, i) => i.toString().padStart(2, "0")).map((hour) => (
+            <TimeSelect
+              value={endHour}
+              onChange={(e) => setEndHour(e.target.value)}
+            >
+              {Array.from({ length: 24 }, (_, i) =>
+                i.toString().padStart(2, "0")
+              ).map((hour) => (
                 <option key={hour} value={hour}>
                   {hour}
                 </option>
               ))}
             </TimeSelect>
             :
-            <TimeSelect value={endMinute} onChange={(e) => setEndMinute(e.target.value)}>
+            <TimeSelect
+              value={endMinute}
+              onChange={(e) => setEndMinute(e.target.value)}
+            >
               {["00", "15", "30", "45"].map((minute) => (
                 <option key={minute} value={minute}>
                   {minute}
@@ -128,14 +150,24 @@ const CourseAdd: React.FC<CourseAddProps> = ({ onBackToList }) => {
           <DayCheckboxContainer>
             {["월", "화", "수", "목", "금", "토", "일"].map((day) => (
               <DayCheckbox key={day}>
-                <input type="checkbox" id={day} value={day} checked={days.includes(day)} onChange={() => handleDayChange(day)} />
+                <input
+                  type="checkbox"
+                  id={day}
+                  value={day}
+                  checked={days.includes(day)}
+                  onChange={() => handleDayChange(day)}
+                />
                 <label htmlFor={day}>{day}</label>
               </DayCheckbox>
             ))}
           </DayCheckboxContainer>
 
           <FormTitle>위치</FormTitle>
-          <Input value={location} onChange={(e) => setLocation(e.target.value)} placeholder="강의실을 입력하세요." />
+          <Input
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+            placeholder="강의실을 입력하세요."
+          />
 
           <Button onClick={handleSubmit}>추가하기</Button>
         </Form>
@@ -145,7 +177,6 @@ const CourseAdd: React.FC<CourseAddProps> = ({ onBackToList }) => {
 };
 
 export default CourseAdd;
-
 
 const Container = styled.div`
   height: 735px;
@@ -166,18 +197,18 @@ const Header = styled.div`
 const ContainerHeader = styled.div`
   width: 100%;
   height: 60px;
-  border-bottom: 1px solid #ccc;`
-;
+  border-bottom: 1px solid #ccc;
+`;
 const ContainerTitle = styled.h2`
   color: #000;
-  font-family: Pretendard;
+  font-family: pretendardB;
   font-size: 20px;
   font-style: normal;
   font-weight: 700;
-  line-height: 150%;`
-;
+  line-height: 150%;
+`;
 const Title = styled.div`
-  font-family: Pretendard;
+  font-family: pretendardB;
   font-size: 18px;
   font-weight: bold;
   cursor: pointer;
@@ -200,7 +231,7 @@ const Form = styled.div`
 `;
 
 const FormTitle = styled.div`
-  font-family: Pretendard;
+  font-family: pretendardM;
   font-size: 15px;
   font-weight: 500;
 `;

@@ -33,7 +33,10 @@ export const logoutUser = async (accessToken: string) => {
     if (contentType?.includes("application/json")) {
       return JSON.parse(rawResponse);
     } else {
-      return { message: "로그아웃이 성공적으로 처리되었습니다.", code: response.status };
+      return {
+        message: "로그아웃이 성공적으로 처리되었습니다.",
+        code: response.status,
+      };
     }
   } catch (error: any) {
     console.error("로그아웃 요청 중 오류 발생:", error.message);

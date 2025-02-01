@@ -4,10 +4,13 @@ import "react-date-range/dist/styles.css"; // 기본 스타일
 import "react-date-range/dist/theme/default.css"; // 테마 스타일
 import "./../styles/aiPlan.css";
 import "./../styles/study.css";
+import { getCurrentSemester } from "../util/getCurrentSemester";
+import { useNavigate } from "react-router-dom";
 
 const AiPlan: React.FC = () => {
-  const userId = 1;
-  const [selectedMaterial, setSelectedMaterial] = useState("강의 자료 선택하러 가기"); // 선택된 강의 자료
+  const userId = localStorage.getItem("userId");
+  const [selectedMaterial, setSelectedMaterial] =
+    useState("강의 자료 선택하러 가기"); // 선택된 강의 자료
   const [materials, setMaterials] = useState([]); // 서버에서 받아온 데이터
   const [selectedCourseId, setSelectedCourseId] = useState<number | null>(null); // 선택된 강의의 courseId
   const [selectedCourseFiles, setSelectedCourseFiles] = useState([]); // 선택된 강의의 파일 데이터
@@ -17,17 +20,19 @@ const AiPlan: React.FC = () => {
   const [endUnit, setEndUnit] = useState("");
   const [additionalNotes, setAdditionalNotes] = useState("");
   const [showWarning, setShowWarning] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchMaterials = async () => {
       try {
+        const { year, semester } = getCurrentSemester();
         const response = await fetch(
-          `https://d291-58-29-179-25.ngrok-free.app/course/${userId}/2024/1`,
+          `https://d291-58-29-179-25.ngrok-free.app/course/${userId}/${year}/${semester}`,
           {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-              "Accept": "application/json",
+              Accept: "application/json",
               "ngrok-skip-browser-warning": "true",
             },
           }
@@ -56,7 +61,7 @@ const AiPlan: React.FC = () => {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            "Accept": "application/json",
+            Accept: "application/json",
             "ngrok-skip-browser-warning": "true",
           },
         }
@@ -99,14 +104,24 @@ const AiPlan: React.FC = () => {
     year: "numeric",
   });
 
-  const selectedMaterialRange = ["1-1", "1-2", "1-3", "1-4", "1-5"]; // 모든 강의의 범위 고정
+  const selectedMaterialRange = [
+    "1-1",
+    "1-2",
+    "1-3",
+    "1-4",
+    "1-5",
+    "1-6",
+    "1-7",
+    "1-8",
+    "1-9",
+  ]; // 모든 강의의 범위 고정
 
   const createPlan = async () => {
     if (!selectedCourseId || !selectedFileId) {
       alert("강의 자료와 파일을 선택하세요.");
       return;
     }
-  
+
     // 날짜를 YYYY-MM-DD 형식으로 변환
     const formatDate = (date: Date) => {
       const year = date.getFullYear();
@@ -114,7 +129,7 @@ const AiPlan: React.FC = () => {
       const day = String(date.getDate()).padStart(2, "0");
       return `${year}-${month}-${day}`;
     };
-  
+
     const bodyData = {
       prompt_text: additionalNotes,
       start_date: formatDate(dateRange[0].startDate), // 시작 날짜를 YYYY-MM-DD로 변환
@@ -123,9 +138,9 @@ const AiPlan: React.FC = () => {
       end_unit: endUnit,
       file_id: selectedFileId,
     };
-  
+
     console.log("생성된 BodyData:", bodyData);
-  
+
     try {
       const response = await fetch(
         `https://d291-58-29-179-25.ngrok-free.app/plan/${selectedCourseId}/new`,
@@ -133,24 +148,24 @@ const AiPlan: React.FC = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "Accept": "application/json",
+            Accept: "application/json",
           },
           body: JSON.stringify(bodyData), // JSON 데이터 설정
         }
       );
-  
+
       if (!response.ok) {
         throw new Error(`HTTP 오류 발생: ${response.status}`);
       }
-  
+
       const data = await response.json();
       console.log("생성된 학습 계획:", data);
       alert("학습 계획이 성공적으로 생성되었습니다!");
+      navigate("/study");
     } catch (error) {
       console.error("학습 계획 생성 중 오류 발생:", error);
     }
   };
-
 
   return (
     <div className="ai-plan">
@@ -163,7 +178,9 @@ const AiPlan: React.FC = () => {
             borderBottom: "1px solid #9A9A9A",
           }}
         >
-          <p style={{ fontSize: "20px", fontWeight: "700" }}>학습계획 정보 입력</p>
+          <p style={{ fontSize: "20px", fontWeight: "700" }}>
+            학습계획 정보 입력
+          </p>
         </div>
 
         {/* 강의 자료 선택 */}
@@ -176,7 +193,11 @@ const AiPlan: React.FC = () => {
               onClick={() => setShowPopup(true)}
             >
               <p style={{ fontSize: "14px" }}>{selectedMaterial}</p>
-              <img src="/lectureDataUpload.png" style={{ width: "30px" }} alt="upload" />
+              <img
+                src="/lectureDataUpload.png"
+                style={{ width: "30px" }}
+                alt="upload"
+              />
             </div>
           </div>
 
@@ -185,11 +206,22 @@ const AiPlan: React.FC = () => {
             <div className="popup">
               <div className="popup-content">
                 <div style={{ borderBottom: "1px solid #9A9A9A" }}>
-                  <p style={{ fontWeight: "bold", marginLeft: "25px", marginBottom: "10px" }}>
+                  <p
+                    style={{
+                      fontWeight: "bold",
+                      marginLeft: "25px",
+                      marginBottom: "10px",
+                    }}
+                  >
                     나의 강의 목록
                   </p>
                 </div>
-                <div style={{ overflowY: "auto", height: selectedCourseFiles.length > 0 ? "200px" : "370px" }}>
+                <div
+                  style={{
+                    overflowY: "auto",
+                    height: selectedCourseFiles.length > 0 ? "200px" : "370px",
+                  }}
+                >
                   <ul>
                     {materials.map((material: any) => (
                       <div
@@ -212,23 +244,36 @@ const AiPlan: React.FC = () => {
 
                 {/* 선택된 강의의 파일 목록 */}
                 {selectedCourseFiles.length > 0 && (
-                  <div style={{ overflowY: "auto",height: "170px" }}>
-                    <div style={{ borderBottom: "1px solid #9A9A9A", borderTop: "1px solid #9A9A9A" }}>
-                      <p style={{ fontWeight: "bold", marginLeft: "25px", marginBottom: "10px", marginTop: "10px" }}>
-                        선택된 강의 자료 파일 목록 
+                  <div style={{ overflowY: "auto", height: "170px" }}>
+                    <div
+                      style={{
+                        borderBottom: "1px solid #9A9A9A",
+                        borderTop: "1px solid #9A9A9A",
+                      }}
+                    >
+                      <p
+                        style={{
+                          fontWeight: "bold",
+                          marginLeft: "25px",
+                          marginBottom: "10px",
+                          marginTop: "10px",
+                        }}
+                      >
+                        선택된 강의 자료 파일 목록
                       </p>
                     </div>
                     <ul>
                       {selectedCourseFiles.map((file: any) => (
                         <div
                           key={file.file_id}
-                          className = 'popup-item'
-                          onClick={() => setSelectedFileId(file.file_id)}>
+                          className="popup-item"
+                          onClick={() => setSelectedFileId(file.file_id)}
+                        >
                           <img
                             src="/lectureListpng.png"
                             style={{ height: "40px", marginRight: "15px" }}
                             alt="lecture"
-                          />  
+                          />
                           <li style={{ fontWeight: "bold", fontSize: "14px" }}>
                             {file.original_filename}
                           </li>
@@ -262,27 +307,26 @@ const AiPlan: React.FC = () => {
                   </button>
                 </div>
               </div>
-              
             </div>
           )}
 
           {showWarning && (
             <div className="popup">
               <div className="warging-popup">
-                <div style={{display:"flex", flexDirection: "row-reverse"}}>
-                  <button onClick={() => setShowWarning(false)} style={{padding: "0px", backgroundColor: "transparent"}}>
+                <div style={{ display: "flex", flexDirection: "row-reverse" }}>
+                  <button
+                    onClick={() => setShowWarning(false)}
+                    style={{ padding: "0px", backgroundColor: "transparent" }}
+                  >
                     <img src="/x.png"></img>
                   </button>
                 </div>
-                
-                <div style={{display: "flex"}}>
-                  <input type="checkbox">
-                  </input>
-                  <p style={{marginLeft:"5px"}}>오늘 하루 보지 않기 </p>
+
+                <div style={{ display: "flex" }}>
+                  <input type="checkbox"></input>
+                  <p style={{ marginLeft: "5px" }}>오늘 하루 보지 않기 </p>
                 </div>
-                
               </div>
-              
             </div>
           )}
 
@@ -290,11 +334,18 @@ const AiPlan: React.FC = () => {
             {/* 기간 선택 */}
             <div className="section">
               <label>기간</label>
-              <div className="date-selection" onClick={() => setShowCalendar(true)}>
+              <div
+                className="date-selection"
+                onClick={() => setShowCalendar(true)}
+              >
                 {/* 선택된 날짜 표시 */}
                 <div style={{ display: "flex" }}>
                   <div className="period-box">
-                    <img src="/calendar.png" style={{ width: "30px" }} alt="calendar" />
+                    <img
+                      src="/calendar.png"
+                      style={{ width: "30px" }}
+                      alt="calendar"
+                    />
                     {formatter.format(dateRange[0].startDate)}
                   </div>
                   <h2
@@ -308,7 +359,11 @@ const AiPlan: React.FC = () => {
                     ~
                   </h2>
                   <div className="period-box">
-                    <img src="/calendar.png" style={{ width: "30px" }} alt="calendar" />
+                    <img
+                      src="/calendar.png"
+                      style={{ width: "30px" }}
+                      alt="calendar"
+                    />
                     {formatter.format(dateRange[0].endDate)}
                   </div>
                 </div>
@@ -324,8 +379,8 @@ const AiPlan: React.FC = () => {
                     direction="horizontal" // 가로로 정렬
                     showDateDisplay={false} // 상단 날짜 표시 숨김
                   />
-                  <div className="top-group" style={{paddingRight: "10px"}}>
-                    <div/>
+                  <div className="top-group" style={{ paddingRight: "10px" }}>
+                    <div />
                     <div className="button-group">
                       <button
                         className="study-button"
@@ -355,7 +410,11 @@ const AiPlan: React.FC = () => {
                 {/* 시작 범위 */}
                 <div className="custom-dropdown">
                   <div className="contents-box">
-                    <img src="/file.png" alt="folder" style={{ width: "30px" }} />
+                    <img
+                      src="/file.png"
+                      alt="folder"
+                      style={{ width: "30px" }}
+                    />
                     <span>{startUnit}</span>
                     단원
                   </div>
@@ -364,6 +423,7 @@ const AiPlan: React.FC = () => {
                     onChange={(e) => setStartUnit(e.target.value)}
                     disabled={!selectedMaterialRange.length}
                   >
+                    <option value="" hidden></option>
                     {selectedMaterialRange.map((range: string) => (
                       <option key={range} value={range}>
                         {range}
@@ -377,7 +437,11 @@ const AiPlan: React.FC = () => {
                 {/* 종료 범위 */}
                 <div className="custom-dropdown">
                   <div className="contents-box">
-                    <img src="/file.png" alt="folder" style={{ width: "30px" }} />
+                    <img
+                      src="/file.png"
+                      alt="folder"
+                      style={{ width: "30px" }}
+                    />
                     <span>{endUnit}</span>
                     단원
                   </div>
@@ -432,10 +496,8 @@ ex) oo 부분을 위주로 계획을 세워라."
           >
             생성하기
           </button>
-
         </div>
       </div>
-      
     </div>
   );
 };

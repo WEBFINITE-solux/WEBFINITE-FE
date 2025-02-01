@@ -63,8 +63,8 @@ const ModalOverlay = styled.div`
 const ModalContainer = styled.div`
   position: relative;
   width: 500px;
-height: 671.053px;
-flex-shrink: 0;
+  height: 671.053px;
+  flex-shrink: 0;
   background: url("/noticeBackground.png") no-repeat center/cover;
   border-radius: 10px;
 `;
@@ -77,7 +77,7 @@ const CloseButton = styled.button`
   border: none;
   font-size: 24px;
   cursor: pointer;
-  color: #6A6A6A;
+  color: #6a6a6a;
 
   &:hover {
     color: #ccc;
@@ -96,6 +96,6 @@ const CheckboxContainer = styled.div`
   align-items: center;
   gap: 8px;
   font-size: 16px;
-  color: #6A6A6A;
-  font-family : Pretendard;
+  color: #6a6a6a;
+  font-family: pretendardM;
 `;

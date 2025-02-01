@@ -39,7 +39,7 @@ const LogoContainer = styled.div`
   }
 
   .title {
-    font-family: "Pretendard", sans-serif;
+    font-family: pretendardB, sans-serif;
     font-size: 4.7vw;
     font-weight: bold;
     color: #1a1a1a;
@@ -53,7 +53,7 @@ const LogoContainer = styled.div`
   }
 
   .description {
-    font-family: "Pretendard", sans-serif;
+    font-family: pretendardM, sans-serif;
     font-size: 0.65vw;
     color: #000000;
     line-height: 1.5;
@@ -96,7 +96,7 @@ const Button = styled.button`
   }
 
   .button-text {
-    font-family: "Pretendard", sans-serif;
+    font-family: pretendardM, sans-serif;
     font-weight: 600;
     font-size: 1.15vw;
     color: #1a1a1a;
@@ -144,7 +144,8 @@ const MainPage: React.FC = () => {
         </h1>
         <p className="description">
           러네이블은 사용자의 입력기반 맞춤형 학습계획을 제공하고 <br />
-          여러 기능을 통해 효율적인 학습을 지원하는 AI기반 학습관리 플랫폼입니다.
+          여러 기능을 통해 효율적인 학습을 지원하는 AI기반 학습관리
+          플랫폼입니다.
         </p>
       </LogoContainer>
       <LoginButton onClick={() => navigate("/loginForm")}>

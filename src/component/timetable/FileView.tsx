@@ -17,7 +17,9 @@ const FileView: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [deletingFileId, setDeletingFileId] = useState<number | null>(null);
-  const [summarizingFileId, setSummarizingFileId] = useState<number | null>(null);
+  const [summarizingFileId, setSummarizingFileId] = useState<number | null>(
+    null
+  );
   const [summary, setSummary] = useState<string | null>(null);
   const [summaryError, setSummaryError] = useState<string | null>(null);
 
@@ -33,7 +35,9 @@ const FileView: React.FC = () => {
         const response = await token.get(`/course/file/${courseId}`);
         setFiles(response.data.files || []);
       } catch (err: any) {
-        setError(err.response?.data?.message || "강의 자료를 불러올 수 없습니다.");
+        setError(
+          err.response?.data?.message || "강의 자료를 불러올 수 없습니다."
+        );
       } finally {
         setLoading(false);
       }
@@ -49,7 +53,9 @@ const FileView: React.FC = () => {
 
     try {
       await token.delete(`/course/file/${fileId}/delete`);
-      setFiles((prevFiles) => prevFiles.filter((file) => file.file_id !== fileId));
+      setFiles((prevFiles) =>
+        prevFiles.filter((file) => file.file_id !== fileId)
+      );
     } catch (err: any) {
       alert(err.response?.data?.message || "파일 삭제에 실패했습니다.");
     } finally {
@@ -65,7 +71,9 @@ const FileView: React.FC = () => {
     try {
       await token.post(`/summary/${fileId}/new`);
       setFiles((prevFiles) =>
-        prevFiles.map((file) => (file.file_id === fileId ? { ...file, is_summarized: true } : file))
+        prevFiles.map((file) =>
+          file.file_id === fileId ? { ...file, is_summarized: true } : file
+        )
       );
     } catch (err: any) {
       alert(err.response?.data?.message || "요약 생성에 실패했습니다.");
@@ -82,7 +90,9 @@ const FileView: React.FC = () => {
       const response = await token.get(`/summary/${fileId}`);
       setSummary(response.data.summary_content);
     } catch (err: any) {
-      setSummaryError(err.response?.data?.message || "요약 내용을 불러올 수 없습니다.");
+      setSummaryError(
+        err.response?.data?.message || "요약 내용을 불러올 수 없습니다."
+      );
     }
   };
 
@@ -113,18 +123,35 @@ const FileView: React.FC = () => {
         <FileList>
           {files.map((file) => (
             <FileItem key={file.file_id}>
-              <FileIcon src={getFileLogo(file.original_filename)} alt="파일 아이콘" />
+              <FileIcon
+                src={getFileLogo(file.original_filename)}
+                alt="파일 아이콘"
+              />
               <FileInfo>
                 <FileName>{file.original_filename}</FileName>
               </FileInfo>
-              <DeleteButton onClick={() => handleFileDelete(file.file_id)} disabled={deletingFileId === file.file_id}>
-                {deletingFileId === file.file_id ? "삭제 중..." : <DeleteLogo src="/deleteLogo.svg" />}
+              <DeleteButton
+                onClick={() => handleFileDelete(file.file_id)}
+                disabled={deletingFileId === file.file_id}
+              >
+                {deletingFileId === file.file_id ? (
+                  "삭제 중..."
+                ) : (
+                  <DeleteLogo src="/deleteLogo.svg" />
+                )}
               </DeleteButton>
               {file.is_summarized ? (
-                <SummaryButton onClick={() => handleViewSummary(file.file_id)}>자료보기</SummaryButton>
+                <SummaryButton onClick={() => handleViewSummary(file.file_id)}>
+                  자료보기
+                </SummaryButton>
               ) : (
-                <SummaryButton onClick={() => handleSummary(file.file_id)} disabled={summarizingFileId === file.file_id}>
-                  {summarizingFileId === file.file_id ? "요약 중..." : "요약하기 →"}
+                <SummaryButton
+                  onClick={() => handleSummary(file.file_id)}
+                  disabled={summarizingFileId === file.file_id}
+                >
+                  {summarizingFileId === file.file_id
+                    ? "요약 중..."
+                    : "요약하기 →"}
                 </SummaryButton>
               )}
             </FileItem>
@@ -155,7 +182,6 @@ const FileView: React.FC = () => {
 
 export default FileView;
 
-
 const Container = styled.div`
   width: 400px;
   height: 692px;
@@ -163,7 +189,7 @@ const Container = styled.div`
   border-radius: 8px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   padding: 16px;
-  font-family: Pretendard, sans-serif;
+  font-family: pretendardR, sans-serif;
 `;
 
 const Header = styled.div`
@@ -245,7 +271,7 @@ const DeleteLogo = styled.img`
 
 const SummaryButton = styled.button`
   background-color: #ffffff;
-  border: 1px solid #007BFF;
+  border: 1px solid #007bff;
   border-radius: 8px;
   padding: 8px 12px;
   cursor: pointer;
@@ -258,7 +284,7 @@ const SummaryButton = styled.button`
   }
 
   &:hover {
-    background-color: #007BFF;
+    background-color: #007bff;
     color: white;
   }
 `;
@@ -283,14 +309,14 @@ const Popup = styled.div`
 `;
 
 const SummayTitle = styled.h3`
- color: #000;
-font-family: Pretendard;
-font-size: 20px;
-font-style: normal;
-font-weight: 700;
-line-height: 150%;
-margin-bottom : 10px;
-`
+  color: #000;
+  font-family: pretendardB;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 150%;
+  margin-bottom: 10px;
+`;
 
 const PopupContent = styled.div`
   background: white;

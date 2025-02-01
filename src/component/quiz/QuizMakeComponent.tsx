@@ -6,6 +6,7 @@ import token from "../token";
 const QuizMakeComponent: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const userId = Number(localStorage.getItem("userId"));
 
   const { courseId, fileId } = location.state || {};
 
@@ -18,7 +19,10 @@ const QuizMakeComponent: React.FC = () => {
   const [detailedRequirements, setDetailedRequirements] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, type: "min" | "max") => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    type: "min" | "max"
+  ) => {
     const value = parseInt(e.target.value, 10);
 
     if (value < 1 || value > 5) {
@@ -43,7 +47,7 @@ const QuizMakeComponent: React.FC = () => {
 
     try {
       const response = await token.post(`/quiz/create/${courseId}/${fileId}`, {
-        userId: 1,
+        userId: `${userId}`,
         quizCountRange: `${quizCount.min}-${quizCount.max}`,
         questionType: quizType.multipleChoice
           ? "MULTIPLE_CHOICE"
@@ -68,9 +72,19 @@ const QuizMakeComponent: React.FC = () => {
     <Container>
       <Label>퀴즈 개수</Label>
       <InputGroup>
-        <Input type="number" placeholder="최소" value={quizCount.min} onChange={(e) => handleInputChange(e, "min")} />
+        <Input
+          type="number"
+          placeholder="최소"
+          value={quizCount.min}
+          onChange={(e) => handleInputChange(e, "min")}
+        />
         <span>~</span>
-        <Input type="number" placeholder="최대" value={quizCount.max} onChange={(e) => handleInputChange(e, "max")} />
+        <Input
+          type="number"
+          placeholder="최대"
+          value={quizCount.max}
+          onChange={(e) => handleInputChange(e, "max")}
+        />
       </InputGroup>
 
       <Label>퀴즈 형식</Label>
@@ -79,7 +93,9 @@ const QuizMakeComponent: React.FC = () => {
           <input
             type="checkbox"
             checked={quizType.trueFalse}
-            onChange={(e) => setQuizType({ ...quizType, trueFalse: e.target.checked })}
+            onChange={(e) =>
+              setQuizType({ ...quizType, trueFalse: e.target.checked })
+            }
           />
           참/거짓
         </CheckboxLabel>
@@ -87,7 +103,9 @@ const QuizMakeComponent: React.FC = () => {
           <input
             type="checkbox"
             checked={quizType.multipleChoice}
-            onChange={(e) => setQuizType({ ...quizType, multipleChoice: e.target.checked })}
+            onChange={(e) =>
+              setQuizType({ ...quizType, multipleChoice: e.target.checked })
+            }
           />
           N지선다 객관식
         </CheckboxLabel>
@@ -95,7 +113,9 @@ const QuizMakeComponent: React.FC = () => {
           <input
             type="checkbox"
             checked={quizType.shortAnswer}
-            onChange={(e) => setQuizType({ ...quizType, shortAnswer: e.target.checked })}
+            onChange={(e) =>
+              setQuizType({ ...quizType, shortAnswer: e.target.checked })
+            }
           />
           단답형
         </CheckboxLabel>
@@ -130,7 +150,7 @@ const Container = styled.div`
 const Label = styled.label`
   display: block;
   color: #1a1a1a;
-  font-family: Pretendard;
+  font-family: pretendardB;
   font-size: 24px;
   font-style: normal;
   font-weight: 700;
@@ -161,11 +181,11 @@ const Textarea = styled.textarea`
   border-radius: 4px;
   margin-bottom: 80px;
   font-size: 12px;
-  font-family: Pretendard;
+  font-family: pretendardM;
 
   &::placeholder {
     color: rgba(0, 0, 0, 0.5);
-    font-family: Pretendard;
+    font-family: pretendardR;
     font-size: 12px;
     font-style: normal;
     font-weight: 400;
@@ -185,7 +205,7 @@ const CheckboxLabel = styled.label`
   align-items: center;
   gap: 4px;
   color: #1a1a1a;
-  font-family: Pretendard;
+  font-family: pretendardB;
   font-size: 18px;
   font-style: normal;
   font-weight: 600;

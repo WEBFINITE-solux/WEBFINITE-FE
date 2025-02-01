@@ -11,10 +11,16 @@ interface QuizData {
 interface QuizComponentEditProps {
   quizzes: QuizData[];
   selectedCards: Record<number, boolean>;
-  setSelectedCards: React.Dispatch<React.SetStateAction<Record<number, boolean>>>;
+  setSelectedCards: React.Dispatch<
+    React.SetStateAction<Record<number, boolean>>
+  >;
 }
 
-const QuizComponentEdit: React.FC<QuizComponentEditProps> = ({ quizzes, selectedCards, setSelectedCards }) => {
+const QuizComponentEdit: React.FC<QuizComponentEditProps> = ({
+  quizzes,
+  selectedCards,
+  setSelectedCards,
+}) => {
   const handleCheckboxChange = (quizId: number, isChecked: boolean) => {
     setSelectedCards((prev) => ({
       ...prev,
@@ -24,18 +30,21 @@ const QuizComponentEdit: React.FC<QuizComponentEditProps> = ({ quizzes, selected
 
   return (
     <Container>
-      
       <QuizList>
         {quizzes.map((quiz) => (
-          
-          <QuizCard key={quiz.quizId} isSelected={selectedCards[quiz.quizId] || false}>
+          <QuizCard
+            key={quiz.quizId}
+            isSelected={selectedCards[quiz.quizId] || false}
+          >
             <HorizontalContainer>
               <Title>{quiz.quizTitle}</Title>
               <CheckboxContainer>
                 <input
                   type="checkbox"
                   checked={selectedCards[quiz.quizId] || false}
-                  onChange={(e) => handleCheckboxChange(quiz.quizId, e.target.checked)}
+                  onChange={(e) =>
+                    handleCheckboxChange(quiz.quizId, e.target.checked)
+                  }
                 />
               </CheckboxContainer>
             </HorizontalContainer>
@@ -61,17 +70,15 @@ const QuizComponentEdit: React.FC<QuizComponentEditProps> = ({ quizzes, selected
 
 export default QuizComponentEdit;
 
-
-
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   padding: 20px;
-  background : none;
+  background: none;
 `;
 
 const QuizList = styled.div`
-  width : 1520px;
+  width: 1520px;
   display: flex;
   overflow-x: auto;
   gap: 20px;
@@ -128,23 +135,23 @@ const SolveButton = styled.button`
   width: 74px;
   height: 20px;
   border-radius: 16px;
-  background: #FFF;
-  box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.30);
+  background: #fff;
+  box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.3);
   border: none;
   border-radius: 5px;
   padding: 2px 2px;
   cursor: pointer;
-  color: #1A1A1A;
+  color: #1a1a1a;
   text-align: center;
-  font-family: Pretendard;
+  font-family: pretendardB;
   font-size: 10px;
   font-style: normal;
   font-weight: 600;
   line-height: 150%;
-  margin-left : 180px;
+  margin-left: 180px;
 
   &:hover {
-    background-color:rgb(225, 225, 225);
+    background-color: rgb(225, 225, 225);
   }
 `;
 
@@ -152,38 +159,38 @@ const ActionButton = styled.button`
   width: 74px;
   height: 20px;
   border-radius: 16px;
-  background: #FFF;
-  box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.30);
+  background: #fff;
+  box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.3);
   border: none;
   border-radius: 5px;
   padding: 2px 2px;
   cursor: pointer;
-  color: #1A1A1A;
+  color: #1a1a1a;
   text-align: center;
-  font-family: Pretendard;
+  font-family: pretendardB;
   font-size: 10px;
   font-style: normal;
   font-weight: 600;
   line-height: 150%;
-  margin-left : 150px;
-  margin-top : 13px;
+  margin-left: 150px;
+  margin-top: 13px;
 
   &:hover {
-    background-color:rgb(225, 225, 225);
+    background-color: rgb(225, 225, 225);
   }
 `;
 const AgainLogo = styled.img`
-width: 16.947px;
-height: 14px;
-flex-shrink: 0;
-`
+  width: 16.947px;
+  height: 14px;
+  flex-shrink: 0;
+`;
 
 const ActionIcon = styled.div`
   font-size: 16px;
   cursor: pointer;
   margin-right: 10px;
   color: #555;
-  margin-top : 10px;
+  margin-top: 10px;
 
   &:hover {
     color: #007bff;

@@ -10,7 +10,7 @@ interface QuizProps {
 interface Choice {
   choiceId: number;
   choiceContent: string;
-  choiceLabel: string; 
+  choiceLabel: string;
 }
 
 interface Question {
@@ -20,14 +20,16 @@ interface Question {
 }
 
 interface QuizData {
-  quizId: number; 
+  quizId: number;
   quizTitle: string;
   questions: Question[];
 }
 
 const QuizMulti: React.FC<QuizProps> = ({ quizData }) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [selectedAnswers, setSelectedAnswers] = useState<Record<number, string>>({});
+  const [selectedAnswers, setSelectedAnswers] = useState<
+    Record<number, string>
+  >({});
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const navigate = useNavigate();
 
@@ -53,7 +55,9 @@ const QuizMulti: React.FC<QuizProps> = ({ quizData }) => {
   };
 
   const handleSubmit = () => {
-    if (!selectedAnswers[quizData.questions[currentQuestionIndex]?.questionId]) {
+    if (
+      !selectedAnswers[quizData.questions[currentQuestionIndex]?.questionId]
+    ) {
       alert("정답을 선택해주세요!");
       return;
     }
@@ -77,7 +81,11 @@ const QuizMulti: React.FC<QuizProps> = ({ quizData }) => {
       navigate(`/quiz/answer?quizId=${quizData.quizId}`);
     } catch (error: any) {
       console.error("🚨 답안 제출 실패:", error.response?.data || error);
-      alert(`답안 제출에 실패했습니다: ${error.response?.data?.message || "오류 발생"}`);
+      alert(
+        `답안 제출에 실패했습니다: ${
+          error.response?.data?.message || "오류 발생"
+        }`
+      );
     }
   };
 
@@ -102,7 +110,9 @@ const QuizMulti: React.FC<QuizProps> = ({ quizData }) => {
       <ProgressBarContainer>
         <ProgressBar
           style={{
-            width: `${((currentQuestionIndex + 1) / quizData.questions.length) * 100}%`,
+            width: `${
+              ((currentQuestionIndex + 1) / quizData.questions.length) * 100
+            }%`,
           }}
         />
       </ProgressBarContainer>
@@ -110,16 +120,27 @@ const QuizMulti: React.FC<QuizProps> = ({ quizData }) => {
         <QuestionNumber>{currentQuestionIndex + 1}</QuestionNumber>
         <QuestionText>{currentQuestion.questionContent}</QuestionText>
         <Navigation>
-          <NavButton onClick={handlePrevious} disabled={currentQuestionIndex === 0}>
+          <NavButton
+            onClick={handlePrevious}
+            disabled={currentQuestionIndex === 0}
+          >
             {"<"}
           </NavButton>
           <Answers>
-            {(currentQuestion.choices || []).map((choice) => (  
-              <AnswerOption key={choice.choiceId} onClick={() => handleAnswerChange(currentQuestion.questionId, choice)}>
+            {(currentQuestion.choices || []).map((choice) => (
+              <AnswerOption
+                key={choice.choiceId}
+                onClick={() =>
+                  handleAnswerChange(currentQuestion.questionId, choice)
+                }
+              >
                 <RadioButton
                   type="radio"
                   name={`answer-${currentQuestion.questionId}`}
-                  checked={selectedAnswers[currentQuestion.questionId] === `${choice.choiceLabel}) ${choice.choiceContent}`}
+                  checked={
+                    selectedAnswers[currentQuestion.questionId] ===
+                    `${choice.choiceLabel}) ${choice.choiceContent}`
+                  }
                   readOnly
                 />
                 <OptionLabel>
@@ -128,7 +149,10 @@ const QuizMulti: React.FC<QuizProps> = ({ quizData }) => {
               </AnswerOption>
             ))}
           </Answers>
-          <NavButton onClick={handleNext} disabled={currentQuestionIndex === quizData.questions.length - 1}>
+          <NavButton
+            onClick={handleNext}
+            disabled={currentQuestionIndex === quizData.questions.length - 1}
+          >
             {">"}
           </NavButton>
         </Navigation>
@@ -139,7 +163,9 @@ const QuizMulti: React.FC<QuizProps> = ({ quizData }) => {
           <PopupContent>
             <PopupText>결과를 바로 확인하러 가시겠습니까?</PopupText>
             <PopupButtons>
-              <PopupButton onClick={() => navigate("/quiz")}>퀴즈 목록으로</PopupButton>
+              <PopupButton onClick={() => navigate("/quiz")}>
+                퀴즈 목록으로
+              </PopupButton>
               <PopupButton onClick={handleAnswer}>결과 확인</PopupButton>
             </PopupButtons>
           </PopupContent>
@@ -150,8 +176,6 @@ const QuizMulti: React.FC<QuizProps> = ({ quizData }) => {
 };
 
 export default QuizMulti;
-
-
 
 const ModalContainer = styled.div`
   width: 1500px;
@@ -187,9 +211,9 @@ const Title = styled.h2`
 `;
 
 const Subtitle = styled.div`
-  color: #7C7C7C;
+  color: #7c7c7c;
   text-align: center;
-  font-family: Pretendard;
+  font-family: pretendardM;
   font-size: 15px;
   font-style: normal;
   font-weight: 500;
@@ -223,9 +247,9 @@ const Content = styled.div`
 `;
 
 const QuestionNumber = styled.div`
-  color: #1A1A1A;
+  color: #1a1a1a;
   text-align: center;
-  font-family: Pretendard;
+  font-family: pretendardM;
   font-size: 40px;
   font-style: normal;
   font-weight: 700;
@@ -235,7 +259,7 @@ const QuestionNumber = styled.div`
 const QuestionText = styled.div`
   color: #000;
   text-align: center;
-  font-family: Pretendard;
+  font-family: pretendardR;
   font-size: 20px;
   font-style: normal;
   font-weight: 400;
@@ -260,7 +284,7 @@ const RadioButton = styled.input`
 
 const OptionLabel = styled.label`
   color: #000;
-  font-family: Pretendard;
+  font-family: pretendardR;
   font-size: 15px;
   font-style: normal;
   font-weight: 400;
@@ -289,12 +313,12 @@ const SubmitButton = styled.button`
   height: 43px;
   flex-shrink: 0;
   border-radius: 28.858px;
-  background: #2D41FF;
+  background: #2d41ff;
   box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.25);
   margin-left: 1270px;
   margin-top: 50px;
-  color: #FFF;
-  font-family: Pretendard;
+  color: #fff;
+  font-family: pretendardM;
   font-size: 16px;
   font-weight: 700;
   line-height: 150%;
@@ -306,7 +330,6 @@ const SubmitButton = styled.button`
     background: #0056b3;
   }
 `;
-
 
 const Popup = styled.div`
   position: fixed;
@@ -332,32 +355,33 @@ const PopupContent = styled.div`
 const PopupText = styled.p`
   color: #000;
   text-align: center;
-  font-family: Pretendard;
+  font-family: pretendardR;
   font-size: 17px;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
   margin-bottom: 20px;
-  margin-top : 20px;
+  margin-top: 20px;
 `;
 
 const PopupButtons = styled.div`
   display: flex;
   justify-content: space-between;
-  gap : 10px;
+  gap: 10px;
 `;
 
 const PopupButton = styled.button<{ primary?: boolean }>`
   background: ${(props) => (props.primary ? "#007bff" : "#fff")};
   color: ${(props) => (props.primary ? "#fff" : "#1a1a1a")};
   border: none;
-  box-shadow : ${(props) => (props.primary ? "none" : "0px 0px 3px 0px rgba(0, 0, 0, 0.25);")};
+  box-shadow: ${(props) =>
+    props.primary ? "none" : "0px 0px 3px 0px rgba(0, 0, 0, 0.25);"};
   text-align: center;
-  font-family: Pretendard;
+  font-family: pretendardB;
   font-size: 15px;
   font-style: normal;
   font-weight: 700;
-  line-height: 150%; 
+  line-height: 150%;
   border-radius: 4px;
   padding: 10px 20px;
   cursor: pointer;

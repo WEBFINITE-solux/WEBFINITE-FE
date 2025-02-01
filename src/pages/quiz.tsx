@@ -59,7 +59,9 @@ const Quiz: React.FC = () => {
 
         for (const course of userCourses) {
           const courseId = course.id;
-          const response = await token.get(`/quiz/${userId}/course/${courseId}`);
+          const response = await token.get(
+            `/quiz/${userId}/course/${courseId}`
+          );
           console.log(`📌 [${courseId}] 퀴즈 데이터 응답:`, response.data);
           console.log(`요청 URL: /quiz/${userId}/course/${courseId}`);
 
@@ -73,7 +75,9 @@ const Quiz: React.FC = () => {
         setCourseQuizzes(allCourseQuizzes);
       } catch (err: any) {
         console.error("퀴즈 데이터 불러오기 오류:", err);
-        setError(err.response?.data?.message || "퀴즈 데이터를 불러올 수 없습니다.");
+        setError(
+          err.response?.data?.message || "퀴즈 데이터를 불러올 수 없습니다."
+        );
       } finally {
         setLoading(false);
       }
@@ -180,13 +184,13 @@ const EditButton = styled.button`
   height: 33px;
   flex-shrink: 0;
   padding: 3px 16px;
-  color: var(--1A1A1A, #1A1A1A);
+  color: var(--1A1A1A, #1a1a1a);
   text-align: center;
-  font-family: Pretendard;
+  font-family: pretendardB;
   font-size: 16px;
   font-weight: 700;
   border-radius: 28.858px;
-  background: #FFF;
+  background: #fff;
   box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.25);
   cursor: pointer;
   transition: background-color 0.3s;
@@ -203,13 +207,13 @@ const Message = styled.div`
   flex-shrink: 0;
   color: #000;
   text-align: center;
-  font-family: Pretendard;
+  font-family: PretendardM;
   font-size: 14px;
   font-weight: 500;
   padding: 15px;
   margin-top: 50px;
   border-radius: 11px;
-  background: #FFF;
+  background: #fff;
   box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.25);
 `;
 
@@ -219,8 +223,8 @@ const CourseSection = styled.div`
 `;
 
 const CourseHeader = styled.div`
-  color: #1A1A1A;
-  font-family: Pretendard;
+  color: #1a1a1a;
+  font-family: pretendardM;
   font-size: 16px;
   font-weight: 500;
   line-height: 150%;

@@ -98,7 +98,9 @@ const TimetableComponent: React.FC<TimetableProps> = ({ courses }) => {
                       (course) =>
                         course.term === selectedTerm &&
                         course.day.includes(
-                          Object.keys(dayMap).find((key) => dayMap[key] === day)!
+                          Object.keys(dayMap).find(
+                            (key) => dayMap[key] === day
+                          )!
                         ) &&
                         timeToNumber(course.start_time) < i + 10 &&
                         timeToNumber(course.end_time) > i + 9
@@ -108,7 +110,9 @@ const TimetableComponent: React.FC<TimetableProps> = ({ courses }) => {
                         key={course.course_id}
                         style={{
                           height: `${
-                            (timeToNumber(course.end_time) - timeToNumber(course.start_time)) * 100
+                            (timeToNumber(course.end_time) -
+                              timeToNumber(course.start_time)) *
+                            100
                           }%`,
                           top: `${
                             (timeToNumber(course.start_time) - (i + 9)) * 100
@@ -132,8 +136,6 @@ const TimetableComponent: React.FC<TimetableProps> = ({ courses }) => {
 };
 
 export default TimetableComponent;
-
-
 
 const Container = styled.div`
   position: absolute;
@@ -163,7 +165,7 @@ const DropdownButton = styled.button`
   font-size: 18px;
   color: #1a1a1a;
   cursor: pointer;
-  font-family: Pretendard;
+  font-family: pretendardM;
 `;
 
 const DropdownMenu = styled.div`
@@ -179,7 +181,7 @@ const DropdownMenu = styled.div`
 `;
 
 const DropdownHeader = styled.div`
-  font-family: Pretendard;
+  font-family: pretendardM;
   font-size: 14px;
   color: #656565;
   margin-bottom: 8px;
@@ -189,7 +191,7 @@ const DropdownItem = styled.div<{ isSelected: boolean }>`
   padding: 10px;
   border-radius: 8px;
   background: ${({ isSelected }) => (isSelected ? "#eaecff" : "transparent")};
-  font-family: Pretendard;
+  font-family: pretendardM;
   font-size: 14px;
   color: ${({ isSelected }) => (isSelected ? "#000" : "#656565")};
   cursor: pointer;
@@ -207,7 +209,7 @@ const CompleteButton = styled.button`
   border: none;
   border-radius: 8px;
   color: #fff;
-  font-family: Pretendard;
+  font-family: pretendardB;
   font-size: 14px;
   font-weight: bold;
   cursor: pointer;
@@ -230,7 +232,7 @@ const Table = styled.table`
 
 const Thead = styled.thead`
   color: #000;
-  font-family: Pretendard;
+  font-family: pretendardM;
   font-size: 15px;
   font-style: normal;
   font-weight: 500;
@@ -253,7 +255,7 @@ const Td = styled.td`
   text-align: center;
   position: relative;
   color: #000;
-  font-family: Pretendard;
+  font-family: pretendardM;
   font-size: 15px;
   font-style: normal;
   font-weight: 500;
@@ -265,7 +267,7 @@ const CourseBlock = styled.div`
   left: 0;
   right: 0;
   color: #303030;
-  font-family: Pretendard;
+  font-family: pretendardB;
   font-size: 10px;
   font-style: normal;
   font-weight: 700;

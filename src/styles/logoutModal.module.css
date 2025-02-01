@@ -24,18 +24,18 @@
 .icon {
   width: 5vw;
   height: auto;
-  margin-top: 3vh;;
+  margin-top: 3vh;
   margin-bottom: 0.28vh;
 }
 
 .title {
   margin-bottom: 27.5px;
-  font-family: 'Pretendard';
+  font-family: pretendardB;
   font-style: normal;
   font-weight: 600;
   font-size: 1.6vh;
   line-height: 150%;
-  color: #1A1A1A;
+  color: #1a1a1a;
 }
 
 .buttonContainer {
@@ -46,12 +46,13 @@
   margin: 0;
 }
 
-.cancelButton, .confirmButton {
+.cancelButton,
+.confirmButton {
   flex: 1;
   padding: 10px 20px;
   border: none;
   border-radius: 9px;
-  font-family: 'Pretendard';
+  font-family: pretendardB;
   font-style: normal;
   font-weight: 600;
   cursor: pointer;
@@ -62,32 +63,32 @@
 }
 
 .cancelButton {
-  background-color: #E3E3E3;
+  background-color: #e3e3e3;
   color: #000000;
 }
 .cancelButton:hover {
-  background-color: #2D41FF;
+  background-color: #2d41ff;
   color: #ffffff;
 }
 
 .cancelButton:focus {
-  background-color: #2D41FF;
+  background-color: #2d41ff;
   color: #ffffff;
   outline: none;
 }
 
 .confirmButton {
-  background-color: #E3E3E3;
+  background-color: #e3e3e3;
   color: #000000;
 }
 
 .confirmButton:hover {
-  background-color: #2D41FF;
+  background-color: #2d41ff;
   color: #ffffff;
 }
 
 .confirmButton:focus {
-  background-color: #2D41FF;
+  background-color: #2d41ff;
   color: #ffffff;
   outline: none;
 }

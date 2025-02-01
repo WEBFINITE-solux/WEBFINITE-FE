@@ -19,20 +19,25 @@ const LearningProgress: React.FC<{ userId: number }> = ({ userId }) => {
   const daysOfWeek = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 
   // 최근 7일 데이터 관리
-  const [weekData, setWeekData] = useState<{ [day: string]: DayAttendance }>({});
+  const [weekData, setWeekData] = useState<{ [day: string]: DayAttendance }>(
+    {}
+  );
 
   useEffect(() => {
     const fetchAttendance = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`https://d291-58-29-179-25.ngrok-free.app/attend/login/${userId}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json",
-            "ngrok-skip-browser-warning": "true"
-          },
-        });
+        const response = await fetch(
+          `https://d291-58-29-179-25.ngrok-free.app/attend/login/${userId}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+              "ngrok-skip-browser-warning": "true",
+            },
+          }
+        );
 
         if (!response.ok) {
           throw new Error(`HTTP 오류 발생: ${response.status}`);
@@ -92,19 +97,55 @@ const LearningProgress: React.FC<{ userId: number }> = ({ userId }) => {
   });
 
   return (
-    <div style={{ textAlign: "center", height: "160px", width: "330px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+    <div
+      style={{
+        textAlign: "center",
+        height: "160px",
+        width: "330px",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+      }}
+    >
       {loading ? (
         <p>로딩 중...</p>
       ) : error ? (
         <p style={{ color: "red" }}>{error}</p>
       ) : (
-        <div style={{ display: "flex", flexDirection: "column", gap: "2px", height: "100%" }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "2px",
+            height: "100%",
+          }}
+        >
           {/* 출석 데이터 표시 영역 */}
-          <div style={{ display: "grid", gridTemplateColumns: "50px repeat(7, 1fr)", height: "100%" }}>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "50px repeat(7, 1fr)",
+              height: "100%",
+            }}
+          >
             {/* 시간 레이블 (왼쪽) */}
-            <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+              }}
+            >
               {timeLabels.map((time, rowIndex) => (
-                <span key={rowIndex} style={{ fontSize: "10px", textAlign: "right", paddingRight: "5px" }}>
+                <span
+                  key={rowIndex}
+                  style={{
+                    fontSize: "10px",
+                    textAlign: "right",
+                    paddingRight: "5px",
+                    fontFamily: "pretendardR",
+                  }}
+                >
                   {time}
                 </span>
               ))}
@@ -112,14 +153,24 @@ const LearningProgress: React.FC<{ userId: number }> = ({ userId }) => {
 
             {/* 출석 블록 */}
             {daysOfWeek.map((day, colIndex) => (
-              <div key={colIndex} style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", gap: "5px" }}>
+              <div
+                key={colIndex}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                  gap: "5px",
+                }}
+              >
                 {timeLabels.map((_, rowIndex) => (
                   <div
                     key={rowIndex}
                     style={{
                       width: "90%",
                       height: "15px",
-                      backgroundColor: weekData[day]?.[rowIndex * 3] ? "blue" : "lightgray",
+                      backgroundColor: weekData[day]?.[rowIndex * 3]
+                        ? "blue"
+                        : "lightgray",
                       borderRadius: "3px",
                     }}
                   />
@@ -129,9 +180,17 @@ const LearningProgress: React.FC<{ userId: number }> = ({ userId }) => {
           </div>
 
           {/* 요일 표시 */}
-          <div style={{ display: "flex",  marginLeft: "45px" }}>
+          <div style={{ display: "flex", marginLeft: "45px" }}>
             {daysOfWeek.map((day, index) => (
-              <span key={index} style={{ width: "40px", textAlign: "center", fontSize: "10px", fontWeight: "bold" }}>
+              <span
+                key={index}
+                style={{
+                  width: "40px",
+                  textAlign: "center",
+                  fontSize: "10px",
+                  fontWeight: "bold",
+                }}
+              >
                 {day}
               </span>
             ))}
