@@ -144,7 +144,7 @@ const QuizMulti: React.FC<QuizProps> = ({ quizData }) => {
                   readOnly
                 />
                 <OptionLabel>
-                  {choice.choiceLabel}) {choice.choiceContent}
+                  {choice.choiceLabel} {choice.choiceContent}
                 </OptionLabel>
               </AnswerOption>
             ))}

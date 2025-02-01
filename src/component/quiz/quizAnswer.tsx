@@ -10,19 +10,20 @@ const QuizAnswer: React.FC<QuizAnswerProps> = ({ quizResult }) => {
   const handleList = () => {
     navigate("/quiz");
   };
-
+  console.log("quizResult:", quizResult);
   return (
     <Container>
       <Header>
         <Title>AI 해설</Title>
       </Header>
       <Content>
-        {quizResult.detailedResults.map((result: any, index: number) => (
-          <QuestionBox key={result.questionId}>
-            <QuestionHeader>
-              {index + 1}. {result.questionContent}
-            </QuestionHeader>
-            <Choices>
+        {quizResult.detailedResults.map((result: any, index: number) => {
+          return (
+            <QuestionBox key={result.questionId}>
+              <QuestionHeader>
+                {index + 1}. {result.questionContent}
+              </QuestionHeader>
+              <Choices>
               {result.choices.map((choice: string, i: number) => (
                 <Choice
                   key={i}
@@ -33,12 +34,14 @@ const QuizAnswer: React.FC<QuizAnswerProps> = ({ quizResult }) => {
                 </Choice>
               ))}
             </Choices>
-            <Explanation isCorrect={result.correct}>
-              <Answer isCorrect={result.correct}>정답:</Answer> {result.correctAnswer} <br />
-              <Script>→ {result.explanation}</Script>
-            </Explanation>
-          </QuestionBox>
-        ))}
+              <Explanation isCorrect={result.correct}>
+                <Answer isCorrect={result.correct}>정답:</Answer> {result.correctAnswer} <br />
+              <Answer isCorrect={result.correct}>내가 선택한 정답 : </Answer>{result.userAnswer}<br/>
+                <Script>→ {result.explanation}</Script>
+              </Explanation>
+            </QuestionBox>
+          );
+        })}
         <ExitButton onClick={handleList}>나가기</ExitButton>
       </Content>
     </Container>
@@ -100,7 +103,19 @@ const Choice = styled.div<{ isCorrect: boolean; isUserAnswer: boolean }>`
   font-size: 16px;
   font-weight: ${(props) => (props.isUserAnswer ? "bold" : "normal")};
   color: ${(props) =>
-    props.isUserAnswer ? (props.isCorrect ? "#2D41FF" : "#FF5C5C") : "#555"};
+    props.isUserAnswer
+      ? props.isCorrect
+        ? "#2D41FF"
+        : "#FF5C5C"
+      : "#555"};
+  background: ${(props) =>
+    props.isUserAnswer
+      ? props.isCorrect
+        ? "#EAECFF"
+        : "#fde7e7"
+      : "transparent"};
+  padding: 5px;
+  border-radius: 4px;
 `;
 
 const Explanation = styled.div<{ isCorrect: boolean }>`
