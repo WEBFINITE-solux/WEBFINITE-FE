@@ -61,7 +61,7 @@ const QuizSolve: React.FC = () => {
             questionContent: q.questionContent || "질문 내용 없음",
             choices: q.choices?.map((c: any, index: number) => ({
               choiceId: c.choiceId,
-              choiceLabel: String.fromCharCode(65 + index), // 🔹 A, B, C, D 자동 생성
+              choiceLabel: String.fromCharCode(65 + index), 
               choiceContent: c.choiceContent || "선택지 없음",
             })) || [],
             answer: q.answer || null,

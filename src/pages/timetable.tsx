@@ -4,6 +4,22 @@ import token from "../component/token";
 import TimetableComponent from "../component/timetable/TimetableComponent";
 import CourseList from "../component/timetable/CourseList";
 
+export const getCurrentSemester = () => {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth() + 1; // getMonth()는 0부터 시작하므로 +1
+
+  // 1~2월이면 직전 연도, 나머지는 그대로 유지
+  const adjustedYear = month === 1 || month === 2 ? year - 1 : year;
+
+  // 학기 결정
+  const semester = month >= 3 && month <= 8 ? 1 : 2;
+
+  return { year: adjustedYear, semester };
+};
+
+const colors = ["#FFD3A9", "#C2B1FF", "#FF9E9E", "#95BAFF", "#9EFFEA"];
+
 type TableCourse = {
   course_id: number;
   course_title: string;
@@ -22,14 +38,12 @@ type ListCourse = {
   period: string;
 };
 
-const colors = ["#FFD3A9", "#C2B1FF", "#FF9E9E", "#95BAFF", "#9EFFEA"];
-
 const Timetable: React.FC = () => {
   const [tableCourses, setTableCourses] = useState<TableCourse[]>([]);
   const [listCourses, setListCourses] = useState<ListCourse[]>([]);
-  const userId = 1;
-  const year = "2024";
-  const semester = "1";
+  
+  const userId = localStorage.getItem("userId");
+  const { year, semester } = getCurrentSemester();
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -50,6 +64,7 @@ const Timetable: React.FC = () => {
         }));
 
         setTableCourses(formattedTableCourses);
+        
         const listResponse = await token.get(`/course/${userId}/${year}/${semester}`);
         console.log("강의 목록 데이터 응답:", listResponse.data);
 
@@ -80,7 +95,6 @@ const Timetable: React.FC = () => {
 };
 
 export default Timetable;
-
 
 const Container = styled.div`
   display: flex;
