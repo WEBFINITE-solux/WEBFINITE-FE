@@ -37,6 +37,7 @@ const CourseDelete: React.FC<CourseDeleteProps> = ({
         alert(`강의 "${selectedCourse.title}"가 삭제되었습니다.`);
         onDelete(selectedCourse.id);
         setShowPopup(false);
+        window.location.reload();
       }
     } catch (error: any) {
       console.error("강의 삭제 중 오류 발생:", error);
