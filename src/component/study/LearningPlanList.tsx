@@ -47,7 +47,7 @@ const LearningPlanList: React.FC = () => {
         try {
           setLoading(true);
           const response = await fetch(
-            `https://d291-58-29-179-25.ngrok-free.app/plan/${userId}`,
+            `https://d291-58-29-179-25.ngrok-free.app/plan/${courseId}`,
             {
               method: "GET",
               headers: {
