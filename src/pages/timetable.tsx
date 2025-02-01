@@ -103,8 +103,8 @@ const Container = styled.div`
 `;
 
 const TimetableBack = styled.img`
-  width: 100%;
-  height: auto;
+  width: 1704px;
+  height: 1079px;
   flex-shrink: 0;
   z-index: 1;
 `;
