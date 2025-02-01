@@ -148,13 +148,13 @@ const QuizTF: React.FC<QuizProps> = ({ quizData }) => {
         <Answers>
           <AnswerButton
             onClick={() => handleAnswerChange("참")}
-            selected={selectedAnswers[currentQuestionIndex] === "TRUE"}
+            selected={selectedAnswers[currentQuestionIndex] === "참"}
           >
             참
           </AnswerButton>
           <AnswerButton
             onClick={() => handleAnswerChange("거짓")}
-            selected={selectedAnswers[currentQuestionIndex] === "FALSE"}
+            selected={selectedAnswers[currentQuestionIndex] === "거짓"}
           >
             거짓
           </AnswerButton>
