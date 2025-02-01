@@ -5,16 +5,13 @@ export const signupUser = async (requestData: {
   nickname: string;
   email: string;
 }) => {
-  const response = await fetch(
-    "https://d291-58-29-179-25.ngrok-free.app/user/signup",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(requestData),
-    }
-  );
+  const response = await fetch("https://d291-58-29-179-25.ngrok-free.app/user/signup", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(requestData),
+  });
 
   const contentType = response.headers.get("Content-Type");
   if (contentType && contentType.includes("application/json")) {
@@ -27,14 +24,9 @@ export const signupUser = async (requestData: {
   }
 };
 
-export const loginUser = async (requestData: {
-  loginUserId: string;
-  password: string;
-}) => {
-  try {
-    const response = await fetch(
-      "https://d291-58-29-179-25.ngrok-free.app/user/signin",
-      {
+export const loginUser = async (requestData: { loginUserId: string; password: string }) => {
+    try {
+      const response = await fetch("https://d291-58-29-179-25.ngrok-free.app/user/signin", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

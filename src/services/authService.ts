@@ -1,15 +1,12 @@
 export const logoutUser = async (accessToken: string) => {
   try {
-    const response = await fetch(
-      "https://d291-58-29-179-25.ngrok-free.app/user/logout",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
-    );
+    const response = await fetch("https://d291-58-29-179-25.ngrok-free.app/user/logout", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
 
     console.log("Request to /logout");
     console.log("Headers:", {
